@@ -1,0 +1,17 @@
+/**
+ * BUTTONS.CSS
+ * All the button types that the system provides
+ * ------------------------------------------------------*/
+ 
+.action {
+	display: inline-block;
+	vertical-align: middle;
+	padding: 0 0.4rem;
+	font-size: 1.2rem;
+	border-radius: 0.4rem;
+	background: rgba(0, 0, 0, 0.5);
+	color: rgba(255, 255, 255, 0.9);
+	border: solid 1px rgba(0, 0, 0, 0.2);
+}
+	.action:hover { text-decoration: none; }
+	.action:active { opacity: 0.8;}

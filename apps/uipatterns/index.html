@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html manifest="manifest.appcache">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="pragma" content="no-cache">
+		<title>UI Patterns</title>
+
+		<!-- BOOTZILLA REMOTE (DEBUG)-->
+		<link rel="stylesheet" type="text/css" href="http://system.gaiamobile.org/bootzilla/css/package.css">
+		<script type="text/javascript" src="http://system.gaiamobile.org/bootzilla/js/responsive.js"></script>
+
+		<!-- BOOTZILLA LOCAL-->
+		<!-- <link rel="stylesheet" type="text/css" href="bootzilla/css/package.css"> -->
+		<!--<script type="text/javascript" src="bootzilla/js/responsive.js"></script> -->
+
+		<script>
+			var host = document.location.host;
+			var domain = host.replace(/(^[\w\d]+\.)?([\w\d]+\.[a-z]+)/, '$2');
+			var src = 'http://' + domain + '/webapi.js';
+			document.write('<script src="' + src + '"><\/script>');
+		</script>
+
+	</head>
+	<body>
+		<section class="view">
+			<header class="vw-header">
+				<ul class="pull-right stack vw-actions">
+					<li><a href="#"><i>Add</i></a></li>
+					<li><a href="#"><i>Edit</i></a></li>
+				</ul>
+				<p class="pull-left vw-back"><a href="#"><i>Back</i></a></p>
+				<h1>Timeline</h1>
+			</header>
+
+			<nav class="tabs">
+				<button class="pull-right">
+					<i></i>
+				</button>
+				<div class="itm-body-exp">
+					<ul class="g-4">
+						<li><a href="#"><strong>All</strong></a></li>
+						<li><a href="#"><i>Calls</i></a></li>
+						<li><a href="#"><i>Voice messages</i></a></li>
+						<li><a href="#"><i>Text messages</i></a></li>
+					</ul>
+				</div>
+			</nav>
+
+			<article class="vw-body">
+				
+			</article>
+
+			<nav class="vw-nav vw-nav-labeled">
+				<ul class="g-4">
+					<li><a href="#" title="All"><i>All</i></a></li>
+					<li><a href="#" title="You"><i>User interactions</i></a></li>
+					<li><a href="#" title="Messages"><i>Messages</i></a></li>
+					<li><a href="#" title="Calls"><i>Calls</i></a></li>
+				</ul>
+			</nav>
+		</section>
+	</body>
+</html>

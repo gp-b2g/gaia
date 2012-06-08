@@ -1,0 +1,24 @@
+{
+  "name": "UI Patterns",
+  "description": "OWD UI Patterns",
+  "launch_path": "/",
+  "developer": {
+    "name": "Telefonica Digital Team",
+    "url": "https://github.com/telefonicaid/OpenWebDevice"
+  },
+	"permissions": [
+	    "mozApps"
+	],
+  "locales": {
+    "en-US": {
+      "name": "UI Patterns",
+      "description": "Connect"
+    },
+    "es": {
+      "name": "UI Patterns",
+      "description": "Connect"
+    }
+  },
+  "default_locale": "en-US",
+  "orientation": "portrait-primary"
+}

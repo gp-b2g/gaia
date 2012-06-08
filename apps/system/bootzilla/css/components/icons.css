@@ -1,0 +1,12 @@
+/**
+ * ICONS.CSS
+ * Icons provided by the system, could be bitmaps, fonts, or svg
+ * ------------------------------------------------------*/
+i {
+	display: inline-block;
+	vertical-align: middle;
+	width: 2.8rem;
+	height: 2.8rem;
+	font: 0/0 a;
+	background-color: rgba(0, 0, 0, 0.5);
+}

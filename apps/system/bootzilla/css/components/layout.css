@@ -1,0 +1,25 @@
+/**
+ * GRIDS.CSS
+ * Medium level components for setting up responsive strcutures
+ * ------------------------------------------------------*/
+
+/* GRID: presets for sliced widths; */
+[class*="g-"] { width: 100%; }
+	[class*="g-"]:before, [class*="g-"]:after { content: ""; display: table; } 
+	[class*="g-"]:after { clear: both; } 
+	
+	[class*="g-"] > * { float: left; -moz-box-sizing: border-box; }
+	.g-10	> * { width: 10%; }
+	.g-8	> * { width: 4rem; }
+	.g-5	> * { width: 20%; }
+	.g-4	> * { width: 25%; }
+	.g-2	> * { width: 50%; }
+
+
+/* STACK: uses display: inline-block; */
+.stack { letter-spacing: -0.4rem; }
+	 .stack > li {
+	 	display: inline-block; 
+	 	vertical-align: middle;
+	 	letter-spacing: 0;
+	 }

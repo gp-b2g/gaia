@@ -1,0 +1,13 @@
+/**
+ * PACKAGE.CSS
+ * Embed all the css files from bootzilla/css/*
+ * ------------------------------------------------------*/
+
+/* Fonts declarations in base64 to allow crossdomain origin */
+@import url("fonts/system-sans.css");
+@import url("fonts/system-sans-light.css");
+@import url("fonts/system-sans-semibold.css");
+@import url("fonts/system-sans-bold.css");
+
+@import url("base/package.css");
+@import url("components/package.css");
