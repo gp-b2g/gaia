@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html manifest="manifest.appcache">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="pragma" content="no-cache">
+    <title>Data control</title>
+    <!-- Compatibility -->
+    <script>
+      if (document.location.protocol === 'file:') {
+        var paths = document.location.pathname.split('/');
+        paths.pop();
+        paths.pop();
+        paths.pop();
+        var src = 'file://' + paths.join('/') + '/webapi.js';
+      } else {
+        var host = document.location.host;
+        var domain = host.replace(/(^[\w\d]+\.)?([\w\d]+\.[a-z]+)/, '$2');
+        var src = 'http://' + domain + '/webapi.js';
+      }
+      document.write('<script src="' + src + '"><\/script>');
+    </script>
+  </head>
+  <body>
+
+    <h1>Data control app</h1>
+      
+  </body>
+</html>

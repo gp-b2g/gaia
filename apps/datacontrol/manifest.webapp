@@ -1,0 +1,17 @@
+{
+  "name": "Data control",
+  "description": "Data usage",
+  "launch_path": "/",
+  "developer": {
+    "name": "Telefonica I+D",
+    "url": "https://github.com/telefonicaid/gaia"
+  },
+  "permissions": [
+  ],
+  "default_locale": "en-US",
+  "icons": {
+    "120": "",
+    "60": ""
+  },
+  "orientation": "portrait-primary"
+}
