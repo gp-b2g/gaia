@@ -15,12 +15,14 @@ var CallScreen = {
 
   get answerButton() {
     delete this.answerButton;
-    return this.answerButton = document.getElementById('co-basic-answer');
+    return this.answerButton = document
+      .getElementById('callbar-answer');
   },
 
   get rejectButton() {
     delete this.rejectButton;
-    return this.rejectButton = document.getElementById('co-basic-reject');
+    return this.rejectButton = document
+      .getElementById('callbar-hang-up');
   },
 
   get keypadButton() {
@@ -28,15 +30,33 @@ var CallScreen = {
     return this.keypadButton = document.getElementById('keypad-visibility');
   },
 
+  get callContainer() {
+    delete this.contactContainer;
+    return this.contactContainer =
+      document.getElementById('call-container');
+  },
+
   get contactPrimaryInfo() {
     delete this.contactPrimaryInfo;
     return this.contactPrimaryInfo =
-      document.getElementById('cs-h-info-primary');
+      document.getElementById('contact-primary-info');
+  },
+
+  get fakeContactPrimaryInfo() {
+    delete this.fakeContactPrimaryInfo;
+    return this.fakeContactPrimaryInfo =
+      document.getElementById('fake-contact-primary-info');
   },
 
   get callDuration() {
     delete this.callDuration;
     return this.callDuration = document.getElementById('call-duration');
+
+  },
+
+  get callDirection() {
+    delete this.callDirection;
+    return this.callDirection = document.getElementById('call-direction');
 
   },
 
@@ -68,12 +88,17 @@ var CallScreen = {
   },
 
   update: function cm_update(phone_number) {
-    this.contactPrimaryInfo.innerHTML = phone_number;
+    this.contactPrimaryInfo.value = phone_number;
+    KeypadManager.formatPhoneNumber('on-call');
     KeypadManager._phoneNumber = phone_number;
     KeypadManager.phoneNumberView.value =
       KeypadManager._phoneNumber;
     KeypadManager.moveCaretToEnd(
       KeypadManager.phoneNumberView);
+  },
+
+  setCallerContactImage: function cm_setCallerContactImage(image_url) {
+    this.callContainer.style.backgroundImage = 'url(' + image_url + ')';
   },
 
   toggleMute: function cm_toggleMute() {
@@ -107,16 +132,23 @@ var CallScreen = {
 
   render: function cm_render(layout_type) {
     switch (layout_type) {
-      case 'outgoing':
-        this.callDuration.innerHTML = '...';
+      case 'dialing':
+        this.callDuration.innerHTML = 'Calling';
+        this.callDuration.classList.remove('ongoing');
+        this.callDirection.classList.add('outgoing');
         this.answerButton.classList.add('hide');
+        this.rejectButton.classList.add('full-space');
         this.callToolbar.classList.remove('transparent');
         this.keypadButton.setAttribute('disabled', 'disabled');
         break;
       case 'incoming':
+        this.callDuration.innerHTML = 'Calling';
+        this.callDuration.classList.remove('ongoing');
+        this.callDirection.classList.add('incoming');
         this.answerButton.classList.remove('hide');
+        this.rejectButton.classList.remove('full-space');
         this.callToolbar.classList.add('transparent');
-        this.callDuration.innerHTML = '';
+        this.keypadButton.setAttribute('disabled', 'disabled');
         break;
       case 'connected':
         // When the call is connected the speaker state is reset
@@ -124,10 +156,20 @@ var CallScreen = {
         this._syncSpeakerEnabled();
 
         this.answerButton.classList.add('hide');
+        this.rejectButton.classList.add('full-space');
         this.callToolbar.classList.remove('transparent');
 
         this.keypadButton.removeAttribute('disabled');
         this.callDuration.innerHTML = '00:00';
+        this.callDuration.classList.add('ongoing');
+        if (this.callDirection.classList.contains('outgoing')) {
+          this.callDirection.classList.remove('outgoing');
+          this.callDirection.classList.add('ongoing-out');
+        } else if (this.callDirection.classList.contains('incoming')) {
+          this.callDirection.classList.remove('incoming');
+          this.callDirection.classList.add('ongoing-in');
+        }
+        this.callDirection.classList.add('show');
 
         break;
     }
@@ -158,36 +200,42 @@ var OnCallHandler = {
     this._screenLock = navigator.requestWakeLock('screen');
     ProximityHandler.enable();
 
-    var self = this;
     var telephony = window.navigator.mozTelephony;
     if (telephony) {
       // Somehow the muted property appears to true after initialization.
       // Set it to false.
       telephony.muted = false;
+
+      var self = this;
       telephony.oncallschanged = function och_callsChanged(evt) {
         telephony.calls.forEach(function callIterator(call) {
-          self.currentCall = call;
-
-          CallScreen.update(call.number);
-          CallScreen.render(typeOfCall);
-
-          self.lookupContact(call.number);
-
-          self.recentsEntry = {
-            date: Date.now(),
-            type: typeOfCall,
-            number: call.number
-          };
-
-          // Some race condition can cause the call to be already
-          // connected when we get here.
-          if (call.state == 'connected')
-            self.connected();
-
-          call.addEventListener('statechange', self);
+          self.setupForCall(call, typeOfCall);
         });
       }
     }
+  },
+
+  setupForCall: function och_setupForCall(call, typeOfCall) {
+    this.currentCall = call;
+
+    this.lookupContact(call.number);
+
+    CallScreen.update(call.number);
+
+    CallScreen.render(typeOfCall);
+
+    this.recentsEntry = {
+      date: Date.now(),
+      type: typeOfCall,
+      number: call.number
+    };
+
+    // Some race condition can cause the call to be already
+    // connected when we get here.
+    if (call.state == 'connected')
+      this.connected();
+
+    call.addEventListener('statechange', this);
   },
 
   handleEvent: function och_handleEvent(evt) {
@@ -241,7 +289,11 @@ var OnCallHandler = {
   },
 
   answer: function ch_answer() {
-    this.currentCall.answer();
+    if (this.currentCall) {
+      this.currentCall.answer();
+    } else {
+      this.disconnected();
+    }
   },
 
   end: function ch_end() {
@@ -315,7 +367,12 @@ var OnCallHandler = {
 
   lookupContact: function och_lookupContact(number) {
     Contacts.findByNumber(number, function lookupContact(contact) {
-      CallScreen.update(contact.name);
+      if (contact.name) {
+        CallScreen.update(contact.name + ' - ');
+      }
+      if (contact.photo) {
+        CallScreen.setCallerContactImage(contact.photo);
+      }
     });
   }
 };
