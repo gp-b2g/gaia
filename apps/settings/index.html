@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="style/ui.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="style/dialogs.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="style/settings.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="style/netstats.css"/>
     <link rel="resource" type="application/l10n" href="locale/l10n.ini"/>
     <!-- Compatibility -->
     <script type="text/javascript">
@@ -240,7 +241,49 @@
         </h1>
       </header>
 
-      <ul>
+      <h2>Usage cycle <button>Monthly - 27th</button></h2>
+      <ul class="dataIntro">
+        <li>
+          <span>Free</span>
+          <strong>47mb</strong>
+        </li>
+        <li>
+          <span>3G</span>
+          <strong>47mb</strong>
+        </li>
+        <li>
+          <span>WIFI</span>
+          <strong>47mb</strong>
+        </li>
+      </ul>
+        <div class="graphs">
+          <canvas id="wifiGraphCanvas" style="margin: 5px 5px; padding: 0" />
+          <canvas id="mobileGraphCanvas" style="margin: 5px 5px; padding: 0" />
+        </div>
+
+        <h2>Apps by 3G + WIFI data usage</h2>
+        <ol class="appUsage">
+          <li>
+              <img src="">
+              <label>
+                  <input type="checkbox">
+                  <span></span>
+              </label>
+              <div class="appMeta">
+                <ul class="dataIntro">
+                  <li>25MB</li>
+                  <li>203MB</li>
+                  <li>1.5GB</li>
+                </ul>
+                <strong>1.5GB</strong>
+              </div>
+          </li>
+        </ol>
+      </ul>
+
+
+
+<!--       <ul>
         <li id="mobileData-enabled">
           <label>
             <input type="checkbox" />
@@ -260,7 +303,7 @@
         <a>Mobile</a>
         <a><canvas id="mobileGraphCanvas" style="margin: 5px 5px; padding: 0" /></a>
       </ul>
-    </section>
+ -->    </section>
 
     <!-- Connectivity :: 3G/data :: APN Settings Dialog -->
     <form role="dialog" id="apnSettings" action="#data">
