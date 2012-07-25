@@ -27,6 +27,7 @@
     <script type="text/javascript" src="js/data.js"></script>
     <script type="text/javascript" src="js/wifi.js"></script>
     <script type="text/javascript" src="js/bluetooth.js"></script>
+    <script type="text/javascript" src="js/netstats.js"></script>
   </head>
   <body class="hidden">
 
@@ -57,6 +58,10 @@
         <li>
           <small id="bluetooth-desc"></small>
           <a href="#bluetooth" data-l10n-id="bluetooth">Bluetooth</a>
+        </li>
+        <li>
+          <small id="dataUsage-desc"></small>
+          <a href="#dataUsage" data-l10n-id="dataUsage">Data usage</a>
         </li>
       </ul>
 
@@ -224,6 +229,36 @@
           <button onclick="Settings.openDialog('mmsSettings');"
             data-l10n-id="mmsSettings">MMS Settings</button>
         </li>
+      </ul>
+    </section>
+
+    <!-- Connectivity :: Data Usage -->
+    <section role="region" id="dataUsage">
+      <header>
+        <h1>
+          <a href="#root" data-l10n-id="dataUsage">Data Usage</a>
+        </h1>
+      </header>
+
+      <ul>
+        <li id="mobileData-enabled">
+          <label>
+            <input type="checkbox" />
+            <span></span>
+          </label>
+          <a data-l10n-id="dataUsage">Mobile data</a>
+        </li>
+        <li id="dataUsageCycle">
+          <label>
+            <input type="checkbox" />
+            <span></span>
+          </label>
+          <a data-l10n-id="dataUsageCycle">Data Usage Cycle</a>
+        </li>
+        <a>Wifi</a>
+        <a><canvas id="wifiGraphCanvas" style="margin: 5px 5px; padding: 0" /></a>
+        <a>Mobile</a>
+        <a><canvas id="mobileGraphCanvas" style="margin: 5px 5px; padding: 0" /></a>
       </ul>
     </section>
 
