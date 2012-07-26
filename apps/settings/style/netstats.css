@@ -23,7 +23,7 @@
      height: auto;
      padding: 0.5em;
      text-align: center;
-     width: calc(100% / 3);
+     width: -moz-calc(100% / 3);
 }
 
 #dataUsage .dataIntro li strong {
