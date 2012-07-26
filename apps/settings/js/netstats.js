@@ -3,7 +3,7 @@
 
 'use strict';
 
-var DEBUG_MODE = false;
+var DEBUG_MODE = true;
 
 window.addEventListener('localized', function scanWifiNetworks(evt) {
   // for testing, get data for last 30 min instead of last month
@@ -63,6 +63,7 @@ window.addEventListener('localized', function scanWifiNetworks(evt) {
       if ( networkTypes[type] == 'mobile' ) { var dataDebug = dataMobile;  }
       var canvas = document.getElementById(dataDebug.connectionType + 'GraphCanvas');
       paint(canvas, dataDebug, color);
+      overviewUI(dataDebug);
 
     } else {
 
@@ -76,6 +77,40 @@ window.addEventListener('localized', function scanWifiNetworks(evt) {
       };
 
     }
+  }
+
+  function overviewUI(networkStats) {
+    var rx = networkStats.rxBytes;
+    var tx = networkStats.txBytes;
+    var type = networkStats.connectionType;
+
+    //Sum bytes
+    var rxBytes = 0;
+    for ( var i in rx ) {
+      rxBytes += rx[i];
+    }
+
+    var txBytes = 0;
+    for ( var i in tx ) {
+      txBytes += tx[i];
+    }
+
+    //Default MB operations
+    var totalMB = (rxBytes + txBytes)/1024;
+    totalMB = totalMB.toFixed();
+    var value = totalMB;
+    var unit = "MB"
+
+    //Convert MB to GB
+    if ( totalMB >= 1024 ) {
+     value = totalMB / 1024;
+     value = value.toFixed(1);
+     unit = "GB"
+    }
+
+    //Apply to UI
+    document.getElementById(type+"Overview").innerHTML = value + unit;
+
   }
 
   function paint(canvas, networkStats, color){
