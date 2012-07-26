@@ -261,24 +261,38 @@
           <canvas id="mobileGraphCanvas" style="margin: 5px 5px; padding: 0" />
         </div>
 
-        <h2>Apps by 3G + WIFI data usage</h2>
-        <ol class="appUsage">
-          <li>
-              <img src="">
-              <label>
-                  <input type="checkbox">
-                  <span></span>
-              </label>
-              <div class="appMeta">
-                <ul class="dataIntro">
-                  <li>25MB</li>
-                  <li>203MB</li>
-                  <li>1.5GB</li>
-                </ul>
-                <strong>1.5GB</strong>
-              </div>
-          </li>
-        </ol>
+        <table class="appUsage" summary="Apps by 3G + WIFI data usage">
+          <thead>
+              <tr>
+                  <th scope="col">App</th>
+                  <th scope="col">Usage</th>
+                  <th scope="col"><span>WIFI only</span></th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>
+                      <img src="" class="appIcon">
+                  </td>   
+                  <td class="appMeta">
+                    <div>
+                      <ul class="dataIntro">
+                        <li>25MB <progress max="100" value="10" style="left: 0; width: 10%">10 %</progress></li>
+                        <li>203MB <progress max="100" value="30" style="left: 10%; width: 30%">30 %</progress></li>
+                        <li>1.5GB <progress max="100" value="60" style="left: 40%; width: 60%">60 %</progress></li>
+                      </ul>
+                      <strong>1.5GB</strong>
+                    </div>
+                  </td>
+                  <td>
+                      <label>
+                          <input type="checkbox">
+                          <span></span>
+                      </label>
+                  </td>
+              </tr>
+          </tbody>
+        </table>
       </ul>
 
 

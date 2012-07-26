@@ -134,3 +134,20 @@ window.addEventListener('localized', function scanWifiNetworks(evt) {
 
 });
 
+// Font size recalc
+document.addEventListener('DOMContentLoaded', function() {
+    var regionNetStats = document.getElementById('dataUsage');
+    if (window.innerWidth <= window.innerHeight) {
+      var changeScale = window.innerWidth / 32;
+      regionNetStats.style.fontSize = changeScale + 'px';
+      regionNetStats.classList.remove('landscape');
+      regionNetStats.classList.add('portrait');
+    } else {
+      var changeScale = window.innerWidth / 64;
+      regionNetStats.style.fontSize = changeScale + 'px';
+      regionNetStats.classList.remove('portrait');
+      regionNetStats.classList.add('landscape');
+    }
+})
+
+

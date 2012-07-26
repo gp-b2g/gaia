@@ -1,106 +1,156 @@
+#dataUsage h1 {
+     font-size: 1.2em;
+}
+#dataUsage h2 {
+     font-size: 1em;
+}
 #dataUsage h2 button {
-	float: right;
-	margin: 1rem 0.5rem 0 0;
+     float: right;
+     margin: 1em 0.5em 0px 0px;
 }
 
 #dataUsage .dataIntro {
-	overflow: hidden;
+     overflow: hidden;
 }
+
 #dataUsage .dataIntro li {
-	width: -moz-calc(100%/3);
-	-moz-box-sizing: border-box;
-	padding: 0.5rem;
-	height: auto;
-	font: 1.2rem/1.5rem Open Sans, Sans-serif;
-	background: none;
-	float: left;
-	text-align: center;
-	color: #fff;
-	border: none;
+     -moz-box-sizing: border-box;
+     background: none repeat scroll 0% 0% transparent;
+     border: medium none;
+     color: #FFFFFF;
+     float: left;
+     font: 1.2em/1.5em Open Sans,Sans-serif;
+     height: auto;
+     padding: 0.5em;
+     text-align: center;
+     width: calc(100% / 3);
 }
+
 #dataUsage .dataIntro li strong {
-	display: block;
+     display: block;
 }
 
-/* Free data */
+/* Free */
 #dataUsage .dataIntro li:nth-child(1) {
-	background: #ccc;
+     background: none repeat scroll 0% 0% #CCCCCC;
 }
 
-/* 3G data */
+/* 3G */
 #dataUsage .dataIntro li:nth-child(2) {
-	background: #3ec2ff;
+     background: none repeat scroll 0% 0% #3EC2FF;
 }
 
-/* WIFI data */
+/* WIFI */
 #dataUsage .dataIntro li:nth-child(3) {
-	background: #bae97c;
+     background: none repeat scroll 0% 0% #BAE97C;
 }
-
 
 #dataUsage .appUsage {
-	display: block;
-	list-style: none;
-	padding: 0;
+     display: block;
+     list-style: none outside none;
+     padding: 0px;
+     width: 100%;
+     position: relative;
+}
+#dataUsage .appUsage:before {
+     content: attr(summary);
+     display: block;
+     position: absolute;
+     top: 0.2em;
+     left: 0.5em;
+}
+#dataUsage .appUsage th:nth-child(1), #dataUsage .appUsage th:nth-child(2) {
+     color: transparent;
+}
+#dataUsage .appUsage th:nth-child(3) {
+     text-align: center;
+     white-space: nowrap;
+     text-transform: uppercase;
 }
 
-#dataUsage .appUsage > li {
-	padding: 0.5rem;
+#dataUsage .appUsage td {
+     padding: 0.5em;
+     vertical-align: top;
+     text-align: center;
 }
 
-#dataUsage .appUsage li img {
-	width: 2.5rem;
-	height: 2.5rem;
-	background: #ccc;
-	float: left;
-	margin-right: 1.5rem;
+#dataUsage .appUsage td img {
+     background: #ccc;
+     display: block;
+     height: 2.5em;
+     width: 2.5em;
+     vertical-align: top;
 }
 
-#dataUsage .appUsage li .appMeta {
-	display: block;
-	overflow: hidden;
+#dataUsage .appUsage td.appMeta {
+     width: 100%;
+}
+#dataUsage .appUsage td.appMeta div {
+     position: relative;
+     height: 2.5em;
+     text-align: left;
 }
 
-#dataUsage .appUsage li .dataIntro {
-	width: auto;
-	display: inline-block;
-	vertical-align: baseline;
-}
-#dataUsage .appUsage li .dataIntro li {
-	font-size: 1rem;
-	padding: 0.25rem 0.5rem;
-	width: auto;
+#dataUsage .appUsage td .dataIntro {
+     display: inline-block;
+     vertical-align: baseline;
+     width: auto;
+     overflow: visible;
 }
 
-#dataUsage .appUsage li strong {
-	float: right;
-	margin-top: 0.5rem;
+#dataUsage .appUsage td .dataIntro li {
+     font-size: 1em;
+     padding: 0.25em 0.5em;
+     width: auto;
+     position: static;
 }
 
-#dataUsage .appUsage li label {
-	float: right;
-	position: relative;
-	width: auto;
+#dataUsage .appUsage td .dataIntro progress { 
+     border: none;
+     background: transparent;
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     height: 0.2em;
 }
-#dataUsage .appUsage li label input {
-	display: block;
-}
-#dataUsage .appUsage li label span {
-	display: none;
+#dataUsage .appUsage td .dataIntro progress::-moz-progress-bar {
+     background: transparent;
 }
 
+/* Free */
+#dataUsage .appUsage td .dataIntro li:nth-child(1) progress {
+     background: #ccc;
+}
 
+/* 3G */
+#dataUsage .appUsage td .dataIntro li:nth-child(2) progress {
+     background: #3EC2FF;
+}
 
+/* WIFI */
+#dataUsage .appUsage td .dataIntro li:nth-child(3) progress {
+     background: #BAE97C;
+}
 
+#dataUsage .appUsage td strong {
+     float: right;
+     margin-top: 0.5em;
+}
 
+#dataUsage .appUsage td:nth-child(3) {
+     vertical-align: middle;
+}
 
+#dataUsage .appUsage td label {
+     display: inline-block;
+     position: relative;
+     width: auto;
+}
 
+#dataUsage .appUsage td label input {
+     display: block;
+}
 
-
-
-
-
-
-
-
-
+#dataUsage .appUsage td label span {
+     display: none;
+}
