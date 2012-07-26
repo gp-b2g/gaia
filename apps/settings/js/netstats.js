@@ -3,7 +3,7 @@
 
 'use strict';
 
-var DEBUG_MODE = true;
+var DEBUG_MODE = false;
 
 window.addEventListener('localized', function scanWifiNetworks(evt) {
   // for testing, get data for last 30 min instead of last month
@@ -38,14 +38,14 @@ window.addEventListener('localized', function scanWifiNetworks(evt) {
   };
 
   // Graphs colors
-  var colorWifi = {
+  var colorMobile = {
       stroke: '#088e38', 
       fill: '#19df5f', 
       axis: "#000000", 
       grid: "#DDDDDD"
     };
 
-  var colorMobile = {
+  var colorWifi = {
     stroke: '#3300AA', 
     fill: '#00AAFF', 
     axis: "#000000", 
@@ -69,8 +69,11 @@ window.addEventListener('localized', function scanWifiNetworks(evt) {
 
       var req = navigator.mozNetworkStats.getNetworkStats({startDate: start, endDate: end, connectionType: networkTypes[type]});
       req.onsuccess = function (event) {
-        var canvas = document.getElementById(event.target.result.connectionType + 'GraphCanvas');
-        paint(canvas, event.target.result, color);
+        var data = event.target.result;
+        var canvas = document.getElementById(data.connectionType + 'GraphCanvas');
+
+        paint(canvas, data, color);
+        overviewUI(data);
       };
       req.onerror = function () {
         console.log('Error requesting network stats: ' + this.error.name);
