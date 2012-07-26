@@ -3,6 +3,8 @@
 
 'use strict';
 
+var DEBUG_MODE = false;
+
 window.addEventListener('localized', function scanWifiNetworks(evt) {
   // for testing, get data for last 30 min instead of last month
   var precision = 1000 * 60;
@@ -17,18 +19,66 @@ window.addEventListener('localized', function scanWifiNetworks(evt) {
 
   //var networkTypes = navigator.mozNetworkStats.types;
   var networkTypes = ['wifi','mobile'];
+
+  // Debug data
+  var dataWifi = {
+    rxBytes: [26340,25136,26685,26384,24923,26720,27056,27327,26218,27444,27000,45809,45208,27696,25266,28372,27563,31374,28574,25670,27358,27466,27318,22169,39645,24830,27227,26340,24830,0,3759],
+    txBytes: [2,72,72,72,66,72,72,72,72,72,72,48,44620,72,72,72,72,72,72,72,72,72,72,6,3400,72,72,72,72,0,30],
+    connectionType: 'wifi',
+    startDate: start,
+    endDate: end
+  };
+
+   var dataMobile = {
+    rxBytes: [37597,41674,25387,26596,26392,24818,26396,27003,26658,24898,26564,26328,26615,24860,26340,26592,25952,25537,26340,0,0,72959,46493,26508,26844,25042,26664,27255,38846,39829,27908],
+    txBytes: [30,3392,72,72,72,72,72,72,72,72,44980,72,72,72,72,72,72,72,72,0,0,18,3394,72,72,72,72,72,36,3400,72],
+    connectionType: 'mobile',
+    startDate: start,
+    endDate: end
+  };
+
+  // Graphs colors
+  var colorWifi = {
+      stroke: '#088e38', 
+      fill: '#19df5f', 
+      axis: "#000000", 
+      grid: "#DDDDDD"
+    };
+
+  var colorMobile = {
+    stroke: '#3300AA', 
+    fill: '#00AAFF', 
+    axis: "#000000", 
+    grid: "#DDDDDD"
+  };
+
   for(var type in networkTypes){
-    var req = navigator.mozNetworkStats.getNetworkStats({startDate: start, endDate: end, connectionType: networkTypes[type]});
-    req.onsuccess = function (event) {
-      var canvas = document.getElementById(event.target.result.connectionType + 'GraphCanvas');
-      paint(canvas, event.target.result);
-    };
-    req.onerror = function () {
-      console.log('Error requesting network stats: ' + this.error.name);
-    };
+
+    if ( networkTypes[type] == 'wifi' ) { var color = colorWifi;  }
+    if ( networkTypes[type] == 'mobile' ) { var color = colorMobile; }
+
+   if ( DEBUG_MODE === true ) {
+
+      if ( networkTypes[type] == 'wifi' ) {  var dataDebug = dataWifi; }
+      if ( networkTypes[type] == 'mobile' ) { var dataDebug = dataMobile;  }
+      var canvas = document.getElementById(dataDebug.connectionType + 'GraphCanvas');
+      paint(canvas, dataDebug, color);
+
+    } else {
+
+      var req = navigator.mozNetworkStats.getNetworkStats({startDate: start, endDate: end, connectionType: networkTypes[type]});
+      req.onsuccess = function (event) {
+        var canvas = document.getElementById(event.target.result.connectionType + 'GraphCanvas');
+        paint(canvas, event.target.result, color);
+      };
+      req.onerror = function () {
+        console.log('Error requesting network stats: ' + this.error.name);
+      };
+
+    }
   }
 
-  function paint(canvas, networkStats){
+  function paint(canvas, networkStats, color){
     var width = canvas.clientWidth;
     var height = canvas.clientHeight;
     var x_space = width / days;
@@ -42,8 +92,8 @@ window.addEventListener('localized', function scanWifiNetworks(evt) {
     console.log("EndDate: " + networkStats.endDate);
 
     if(rx && tx){
-      console.log("Data rx: " + networkStats.rx);
-      console.log("Data tx: " + networkStats.tx);
+      console.log("Data rx: " + rx);
+      console.log("Data tx: " + tx);
 
       // Check if data is available from start/end date, else insert '0'
       if(networkStats.startDate > start){
@@ -75,8 +125,8 @@ window.addEventListener('localized', function scanWifiNetworks(evt) {
       var x = 1;
       var y = height - ((rx[0] + tx[0]) * scale_factor);
   
-      ctx.strokeStyle = '#3300AA';
-      ctx.fillStyle = '#00AAFF';
+      ctx.strokeStyle = color.stroke;
+      ctx.fillStyle = color.fill;
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.moveTo(x, y);
@@ -94,8 +144,8 @@ window.addEventListener('localized', function scanWifiNetworks(evt) {
       var x = 1;
       var y = height - (tx[0] * scale_factor);
 
-      ctx.strokeStyle = "#33BB00";
-      ctx.fillStyle = "#33FF55";
+      ctx.strokeStyle = color.stroke;
+      ctx.fillStyle = color.fill;
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.moveTo(x, y);
@@ -111,7 +161,7 @@ window.addEventListener('localized', function scanWifiNetworks(evt) {
     }
 
     // Draw axis
-    ctx.strokeStyle = "#000000";
+    ctx.strokeStyle = color.axis;
     ctx.beginPath();
     ctx.moveTo(1,1);
     ctx.lineTo(1, height);
@@ -121,7 +171,7 @@ window.addEventListener('localized', function scanWifiNetworks(evt) {
     // Draw subX
     var x = 1;
 
-    ctx.strokeStyle = "#DDDDDD";
+    ctx.strokeStyle = color.grid;
     ctx.lineWidth = 1;
     ctx.beginPath();
     for(var i = 1; i < days - 1; i++){
