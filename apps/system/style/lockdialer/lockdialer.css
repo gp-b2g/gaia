@@ -1,0 +1,32 @@
+#lockdialer {
+	position: absolute;
+	left: 0;
+	right: 0;
+	/* Using '100px' as base, becouse of lockscreen.css => #lockscreen-header { height: 100px; } */
+	top: 125px;  
+	/* Show it above fullscreen - see https://mxr.mozilla.org/mozilla-central/source/layout/style/ua.css#218 */
+	bottom: 0;
+	z-index: 2147483647;
+	background: url(images/generic.png) no-repeat center center;
+	background-size: cover;
+}
+
+#lockdialer > header {
+	background: #52B6CC;
+	border-top: solid 1px rgba(255, 255, 255, 0.3);
+	height: 8rem;
+	padding: 0 3rem;
+}
+
+#lockdialer > header h1 {
+	font: lighter 3.2rem/0 Open Sans;
+	color: #1A3F46;
+	margin: 2.5rem 0;
+}
+#lockdialer > header p {
+	font: 1.4rem/1em Open Sans;
+	color: #fff;
+}
+#lockdialer > header p span {
+	text-transform: uppercase;
+}
