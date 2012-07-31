@@ -3,7 +3,7 @@
 
 'use strict';
 
-var DEBUG_MODE = false;
+var DEBUG_MODE = true;
 
 window.addEventListener('localized', function scanWifiNetworks(evt) {
   // for testing, get data for last 30 min instead of last month

@@ -3,6 +3,11 @@
 
 'use strict';
 
+/**
+ * Debug note: to test this app in a desktop browser, you'll have to set
+ * the `dom.mozSettings.enabled' preference to false.
+ */
+
 var Settings = {
   init: function settings_init() {
     this.loadGaiaCommit();
@@ -10,6 +15,32 @@ var Settings = {
     var settings = window.navigator.mozSettings;
     if (!settings) // e.g. when debugging on a browser...
       return;
+
+    settings.onsettingchange = function settingChanged(event) {
+      var key = event.settingName;
+      var value = event.settingValue;
+
+      var checkbox =
+          document.querySelector('input[name="' + key + '"]');
+      if (checkbox) {
+        if (checkbox.checked == value)
+          return;
+        checkbox.checked = value;
+        return;
+      }
+
+      var progressBar =
+          document.querySelector('[data-name="' + key + '"]');
+      if (progressBar) {
+        var intValue = Math.ceil(value * 10);
+        if (progressBar.value == intValue)
+          return;
+        progressBar.value = intValue;
+        return;
+      }
+
+      // XXX: if there are more values needs to be synced.
+    };
 
     // preset all inputs that have a `name' attribute
     var transaction = settings.getLock();
@@ -84,7 +115,8 @@ var Settings = {
   handleEvent: function settings_handleEvent(evt) {
     var input = evt.target;
     var key = input.name || input.dataset.name;
-    if (!key)
+    var settings = window.navigator.mozSettings;
+    if (!key || !settings)
       return;
 
     switch (evt.type) {
@@ -97,8 +129,8 @@ var Settings = {
                    (input.type == 'password')) {
           value = input.value;
         }
-        var cset = { }; cset[key] = value;
-        window.navigator.mozSettings.getLock().set(cset);
+        var cset = {}; cset[key] = value;
+        settings.getLock().set(cset);
         break;
 
       case 'click':
@@ -111,8 +143,8 @@ var Settings = {
         value = Math.max(0, Math.min(1, value));
         input.value = position;
 
-        var cset = { }; cset[key] = value;
-        window.navigator.mozSettings.getLock().set(cset);
+        var cset = {}; cset[key] = value;
+        settings.getLock().set(cset);
         break;
     }
   },
@@ -134,7 +166,7 @@ var Settings = {
     var req = new XMLHttpRequest();
     req.onreadystatechange = (function(e) {
       if (req.readyState === 4) {
-        if (req.status === 200) {
+        if (req.status === 0 || req.status === 200) {
           var data = req.responseText.split('\n');
           var dispDate = document.getElementById('gaia-commit-date');
           var disp = document.getElementById('gaia-commit-hash');
@@ -200,12 +232,12 @@ var Settings = {
     // validate all settings in the dialog box
     function submit() {
       if (settings) {
-        var cset = {};
         for (var i = 0; i < fields.length; i++) {
           var input = fields[i];
+          var cset = {};
           cset[input.dataset.setting] = input.value;
+          settings.getLock().set(cset);
         }
-        settings.getLock().set(cset);
       }
       return close();
     }
