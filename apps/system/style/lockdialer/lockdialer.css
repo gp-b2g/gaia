@@ -30,3 +30,85 @@
 #lockdialer > header p span {
 	text-transform: uppercase;
 }
+
+
+/* Call actions */
+#lockdialer .call-actions {
+	position: absolute;
+	bottom: 3rem;
+	left: 3.1rem;
+	right: 3.1rem;
+	height: 4rem;
+}
+#lockdialer .call-actions button {
+	background: transparent no-repeat center center;
+	background-size: 100% auto;
+	border: none;
+	font: 0/0 a;
+	overflow: hidden;
+	width: 4rem;
+	height: 4rem;
+	position: absolute;
+	top: 0;
+}
+
+#lockdialer .call-actions .hang {
+	left: 0;
+	background-image: url(images/hang.png);
+}
+#lockdialer .call-actions .hang.active {
+	background-image: url(images/hang-active.png);
+}
+
+#lockdialer .call-actions .pick {
+	right: 0;
+	background-image: url(images/pick.png);
+}
+
+#lockdialer .call-actions .pick.active {
+	background-image: url(images/pick-active.png);
+}
+
+#lockdialer .call-actions .seeker {
+	height: 1px;
+	background: rgba(255, 255, 255, 0.5);
+	position: absolute;
+	top: 50%;
+	left: 4rem;
+	right: 4rem;
+}
+
+#lockdialer .call-actions .seeker .handler {
+	background: url(images/handle.png) no-repeat center center;
+	background-size: 100% auto;
+	width: 5rem;
+	height: 5rem;
+	position: absolute;
+	left: 50%;
+	top: -2.5rem;
+	margin-left: -2.5rem;
+}
+#lockdialer .call-actions .seeker .handler.active:after {
+	content: "";
+	position: absolute;
+	left: -0.7rem;
+	right: -0.7rem;
+	top: -0.7rem;
+	bottom: -0.7rem;
+	background: url(images/handle-active.png) no-repeat center center;
+	background-size: 100% auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
