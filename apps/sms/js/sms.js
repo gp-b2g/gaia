@@ -262,7 +262,22 @@ var ThreadListUI = {
       this.deleteThreads.bind(this));
     this.doneButton.addEventListener('click', this.executeDeletion.bind(this));
     this.view.addEventListener('click', this);
-   },
+    this.view.addEventListener('scroll', this.listScrolling.bind(this));
+  },
+
+  listScrolling: function thlui_listScrolling() {
+    var headings = ThreadListUI.view.querySelectorAll("h2");
+    var currentScroll = this.view.scrollTop;
+
+    for ( var i = 0; i < headings.length; i++ ) {
+
+      var headingPosition =  headings[i].offsetTop - 50;
+      if ( currentScroll > headingPosition ) {
+        document.getElementById("fixed-title").style.backgroundImage = "-moz-element(#"+headings[i].id+")";
+      }
+
+    }
+  },
 
   updateMsgWithContact: function thlui_updateMsgWithContact(number, contact) {
     var element =
@@ -498,6 +513,7 @@ var ThreadListUI = {
     // Create DOM Element
     var headerHTML = document.createElement('h2');
     // Append 'time-update' state
+    headerHTML.id = "dt_" + timestamp;
     headerHTML.setAttribute('data-time-update', true);
     headerHTML.setAttribute('data-time', timestamp);
     // Boot update of headers
@@ -1119,7 +1135,6 @@ var WaitingScreen = {
 
 window.addEventListener('localized', function showBody() {
   MessageManager.init();
-
   // Set the 'lang' and 'dir' attributes to <html> when the page is translated
   document.documentElement.lang = navigator.mozL10n.language.code;
   document.documentElement.dir = navigator.mozL10n.language.direction;

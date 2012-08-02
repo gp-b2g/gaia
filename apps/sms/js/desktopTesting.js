@@ -24,6 +24,54 @@ if (!navigator.mozSms) {
         timestamp: new Date(Date.now() - 44000000)
       },
       {
+        sender: null,
+        receiver: '1-977-743-6797',
+        body: 'Nothing :)',
+        delivery: 'sent',
+        id: 42,
+        timestamp: new Date(Date.now() - 33000000)
+      },
+      {
+        sender: null,
+        receiver: '1-277-743-6797',
+        body: 'Nothing :)',
+        delivery: 'sent',
+        id: 43,
+        timestamp: new Date(Date.now() - 55000000)
+      },
+      {
+        sender: null,
+        receiver: '1-177-743-6797',
+        body: 'Nothing :)',
+        delivery: 'sent',
+        id: 44,
+        timestamp: new Date(Date.now() - 66000000)
+      },
+      {
+        sender: null,
+        receiver: '1-377-743-6797',
+        body: 'Nothing :)',
+        delivery: 'sent',
+        id: 45,
+        timestamp: new Date(Date.now() - 66000000)
+      },
+      {
+        sender: null,
+        receiver: '1-477-743-6797',
+        body: 'Nothing :)',
+        delivery: 'sent',
+        id: 46,
+        timestamp: new Date(Date.now() - 44000000)
+      },
+      {
+        sender: null,
+        receiver: '1-677-743-6797',
+        body: 'Nothing :)',
+        delivery: 'sent',
+        id: 47,
+        timestamp: new Date(Date.now() - 44000000)
+      },
+      {
         sender: '1-977-743-6797',
         body: 'Hey! What\s up?',
         delivery: 'received',
