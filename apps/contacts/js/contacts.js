@@ -27,7 +27,7 @@ function navigationStack(currentView) {
   };
 
   var setAppView = function(current, next) {
-    current.dataset.state = 'inactive';
+    current.removeAttribute("data-state");
     next.dataset.state = 'active';
   };
 
@@ -48,7 +48,7 @@ function navigationStack(currentView) {
     nextMirror.addEventListener('transitionend', function nocache() {
       setAppView(current, next);
       app.dataset.state = 'active';
-      cache.dataset.state = 'inactive';
+      cache.removeAttribute("data-state");
       nextMirror.removeEventListener('transitionend', nocache);
       current.classList.remove('transitioning');
       next.classList.remove('transitioning');
@@ -467,10 +467,12 @@ var Contacts = (function() {
     if (contact.bday) {
       var bdayTemplate = document.getElementById('birthday-template-#i#');
 
-      var f = new navigator.mozL10n.DateTimeFormat();
-      var bdayFormat = _('birthdayDateFormat') || '%e %B';
-      var bdayString = f.localeFormat(contact.bday, bdayFormat);
-
+      // TODO: Fix this with a locale function for dates!!!!
+      var months = ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November',
+                    'December'];
+      var bdayString = contact.bday.getDate() + ', ' +
+                                            months[contact.bday.getMonth()];
       var e = utils.templates.render(bdayTemplate, {bday: bdayString});
       listContainer.appendChild(e);
     }

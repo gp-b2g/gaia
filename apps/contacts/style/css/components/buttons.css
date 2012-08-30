@@ -12,7 +12,7 @@
   text-align: left;
   border-radius: 0.4rem;
   border: solid 1px #c8c8c8;
-  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.2);
+  /*box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.2);*/
   background-color: #fff;
 }
 
@@ -64,7 +64,7 @@
 
 /* Add style */
 .action-add {
-  background: -moz-linear-gradient(bottom, #ccc, #fafafa);
+  /*background: -moz-linear-gradient(bottom, #ccc, #fafafa);*/
   border: solid 1px #bcbcbc;
   box-shadow: none;
   color: #333;
@@ -76,13 +76,13 @@
 }
 
 .action-add:active {
-  background: -moz-linear-gradient(bottom, #fafafa, #ccc);
+  /*background: -moz-linear-gradient(bottom, #fafafa, #ccc);*/
 }
 
 /* Remove/delete style */
 .action-delete {
   color: #fff;
-  background: -moz-linear-gradient(bottom, #900010, #c90010);
+  /*background: -moz-linear-gradient(bottom, #900010, #c90010);*/
   border: none;
   padding-left: 0.8rem;
 }

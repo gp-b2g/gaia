@@ -22,9 +22,7 @@
     <script src="js/activities.js"></script>
 
     <link rel="resource" type="application/l10n" href="locales/locales.ini"/>
-    <link rel="resource" type="application/l10n" href="shared/locales/date.ini"/>
     <script type="text/javascript" src="shared/js/l10n.js"></script>
-    <script type="text/javascript" src="shared/js/l10n_date.js"></script>
 
     <script defer type="text/javascript" src="js/utilities/normalizer.js"></script>
     <script defer type="text/javascript" src="js/utilities/responsive.js"></script>
@@ -60,10 +58,7 @@
 
 
           <article class="view-body">
-            <div id='fixed-container' class='fixed-title'></div>
             <div class="view-jumper">
-              <abbr class="view-jumper-current" title="Contacts by "></abbr>
-
               <ol class="view-jumper-inner">
                 <li><a href="#"><span role="button" class="icon-search"></span></a></li>
                 <li><a href="#"><span role="button" class="icon-fav-dark"></span></a></li>
@@ -87,6 +82,8 @@
             </div>
           </article>
         </div> <!-- view-inner -->
+        <div id='fixed-container' class='fixed-title'></div>
+        <div id="current-jumper" class="view-jumper-current"></div>
       </section>
 
       <!-- Contact Details Section -->
@@ -376,11 +373,10 @@
     </div>
 
     <div class="cache" id="cache">
-      <div id="mirror-contacts-list" class="view" style="background-image: -moz-element(#view-contacts-list);"></div>
-      <div id="mirror-contact-form" class="view view-right" style="background-image: -moz-element(#view-contact-form);"></div>
-      <div id="mirror-contact-tags" class="view view-right" style="background-image: -moz-element(#view-select-tag);"></div>
-      <div id="mirror-contact-details" class="view view-right" style="background-image: -moz-element(#view-contact-details);"></div>
-      <div id="current-jumper"></div>
+      <div id="mirror-contacts-list" class="view" style="background: red;"></div>
+      <div id="mirror-contact-form" class="view view-right" style="background: blue;"></div>
+      <div id="mirror-contact-tags" class="view view-right" style="background: orange;"></div>
+      <div id="mirror-contact-details" class="view view-right" style="background: green;"></div>
     </div>
 
   </body>
