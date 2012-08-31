@@ -48,8 +48,9 @@ var FixedHeader = (function FixedHeader() {
         if (differentHeaders) {
           fixedContainer.style.transform = 'translateY(0)';
           currentlyFixed = currentHeader;
-          var background = '-moz-element(#' + currentHeader.id + ')';
-          fixedContainer.style.backgroundImage = background;
+          var content = currentHeader.id.split("-");
+          content = content[1];
+          fixedContainer.textContent = content;
         }
         return;
       }

@@ -176,6 +176,7 @@ img {
 
 
 
+
 /* view */
 .view, .cache, .views {
   position: fixed;
@@ -222,6 +223,18 @@ img {
   overflow: hidden;
 }
 
+.view-header sup {
+  background: url(../../gphx/bitmap/default/vw-header/icons/fav-star.png) no-repeat center center;
+  background-size: 100% auto;
+  width: 1.2rem;
+  height: 3.2rem;
+  vertical-align: text-top;
+  text-indent: 100%;
+  overflow: hidden;
+  position: relative;
+  float: left;
+  top: 0;
+}
 
 /* Body */
 .view-body {
@@ -230,14 +243,11 @@ img {
 }
 
 .view-body-inner {
+  position: relative;
   overflow-x: hidden;
   overflow-y: auto;
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 5;
   width: 100%;
+  height: 100%;
   -moz-box-sizing: border-box;
   padding: 1.4rem 2rem;
   background: #f4f4f4;
@@ -255,7 +265,6 @@ img {
   position: absolute;
   right: 0;
   top: 0;
-  bottom: 1rem;
   z-index: 10;
 }
 
@@ -267,21 +276,16 @@ img {
   position: absolute;
   right: 4rem;
   top: 30%;
+  z-index: 100;
   width: 10.5rem;
   height: 10.5rem;
-  background: -moz-element(#current-jumper);
-  pointer-events: none;
-  -moz-transition: opacity;
-  opacity: 0;
-}
-
-#current-jumper {
-  width: 10.5rem;
   background: rgba(0, 0, 0, 0.7);
-  font: 6rem/10.5rem Open Sans, Sans-serif;
-  font-weight: light;
+  font: 400 6rem/10.5rem Open Sans, Sans-serif;
   color: #fff;
   text-align: center;
+  -moz-transition: opacity;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .view-jumper-inner {
@@ -304,6 +308,7 @@ img {
   width: 100%;
   text-indent: 1.5rem;
 }
+
 
 .action {
   position: relative;
