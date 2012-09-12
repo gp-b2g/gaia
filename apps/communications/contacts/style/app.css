@@ -20,7 +20,7 @@ body {
   overflow: hidden;
   background: #000;
   color: #fff;
-  font: 1.6rem/2.2rem Open Sans, Sans-serif;
+  font: 1.6rem/2.2rem Moz Sans, Sans-serif;
   text-align: center;
   vertical-align: middle;
 }
@@ -70,17 +70,17 @@ abbr, acronym {
 }
 
 strong {
-  font-family: Open Sans, Sans-serif;
+  font-family: Moz Sans, Sans-serif;
   font-weight: bold;
 }
 
 b {
-  font-family: Open Sans, Sans-serif;
+  font-family: Moz Sans, Sans-serif;
   font-weight: 600;
 }
 
 small {
-  font: 1.1rem/1rem Open Sans, Sans-serif;
+  font: 1.1rem/1rem Moz Sans, Sans-serif;
   color: #999;
 }
 
@@ -167,7 +167,7 @@ button {
   background: none;
   border: none;
   outline: none;
-  font: 1.1rem/1.3rem Open Sans, Sans-serif;
+  font: 1.1rem/1.3rem Moz Sans, Sans-serif;
   color: #666;
   white-space: nowrap;
   cursor: pointer;
@@ -195,7 +195,7 @@ textarea {
 }
 
 input[type="text"], textarea {
-  font: 1.3rem/4rem Open Sans, Sans-serif;
+  font: 1.3rem/4rem Moz Sans, Sans-serif;
   font-weight: 600;
 }
 
@@ -279,6 +279,19 @@ section[role="region"] > header:first-child {
   background-color: #cd6623;
 }
 
+section[role="region"] > header:first-child h1 {
+  font-size: 2.4rem;
+}
+
+section[role="region"] > header:first-child h1,
+section[role="region"] > header:first-child button,
+section[role="region"] > header:first-child a[role="button"] {
+  font-family: Moz Sans, Sans-serif!important;
+}
+
+
+
+
 /* Body */
 .view-body {
   position: relative;
@@ -327,7 +340,7 @@ section[role="region"] > header:first-child {
   width: 10.5rem;
   height: 10.5rem;
   background: rgba(0, 0, 0, 0.7);
-  font: 400 6rem/10.5rem Open Sans, Sans-serif;
+  font: 400 6rem/10.5rem Moz Sans, Sans-serif;
   color: #fff;
   text-align: center;
   -moz-transition: opacity;
@@ -640,7 +653,7 @@ span[role="button"].icon-arrow.icon-arrow-right {
 
 /* TEXTFIELD: we use a classname to avoid redefine with type=mail, type=number, type=text, etc...; */
 .textfield {
-  font: 1.3rem/4rem Open Sans, Sans-serif;
+  font: 1.3rem/4rem Moz Sans, Sans-serif;
   font-weight: 600;
   border-radius: 0.3rem;
   border: solid 1px #c8c8c8;
@@ -829,17 +842,17 @@ textarea.textfield {
 }
 
 .block-name {
-  font-size: 1.8rem;
-  font-family: Open Sans, Sans-serif;
+  font-size: 2rem;
+  font-family: Moz Sans, Sans-serif;
   color: #333;
   display: block;
-  margin: 1.5rem 0 0;
+  margin: 0.8rem 0 0;
   font-weight: normal;
 }
 
 .block-company {
   margin: 0px 0px 1.5rem;
-  font-size: 1.1/1.1rem;
+  font-size: 1.45rem;
   color: #666;
 }
 
@@ -929,7 +942,7 @@ textarea.textfield {
 .selection-list > li {
   background: #fff;
   border-bottom: solid 1px #c8c8c8;
-  font: 1.4rem/2.6em Open Sans, Sans-serif;
+  font: 1.4rem/2.6em Moz Sans, Sans-serif;
   font-weight: 600;
 }
 
