@@ -8,8 +8,24 @@
   <script type="text/javascript" src="js/render.js"></script>
   <script type="text/javascript" src="js/controller.js"></script>
   <script type="text/javascript" src="js/keyboard.js"></script>
-  <link rel="stylesheet" type="text/css" href="style/fonts/fonts_test.css">
-  <link rel="stylesheet" type="text/css" href="style/keyboard.css">
+    <style>
+     @font-face {
+      font-family: 'Moz Sans';
+      font-weight: 200;
+      src: url('style/Moz Light.otf');
+    }
+    @font-face {
+      font-family: 'Moz Sans';
+      font-weight: normal;
+      src: url('style/Moz Regular.otf');
+    }
+    @font-face {
+      font-family: 'Moz Sans';
+      font-weight: 600;
+      src: url('style/Moz Medium.otf');
+    }
+    </style>
+    <link rel="stylesheet" type="text/css" href="style/keyboard.css">
 </head>
 <body>
   <div id="keyboard" class="hide" data-hidden="true" onmousedown="this.setCapture(false); return false;"></div>
