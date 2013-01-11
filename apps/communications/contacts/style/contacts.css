@@ -18,7 +18,7 @@ section[role="region"] > header:first-child sup {
 }
 
 section[role="region"] > header:first-child .icon.icon-edit-contact {
-  background: url(images/edit-contact.png) no-repeat center center;
+  background-image: url(images/edit-contact.png);
 }
 
 .contact-header img {
