@@ -60,7 +60,7 @@ const GridManager = (function() {
         // Start panning immediately but only disable
         // the tap when we've moved far enough.
         deltaX = evt.clientX - startEvent.clientX;
-        if (deltaX == 0)
+        if (Math.abs(deltaX) <= 5)
           return;
         document.body.dataset.transitioning = 'true';
         if (Math.abs(deltaX) >= thresholdForTapping) {
@@ -185,7 +185,7 @@ const GridManager = (function() {
         break;
 
       case 'contextmenu':
-        if (deltaX !== 0) {
+        if (Math.abs(deltaX) > 5) {
           evt.stopImmediatePropagation();
           return;
         }
