@@ -25,6 +25,10 @@ var MAX_ICON_SIZE = 60*SCALE_RATIO;
 
 Icon.prototype = {
 
+  MAX_ICON_SIZE: MAX_ICON_SIZE,
+
+  MIN_ICON_SIZE: MIN_ICON_SIZE,
+
   DEFAULT_BOOKMARK_ICON_URL: window.location.protocol + '//' + window.location.host +
                     '/style/images/default_favicon.png',
   DEFAULT_ICON_URL: window.location.protocol + '//' + window.location.host +
