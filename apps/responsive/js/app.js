@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function(){
 		});
 	}
 
-	window.alert("Pixel ratio: "+window.devicePixelratio + "width: "+ window.innerWidth+"height: "+window.innerHeight)
+	window.alert("Pixel ratio: "+window.devicePixelRatio + "width: "+ window.innerWidth+"height: "+window.innerHeight)
 
 
 
