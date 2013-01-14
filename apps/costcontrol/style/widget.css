@@ -61,15 +61,15 @@ p.meta {
 
 /* FTE */
 .widget-authed-sim {
-  background: url(images/widget/sim/authed-sim.png);
+  background: url(images/widget/sim/authed-sim.png) no-repeat center center;
 }
 
 .widget-nonauthed-sim {
-  background: url(images/widget/sim/nonauthed-sim.png);  
+  background: url(images/widget/sim/nonauthed-sim.png) no-repeat center center;
 }
 
 .widget-no-sim {
-  background: url(images/widget/sim/no-sim.png);
+  background: url(images/widget/sim/no-sim.png) no-repeat center center;
 }
 
 #fte-view .icon {
@@ -77,6 +77,7 @@ p.meta {
   margin-left: 0.5rem;
   width: 3.75rem;
   height: 4.5rem;
+  background-size: 2.6rem;
   vertical-align: middle;
   background-position: center;
   background-repeat: no-repeat;
