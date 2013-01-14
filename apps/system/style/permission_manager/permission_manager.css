@@ -28,6 +28,7 @@
 #permission-remember-section {
   height: 6rem;
   border-top: 0.1rem solid #686868;
+  font-size: 1.4rem;
   width: 100%;
   position: relative;
 }
@@ -40,6 +41,8 @@
   background-image: none;
   background-repeat: no-repeat no-repeat;
   min-height: 6.4rem;
+  font-size: 1.6rem;
+  background-size: 6.4rem
 }
 
 #permission-screen[data-type] #permission-remember-section,
