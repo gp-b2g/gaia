@@ -59,14 +59,14 @@ done
 #MacOSX needs to define a path with -i
 if [[ "$SYS" == 'Darwin' ]];
   then
-    echo "Replacing assets declarations in .css .js .html .webapp files"
-    find $SOURCE -name "*.css" -o -name "*.html" -o -name "*.js" -o -name "*.webapp" | xargs sed -i '' 's/\.[jpg][png][gif]/@2x&/g'
+    echo "Replacing assets declarations in .css .js .html .webapp & .json files"
+    find $SOURCE -name "*.css" -o -name "*.html" -o -name "*.js" -o -name "*.webapp"  -o -name "*.json" | xargs sed -i '' 's/\.[jpg][png][gif]/@2x&/g'
 
     echo "Appending $SCREEN_TYPE.css link into .html files"
     find $APPS"/" -name "*.html" | xargs sed -i '' 's/<\/head>/<link rel=\"stylesheet\" href\=\"\/shared\/screens\/'$SCREEN_TYPE'.css\" >\ <\/head>/'
   else
-    echo "Replacing assets declarations in .css .js .html .webapp files"
-    find $SOURCE -name "*.css" -o -name "*.html" -o -name "*.js" -o -name "*.webapp" | xargs sed -i 's/\.[jpg][png][gif]/@2x&/g'
+    echo "Replacing assets declarations in .css .js .html .webapp & .json files"
+    find $SOURCE -name "*.css" -o -name "*.html" -o -name "*.js" -o -name "*.webapp"  -o -name "*.json" | xargs sed -i 's/\.[jpg][png][gif]/@2x&/g'
 
     echo "Appending ${SCREEN_TYPE}.css link into .html files"
     find $APPS"/" -name "*.html" | xargs sed -i 's/<\/head>/<link rel=\"stylesheet\" href\=\"\/shared\/screens\/'$SCREEN_TYPE'.css\" >\ <\/head>/'
