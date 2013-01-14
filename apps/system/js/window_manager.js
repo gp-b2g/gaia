@@ -144,9 +144,11 @@ var WindowManager = (function() {
       var frameWidth = frame.offsetWidth/scaleRatio;
       var frameHeight = frame.offsetHeight/scaleRatio;
 
+      var controlsHeight = 30;
+
       // Apply new values
       viewport.style.width = frameWidth+'px';
-      viewport.style.height = frameHeight+'px';
+      viewport.style.height = frameHeight-controlsHeight+'px';
       viewport.style.transform = 'scale('+scaleRatio+')';
     })();
 

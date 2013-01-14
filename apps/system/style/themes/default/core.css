@@ -33,7 +33,11 @@
   width: 100%;
   display: inline-block;
   vertical-align: middle;
-  white-space: normal;  
+  white-space: normal;
+}
+
+[role="dialog"] .inner p {
+  font-size: 1.6rem
 }
 
 [role="dialog"] h3 {
@@ -92,7 +96,7 @@
 
 [role="dialog"].inline p {
   border: 0;
-  padding: 1rem 1.5rem; 
+  padding: 1rem 1.5rem;
 }
 
 [role="dialog"].inline menu {
