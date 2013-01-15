@@ -227,6 +227,10 @@ var Browser = {
   // We want to ensure the current page preview on the tabs screen is in
   // a consistently sized gutter on the left
   handleWindowResize: function browser_handleWindowResize() {
+    var tab = document.querySelector('#frames iframe.active') || false;
+    if (tab) {
+      this.scaleContent(tab);
+    }
     var leftPos = 'translate(' + -(window.innerWidth - 50) + 'px)';
     if (!this.gutterPosRule) {
       var css = '.tabs-screen #main-screen { transform: ' + leftPos + '; }';
@@ -1146,7 +1150,8 @@ var Browser = {
     // We put loading tabs off screen as we want to screenshot
     // them when loaded
     if (tab.loading && !visible) {
-      tab.dom.style.top = '-999px';
+      tab.dom.style.top = 'cacl(-100% - 5rem)';
+      tab.dom.classList.remove('active');
       return;
     }
 
@@ -1154,7 +1159,8 @@ var Browser = {
       tab.dom.setVisible(visible);
 
     tab.dom.style.display = visible ? 'block' : 'none';
-    tab.dom.style.top = '0px';
+    tab.dom.style.top = '0';
+    tab.dom.classList.add('active');
   },
 
   bindBrowserEvents: function browser_bindBrowserEvents(iframe, tab) {
@@ -1208,21 +1214,26 @@ var Browser = {
     // We need to remove "remote", as it causes mismapped events:
     // https://bugzilla.mozilla.org/show_bug.cgi?id=827802
     // iframe.setAttribute('remote', 'true');
-
-    // Virtual scale for proper webapps display
-    var virtualScale = (function vScale(){
-      var BASE_SIZE = 320;
-      var scaleRatio = window.innerWidth/BASE_SIZE;
-      var viewportWidth = iframe.offsetWidth/scaleRatio;
-      var viewportHeight = iframe.offsetHeight/scaleRatio;
-
-      iframe.style.width = viewportWidth+'px';
-      iframe.style.height = viewportHeight+'px';
-      iframe.style.transform = 'scale('+scaleRatio+')';
-      iframe.style.transformOrigin = 'left top';
-    })();
-
+    this.scaleContent(iframe);
     return tab.id;
+  },
+
+  scaleContent: function(frameView) {
+    // Virtual scale for proper webapps display
+      var BASE_SIZE = 320;
+      var MENUS_SIZE = 95;
+      if ('scale' in frameView.dataset) {
+        var scaleRatio = frameView.dataset.scale;
+      } else {
+        var scaleRatio = window.innerWidth/BASE_SIZE;
+        frameView.dataset.scale = scaleRatio;
+      }
+      var viewportWidth = window.innerWidth/scaleRatio;
+      var viewportHeight = (window.innerHeight - MENUS_SIZE*scaleRatio)/scaleRatio;
+      frameView.style.width = viewportWidth+'px';
+      frameView.style.height = viewportHeight+'px';
+      frameView.style.transform = 'scale('+scaleRatio+')';
+      frameView.style.transformOrigin = 'left top';
   },
 
   deleteTab: function browser_deleteTab(id) {
