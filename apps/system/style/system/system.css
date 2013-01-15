@@ -275,6 +275,10 @@ body {
   top: 2rem!important;
 }
 
+#windows .fullscreen-app {
+  height: 100%!important;
+}
+
 #screen.active-statusbar #windows .appWindow {
   top: 4rem;
 }

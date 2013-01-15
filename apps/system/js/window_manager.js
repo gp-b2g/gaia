@@ -129,32 +129,45 @@ var WindowManager = (function() {
   }
 
   function scaleContent(frame) {
-    // We need to remove "remote", as it causes mismapped events:
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=827802
-    var viewport = document.createElement("section");
-    viewport.className="wrappedViewport";
 
-    frame.removeAttribute('remote');
+    if (frame.parentNode.className == 'wrappedViewport') {
+      var viewport = frame.parentNode;
+    } else {
+      var viewport = document.createElement("section");
+      viewport.className="wrappedViewport";
+      // We need to remove "remote", as it causes mismapped events:
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=827802
+      frame.removeAttribute('remote');
+    }
 
     // Virtual scale for proper webapps display
     var virtualScale = (function vScale(){
       var BASE_SIZE = 320;
-      var scaleRatio = window.innerWidth/BASE_SIZE;
+      if (frame.parentNode.className == 'wrappedViewport') {
+        var scaleRatio = frame.parentNode.dataset.scale;
+      } else {
+        var scaleRatio = window.innerWidth/BASE_SIZE;
+      }
 
-      var frameWidth = frame.offsetWidth/scaleRatio;
-      var frameHeight = frame.offsetHeight/scaleRatio;
+      var frameWidth = parseInt(frame.style.width.split('px')[0])/scaleRatio;
+      var frameHeight = parseInt(frame.style.height.split('px')[0])/scaleRatio;
 
-      var controlsHeight = 30;
+      var controlsHeight = 5*scaleRatio;
 
       // Apply new values
       viewport.style.width = frameWidth+'px';
       viewport.style.height = frameHeight-controlsHeight+'px';
-      viewport.style.transform = 'scale('+scaleRatio+')';
+      if (frame.parentNode.className !== 'wrappedViewport') {
+        viewport.dataset.scale = scaleRatio;
+        viewport.style.transform = 'scale('+scaleRatio+')';
+      }
     })();
 
-    // Move app to scaled viewport
-    viewport.appendChild(frame);
-    windows.appendChild(viewport);
+    if (frame.parentNode.className !== 'wrappedViewport') {
+      // Move app to scaled viewport
+      viewport.appendChild(frame);
+      windows.appendChild(viewport);
+    }
   }
 
   // Make the specified app the displayed app.
@@ -206,18 +219,19 @@ var WindowManager = (function() {
 
     var cssWidth = window.innerWidth + 'px';
     var cssHeight = window.innerHeight - StatusBar.height;
-    if ('wrapper' in frame.dataset) {
-      cssHeight -= 10;
-    }
-    cssHeight += 'px';
 
     if (!screenElement.classList.contains('attention') &&
         requireFullscreen(origin)) {
-      cssHeight = window.innerHeight + 'px';
+        cssHeight = window.innerHeight + 'px';
     }
 
+    cssHeight += 'px';
     frame.style.width = cssWidth;
     frame.style.height = cssHeight;
+
+    if ('wrapper' in frame.dataset) {
+      scaleContent(frame);
+    }
 
     // We will call setInlineActivityFrameSize()
     // if changeActivityFrame is not explicitly set to false.
@@ -1152,11 +1166,6 @@ var WindowManager = (function() {
 
     // Add the iframe to the document
     windows.appendChild(frame);
-
-    // If is wrapped scale and append
-    if ('wrapper' in frame.dataset) {
-      scaleContent(frame);
-    }
 
     // And map the app origin to the info we need for the app
     var app = {
