@@ -1225,7 +1225,11 @@ var Browser = {
       if ('scale' in frameView.dataset) {
         var scaleRatio = frameView.dataset.scale;
       } else {
-        var scaleRatio = window.innerWidth/BASE_SIZE;
+        if (window.matchMedia('(orientation: portrait)').matches) {
+          var scaleRatio = window.innerWidth/BASE_SIZE;
+        } else {
+          var scaleRatio = window.innerHeight/BASE_SIZE;
+        }
         frameView.dataset.scale = scaleRatio;
       }
       var viewportWidth = window.innerWidth/scaleRatio;
