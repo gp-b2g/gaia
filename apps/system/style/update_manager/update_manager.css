@@ -5,6 +5,7 @@ html, body {
 
 #update-manager-container {
   display: none;
+  overflow: hidden;
 }
 
 #update-manager-container.displayed {
@@ -20,6 +21,7 @@ html, body {
   background-image: url(images/loader.png);
   background-position: center center;
   background-repeat: no-repeat;
+  background-size: 3.1rem;
   animation: 0.9s fn-rotate infinite linear;
 }
 
@@ -48,6 +50,7 @@ html, body {
 #update-manager-container > .icon,
 #update-manager-toaster > .icon {
   background-image: url('images/iconindicator_download_24x24.png');
+  background-size: 2.4rem;
 }
 
 #update-manager-container.downloading > .icon {
