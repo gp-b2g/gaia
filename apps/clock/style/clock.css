@@ -390,6 +390,7 @@ html, body {
 #analog-clock-container {
   position: relative;
   background-repeat: no-repeat;
+  background-size: 100%;
   margin: 8.8rem auto 0;
 }
 
@@ -437,7 +438,6 @@ html, body {
 #analog-clock-svg { /* styles for everything in the clock */
   stroke-linecap: butt; /* with butt ends */
   fill: transparent; /* on a transparent background */
-  margin-top: 1rem;
 }
 #hourhand, #minutehand, #minutehandCentralPoint {
   fill: #CFE2E6;

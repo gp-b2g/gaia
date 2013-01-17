@@ -328,13 +328,13 @@ ul li > small {
 }
 
 #alarms label input[type="checkbox"] + span {
-  background: url(images/alarm_off.png) no-repeat center top;
+  background: url(images/alarm_off.png) no-repeat center top / 3.4rem;
   width: 3.4rem;
   height: 3.4rem;
 }
 #alarms label input[type="checkbox"]:checked + span {
   border-color: #00acce;
-  background: url(images/alarm_on.png) no-repeat center top;;
+  background: url(images/alarm_on.png) no-repeat center top / 3.4rem;
 }
 
 #alarms label span {
