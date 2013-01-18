@@ -226,8 +226,8 @@ html, body {
 #updates-download-dialog[data-nowifi="true"] section {
   /* Fixing at the top of the screen to properly make room for the warning */
   position: absolute;
-  top: 20px;
-  max-height: calc(100% - 15rem - 20px);
+  top: 2rem;
+  max-height: calc(100% - 15rem - 2rem);
 }
 #updates-download-dialog[data-nowifi="true"] #updates-no-wifi-warning,
 #updates-download-dialog[data-nowifi="true"][data-edge="true"] #updates-edge-warning {

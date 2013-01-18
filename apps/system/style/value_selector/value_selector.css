@@ -1,14 +1,14 @@
 #value-selector {
   width: 100%;
-  height: -moz-calc(100% - 20px);
-  top: 20px;
+  height: -moz-calc(100% - 2rem);
+  top: 2rem;
   left: 0;
   position: absolute;
 }
 
 #screen.active-statusbar #value-selector {
-  height: -moz-calc(100% - 40px);
-  top: 40px;
+  height: -moz-calc(100% - 4rem);
+  top: 4rem;
 }
 
 #screen:-moz-full-screen-ancestor #value-seletcor,
