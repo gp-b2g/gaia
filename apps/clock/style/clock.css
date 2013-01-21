@@ -363,6 +363,7 @@ html, body {
 
 #clock-hour24-state.alarm-set-indicator::after {
   background: url("images/alarm_indicator.png") no-repeat;
+  background-size: 1.8rem;
   position: absolute;
   height: 1.8rem;
   width: 1.8rem;
