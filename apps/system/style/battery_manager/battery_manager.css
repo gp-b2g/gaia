@@ -22,6 +22,7 @@
   height: 4.5rem;
   display: inline-block;
   background-image: none;
+  background-size: 4.2rem;
   background-position: center center;
   background-repeat: no-repeat no-repeat;
 }
@@ -34,6 +35,8 @@
 
 #battery .battery-notification {
   display: none;
+  font-size: 1.4rem;
+  margin-left: 0.5rem;
 }
 
 #battery[data-level="10"] .icon-battery {

@@ -658,11 +658,18 @@ profile/settings.json: build/settings.py build/wallpaper.jpg
 	python build/settings.py $(SETTINGS_ARG) --console --locale $(GAIA_DEFAULT_LOCALE) --homescreen $(SCHEME)homescreen.$(GAIA_DOMAIN)$(GAIA_PORT)/manifest.webapp --ftu $(SCHEME)communications.$(GAIA_DOMAIN)$(GAIA_PORT)/manifest.webapp --wallpaper build/wallpaper.jpg --override build/custom-settings.json --output $@
 
 # push profile/settings.json to the phone
-install-settings-defaults: profile/settings.json
+install-settings-defaults:
+ifneq ($(SCREEN_TYPE),*)
+	build/./@2xsettings.sh
+endif
+	$(MAKE) profile/settings.json
 	$(ADB) shell stop b2g
 	$(ADB) remount
 	$(ADB) push profile/settings.json /system/b2g/defaults/settings.json
 	$(ADB) shell start b2g
+ifneq ($(SCREEN_TYPE),*)
+	build/./undo@2xsettings.sh
+endif
 
 
 # clean out build products

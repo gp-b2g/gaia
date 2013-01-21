@@ -95,7 +95,7 @@
   position: absolute;
 
   background-color: #000;
-  background-size: cover;
+  /*background-size: cover; Possible memory leaks, removed for improving stability*/
   background-repeat: no-repeat;
   background-position: 50% 50%;
 
@@ -480,7 +480,7 @@ button::-moz-focus-inner {
 .passcode-entered #lockscreen-passcode-pad > a[data-key="b"] {
   display: block;
   text-align: left;
-  text-indent: -9999px; 
+  text-indent: -9999px;
 }
 
 #lockscreen-passcode-pad > a:active {
