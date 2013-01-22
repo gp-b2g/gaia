@@ -48,7 +48,7 @@ function l10n_getFileContent(webapp, htmlFile, relativePath) {
   paths.forEach(function appendPath(name) {
     file.append(name);
     if (isSubjectToBranding(file.path)) {
-      file.append((OFFICIAL == 1) ? 'official' : 'unofficial');
+      file.append((BRAND != '') ? BRAND.toString() : 'unofficial');
     }
   });
 

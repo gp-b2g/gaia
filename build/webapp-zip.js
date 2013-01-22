@@ -22,7 +22,7 @@ const PR_EXCL = 0x80;
  */
 function addToZip(zip, pathInZip, file) {
   if (isSubjectToBranding(file.path)) {
-    file.append((OFFICIAL == 1) ? 'official' : 'official');
+    file.append((BRAND != '') ? BRAND.toString() : 'unofficial');
   }
 
   if (!file.exists())
@@ -282,7 +282,7 @@ Gaia.webapps.forEach(function(webapp) {
     path.split('/').forEach(function(segment) {
       file.append(segment);
       if (isSubjectToBranding(file.path)) {
-        file.append((OFFICIAL == 1) ? 'official' : 'official');
+        file.append((BRAND != '') ? BRAND.toString() : 'unofficial');
       }
     });
     if (!file.exists()) {
