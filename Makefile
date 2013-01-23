@@ -232,11 +232,13 @@ webapp-manifests: install-xulrunner-sdk
 ui-scale:
 	@echo "Initializing scaling process..."
 	build/./@2ximages.sh
+	build/./@2xsettings.sh
 
 # Go to previous state of  ui-scale command
 undo-ui-scale:
 	@echo "Reverting scaling process..."
 	build/./undo@2ximages.sh
+	build/./undo@2xsettings.sh
 
 # Generate profile/webapps/APP/application.zip
 webapp-zip: stamp-commit-hash install-xulrunner-sdk
@@ -670,7 +672,6 @@ endif
 ifneq ($(SCREEN_TYPE),*)
 	build/./undo@2xsettings.sh
 endif
-
 
 # clean out build products
 clean:

@@ -1,5 +1,5 @@
+SYS=`uname -s`
 EXTRA_SOURCE="build/settings.py Makefile"
-
 
 # Create snapshoot of $EXTRA_SOURCE
 cp 'build/settings.py' 'build/settings_tmp.py'
