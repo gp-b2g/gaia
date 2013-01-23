@@ -14,6 +14,6 @@ if [[ "$SYS" == 'Darwin' ]];
     echo "Settings @2x resources"
   else
     # Searching for default background set-up
-    find $EXTRA_SOURCE | xargs sed -i '' 's/\.[jpg][png][gif]/@2x&/g'
+    find $EXTRA_SOURCE | xargs sed -i 's/\.[jpg][png][gif]/@2x&/g'
     echo "Settings @2x resources"
 fi
