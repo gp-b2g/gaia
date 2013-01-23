@@ -138,14 +138,14 @@
  */
 
 /* signal levels */
-#wifi-availableNetworks > li {
+#wifi-availableNetworks > li a {
   background-repeat: no-repeat;
   background-position: right 3rem top 50%;
   padding-right: 3rem;
   position: relative;
 }
 
-#wifi-availableNetworks > li:before {
+#wifi-availableNetworks a:before {
   content: "";
   width: 3.1rem;
   height: 3rem;
@@ -156,32 +156,29 @@
   margin-top: -2rem;
 }
 
-#wifi-availableNetworks .wifi-signal0:before {
+/* secured networks */
+#wifi-availableNetworks .wifi-secure:before {
+  background-image: url(images/wifi_lock.png);
+}
+
+#wifi-availableNetworks .wifi-signal0 a:before {
   background-position: 0rem 0rem;
 }
 
-#wifi-availableNetworks .wifi-signal1:before {
+#wifi-availableNetworks .wifi-signal1 a:before {
   background-position: -3.2rem 0rem;
 }
 
-#wifi-availableNetworks .wifi-signal2:before {
+#wifi-availableNetworks .wifi-signal2 a:before {
   background-position: -6.4rem 0rem;
 }
 
-#wifi-availableNetworks .wifi-signal3:before {
+#wifi-availableNetworks .wifi-signal3 a:before {
   background-position: -9.6rem 0rem;
 }
 
-#wifi-availableNetworks .wifi-signal4:before {
+#wifi-availableNetworks .wifi-signal4 a:before {
   background-position: -12.8rem 0rem;
-}
-
-/* secured networks */
-.wifi-secure {
-  background-repeat: no-repeat;
-  background-position: right 1.8rem top 50%;
-  background-image: url(images/wifi_lock.png);
-  background-size: 5.6rem;
 }
 
 /******************************************************************************
