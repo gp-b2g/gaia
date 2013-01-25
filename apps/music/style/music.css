@@ -100,6 +100,7 @@ body {
   width: 2.9rem;
   height: 2.9rem;
   background: url(images/spinner.png) no-repeat center center;
+  background-size: 2.9rem;
   animation: 0.9s spinner-animation infinite steps(30);
   border: none;
 }
@@ -134,6 +135,7 @@ body {
   width: 2.9rem;
   height: 2.9rem;
   background: url(images/spinner.png) no-repeat center center;
+  background-size: 2.9rem;
   animation: 0.9s spinner-animation infinite steps(30);
   border: none;
 }
