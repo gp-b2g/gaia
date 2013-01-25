@@ -29,6 +29,7 @@ GAIA_DOMAIN?=gaiamobile.org
 DEBUG?=0
 PRODUCTION?=0
 SCREEN_TYPE?=*
+DOGFOOD?=0
 
 LOCAL_DOMAINS?=1
 
@@ -58,6 +59,10 @@ GAIA_ALL_APP_SRCDIRS=$(GAIA_APP_SRCDIRS)
 ifeq ($(MAKECMDGOALS), demo)
 GAIA_DOMAIN=thisdomaindoesnotexist.org
 GAIA_APP_SRCDIRS=apps showcase_apps
+else ifeq ($(MAKECMDGOALS), dogfood)
+DOGFOOD=1
+PRODUCTION=1
+B2G_SYSTEM_APPS=1
 else ifeq ($(MAKECMDGOALS), production)
 PRODUCTION=1
 B2G_SYSTEM_APPS=1
@@ -67,6 +72,10 @@ endif
 ifeq ($(PRODUCTION), 1)
 GAIA_APP_SRCDIRS=apps
 ADB_REMOUNT=1
+endif
+
+ifeq ($(MAKECMDGOALS), dogfood)
+GAIA_APP_SRCDIRS=apps dogfood_apps
 endif
 
 ifeq ($(B2G_SYSTEM_APPS), 1)
@@ -337,6 +346,8 @@ define run-js-command
 	const BUILD_APP_NAME = "$(BUILD_APP_NAME)";                                 \
 	const PRODUCTION = "$(PRODUCTION)";                                         \
 	const BRAND = "$(BRAND)";                                     \
+	const DOGFOOD = "$(DOGFOOD)";                                               \
+	const OFFICIAL = "$(MOZILLA_OFFICIAL)";                                     \
 	const GAIA_DEFAULT_LOCALE = "$(GAIA_DEFAULT_LOCALE)";                       \
 	const GAIA_INLINE_LOCALES = "$(GAIA_INLINE_LOCALES)";                       \
 	const GAIA_ENGINE = "xpcshell";                                             \
@@ -585,7 +596,6 @@ TARGET_FOLDER = webapps/$(BUILD_APP_NAME).$(GAIA_DOMAIN)
 
 APP_NAME = $(shell cat apps/${BUILD_APP_NAME}/manifest.webapp | grep name | head -1 | cut -d '"' -f 4)
 APP_PID = $(shell adb shell b2g-ps | grep '${APP_NAME}' | tr -s '${APP_NAME}' ' ' | tr -s ' ' ' ' | cut -f 3 -d' ')
-
 install-gaia:
 ifneq ($(SCREEN_TYPE),*)
 	$(MAKE) ui-scale
@@ -648,6 +658,7 @@ dialer-demo:
 demo: install-media-samples install-gaia
 
 production: reset-gaia
+dogfood: reset-gaia
 
 # Remove everything and install a clean profile
 reset-gaia: purge install-gaia install-settings-defaults

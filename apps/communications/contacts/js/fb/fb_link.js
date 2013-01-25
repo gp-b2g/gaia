@@ -232,12 +232,15 @@ if (!fb.link) {
         var numFriendsProposed = data.length;
         var searchAccentsArrays = {};
         var index = 0;
+
         data.forEach(function(item) {
           if (!item.email) {
             item.email = '';
           }
+
           item.picwidth = picwidth;
           item.picheight = picheight;
+
           // Only do this if we need to prepare the search accents phase
           if (numQueries === 2) {
             // Saving the original order

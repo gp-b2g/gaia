@@ -134,6 +134,9 @@
 #evmeContainer .evme-apps ul li.installed b {
     line-height: 90%;
 }
+#evmeContainer .evme-apps ul li.installed b {
+    line-height: 90%;
+}
 #evmeContainer .evme-apps ul li b em {
     font-style: normal;
 }

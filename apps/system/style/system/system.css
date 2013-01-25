@@ -288,6 +288,15 @@ body {
   top: 2rem!important;
 }
 
+#windows .appWindow > iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 #screen.active-statusbar #windows .appWindow {
   top: 4rem;
 }
@@ -354,7 +363,6 @@ body {
   visibility: inherit;
   opacity: 1;
 }
-
 
 #screen.switch-app > #windows.slow-transition .appWindow.closing-card {
   transition: transform 5s ease;
