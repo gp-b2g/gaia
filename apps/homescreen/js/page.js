@@ -273,9 +273,9 @@ Icon.prototype = {
 
     // Deal with very small or very large icons
     img.width =
-        Math.min(MAX_ICON_SIZE, Math.max(img.width, MIN_ICON_SIZE));
+        Math.min(MAX_ICON_SIZE, Math.max(img.width, MAX_ICON_SIZE));
     img.height =
-        Math.min(MAX_ICON_SIZE, Math.max(img.height, MIN_ICON_SIZE));
+        Math.min(MAX_ICON_SIZE, Math.max(img.height, MAX_ICON_SIZE));
 
     var width = Math.min(img.width, canvas.width - 4);
     var height = Math.min(img.width, canvas.height - 4);

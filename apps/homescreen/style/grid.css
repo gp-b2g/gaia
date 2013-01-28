@@ -149,6 +149,8 @@ body[data-transitioning] .loading:after {
 .loading img {
   margin-top: 0.4rem;
   margin-left: -0.4rem;
+  width: 6rem;
+  height: 6rem;
 }
 
 @keyframes rotate {
