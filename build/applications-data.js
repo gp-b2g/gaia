@@ -74,15 +74,6 @@ function iconDescriptor(directory, app_name, entry_point) {
   }
   let icon = bestMatchingIcon(PREFERRED_ICON_SIZE, manifest, origin)
 
-  // Create @2x icons for init.json
-  if ( SCREEN_TYPE == "qhd" && icon.search("@2x") == -1 ) {
-    // Support data:image/png;base64
-    var isBase = icon.split(".png")[0] == icon;
-    if (!isBase) {
-      icon = icon.split(".png")[0] + "@2x.png";
-    }
-  }
-
   //TODO set localizedName once we know the default locale
   return {
     manifestURL: manifestURL,

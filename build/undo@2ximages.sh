@@ -2,9 +2,6 @@
 APPS=apps
 SHARED=shared
 SOURCE="$APPS $SHARED"
-FOUNDFILES=build/foundfiles.txt
-MATCHES=build/matched.txt
-UNMATCHES=build/unmatched.txt
 
 if [ -d .tmp_$APPS ];
   then
@@ -17,11 +14,6 @@ if [ -d .tmp_$APPS ];
 	rm -rf $SHARED/
 	cp -rf .tmp_$SHARED/ $SHARED/
 	rm -rf .tmp_$SHARED/
-
-	# Clean logs
-	rm -rf $FOUNDFILES
-	rm -rf $MATCHES
-	rm -rf $UNMATCHES
   else
   	echo "Warning: Temporal folders does not exists"
 fi

@@ -1,3 +1,4 @@
+# Generates settings.json with @2x default wallpaper
 SYS=`uname -s`
 EXTRA_SOURCE="build/settings.py Makefile"
 

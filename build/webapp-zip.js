@@ -21,6 +21,21 @@ const PR_EXCL = 0x80;
  * @param {nsIFile}      file      file xpcom to add.
  */
 function addToZip(zip, pathInZip, file) {
+
+  // Check @2x files to add
+  if ( SCREEN_TYPE != '*' && file.path.search("@2x") == -1 ) {
+    var path2x = file.path;
+    var path2x = path2x.split(".")[0]+"@2x."+path2x.split(".")[1];
+    var file2x = new FileUtils.File(path2x);
+    // If there is a @2x version of this asset just exit, the @2x will come after
+    if ( file2x.exists() ) {
+      return;
+    }
+  } else {
+        var pathInZip = pathInZip.split("@2x")[0]+pathInZip.split("@2x")[1];
+  }
+
+
   if (isSubjectToBranding(file.path)) {
     file.append((BRAND != '') ? BRAND.toString() : 'unofficial');
   }
@@ -289,6 +304,18 @@ Gaia.webapps.forEach(function(webapp) {
       throw new Error('Using inexistent shared resource: ' + path +
                       ' from: ' + webapp.domain + '\n');
       return;
+    }
+
+    // Force asset to pass as @2x, there is another check in addToZip()
+    if ( SCREEN_TYPE != '*' && file.path.search("@2x") == -1 ) {
+      var path2x = file.path;
+      var path2x = path2x.split(".")[0]+"@2x."+path2x.split(".")[1];
+      var file2x = new FileUtils.File(path2x);
+      // If there is a @2x version of this asset add the sufix
+      if ( file2x.exists() ) {
+        var path = path.split(".")[0]+"@2x."+path.split(".")[1];
+        var file = file2x;
+      }
     }
     addToZip(zip, '/shared/resources/' + path, file);
   });
