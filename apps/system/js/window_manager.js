@@ -861,6 +861,7 @@ var WindowManager = (function() {
       var app = Applications.getByManifestURL(homescreenManifestURL);
       appendFrame(null, homescreen, homescreenURL,
                   app.manifest.name, app.manifest, app.manifestURL);
+      runningApps[homescreen].iframe.dataset.start = Date.now();
       setAppSize(homescreen);
     } else if (reset) {
       runningApps[homescreen].iframe.src = homescreenURL;
@@ -1023,12 +1024,46 @@ var WindowManager = (function() {
     if (newApp != currentApp) {
       var evt = document.createEvent('CustomEvent');
       evt.initCustomEvent('appwillopen', true, true, { origin: newApp });
+
+      var app = runningApps[newApp];
       // Allows listeners to cancel app opening and so stay on homescreen
-      if (!runningApps[newApp].frame.dispatchEvent(evt)) {
+      if (!app.frame.dispatchEvent(evt)) {
         if (typeof(callback) == 'function')
           callback();
         return;
       }
+
+      var iframe = app.iframe;
+
+      // unpainted means that the app is cold booting
+      // if it is, we're going to listen for Browser API's loadend event
+      // which indicates that the iframe's document load is complete
+      //
+      // if the app is not cold booting (is in memory) we will listen
+      // to appopen event, which is fired when the transition to the
+      // app window is complete.
+      //
+      // [w] - warm boot (app is in memory, just transition to it)
+      // [c] - cold boot (app has to be booted, we show it's document load
+      // time)
+      var type;
+      if ('unpainted' in iframe.dataset) {
+        type = 'mozbrowserloadend';
+      } else {
+        iframe.dataset.start = Date.now();
+        type = 'appopen';
+      }
+
+      app.frame.addEventListener(type, function apploaded(e) {
+        e.target.removeEventListener(e.type, apploaded);
+
+        var evt = document.createEvent('CustomEvent');
+        evt.initCustomEvent('apploadtime', true, false, {
+          time: parseInt(Date.now() - iframe.dataset.start),
+          type: (e.type == 'appopen') ? 'w' : 'c'
+        });
+        iframe.dispatchEvent(evt);
+      });
     }
 
     // Case 1: the app is already displayed
@@ -1354,6 +1389,8 @@ var WindowManager = (function() {
   // There are two types of mozChromeEvent we need to handle
   // in order to launch the app for Gecko
   window.addEventListener('mozChromeEvent', function(e) {
+    var startTime = Date.now();
+
     var manifestURL = e.detail.manifestURL;
     if (!manifestURL)
       return;
@@ -1402,6 +1439,7 @@ var WindowManager = (function() {
             appendFrame(null, origin, e.detail.url,
                         name, app.manifest, app.manifestURL);
           }
+          runningApps[origin].iframe.dataset.start = startTime;
           setDisplayedApp(origin, null, 'window');
         }
         break;
@@ -1654,6 +1692,25 @@ var WindowManager = (function() {
 
     return (value === 'allow');
   }
+
+  // Use a setting in order to be "called" by settings app
+  navigator.mozSettings.addObserver(
+    'clear.remote-windows.data',
+    function clearRemoteWindowsData(setting) {
+      var shouldClear = setting.settingValue;
+      if (!shouldClear)
+        return;
+
+      // Delete all storage and cookies from our content processes
+      var request = navigator.mozApps.getSelf();
+      request.onsuccess = function() {
+        request.result.clearBrowserData();
+      };
+
+      // Reset the setting value to false
+      var lock = navigator.mozSettings.createLock();
+      lock.set({'clear.remote-windows.data': false});
+    });
 
   // Watch for window.open usages in order to open wrapper frames
   window.addEventListener('mozbrowseropenwindow', function handleWrapper(evt) {

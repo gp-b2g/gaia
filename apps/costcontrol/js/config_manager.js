@@ -7,7 +7,7 @@ var ConfigManager = (function() {
 
   var DEFAULT_SETTINGS = {
     'dataLimit': false,
-    'dataLimitValue': null,
+    'dataLimitValue': 1,
     'dataLimitUnit': 'GB',
     'errors': {
       'INCORRECT_TOPUP_CODE': false,
@@ -44,7 +44,7 @@ var ConfigManager = (function() {
     'nextReset': null,
     'plantype': 'prepaid',
     'resetTime': 1,
-    'trackingPeriod': 'never',
+    'trackingPeriod': 'monthly',
     'wifiFixing': 0
   };
 

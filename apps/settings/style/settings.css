@@ -82,6 +82,7 @@ section[role="region"] > header:first-child + * {
   margin-top: 5rem;
 }
 
+
 /******************************************************************************
  * Explanation texts
  */
@@ -216,6 +217,7 @@ section li.password > p {
   height: 2.7rem;
 }
 
+
 /******************************************************************************
  * Cellular and Data
  */
@@ -223,6 +225,17 @@ section li.password > p {
 .carrier-disabled a {
   opacity: 0.6;
   color: #797e80;
+}
+
+#carrier-dc-warning h1 > span:before {
+  content: "";
+  position: relative;
+  display: inline-block;
+  background: -moz-image-rect(url(images/icons_sprite.png), 0, 120, 30, 90) no-repeat scroll 0 50% transparent;
+  top: 0.9rem;
+  margin: 0.5rem;
+  width: 3rem;
+  height: 3rem;
 }
 
 
@@ -357,6 +370,10 @@ ul li > label .range-icons.brightness {
   display: none;
 }
 
+#dateTime ul[hidden] + header {
+  margin-top: 5rem;
+}
+
 #time-manual span {
   pointer-events: none;
 }
@@ -384,6 +401,7 @@ ul li > label .range-icons.brightness {
  * OS License
  */
 
+#obtain-sc,
 #os-license {
   width: 100%;
   height: calc(100% - 5rem);
