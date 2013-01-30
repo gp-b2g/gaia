@@ -1,3 +1,22 @@
+# Installing on different devices resolution
+#### Currently supported screens
+  * **qhd**: ~540×960
+  * **fwvga**: ~480×800
+
+#### How to:
+You need to set `SCREEN_TYPE=qhd` or `SCREEN_TYPE=fwvga` when using any `make` comand
+
+#### Examples
+`SCREEN_TYPE=qhd make reset-gaia`
+`SCREEN_TYPE=qhd make install-gaia`
+`SCREEN_TYPE=qhd BUILD_APP_NAME=contacts make install-gaia`
+
+#### Debugging UI on Firefox
+You should debug on standard screen mode (320x480) is the easiest way.
+If you need to check specifically a *qhd* resolution in browser:
+* Use the responsive mode on Firefox `alt+cmd+m`
+* Search for `shared/screens/qhd.css` and apply that `font-size` to your application `html` tag. You can also link directly the CSS file.
+
 # Gaia
 
 Gaia is Mozilla's Phone UX for the Boot to Gecko (B2G) project.
