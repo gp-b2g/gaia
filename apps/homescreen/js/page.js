@@ -525,7 +525,9 @@ Page.prototype = {
   /*
    * It defines the threshold in pixels to consider a gesture like a tap event
    */
-  tapThreshold: 10,
+
+   // for Keon tapThreshold: 10,
+  tapThreshold: 15,
 
   /*
    * Renders a page for a list of apps
