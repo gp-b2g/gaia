@@ -133,7 +133,7 @@ var UtilityTray = {
     var alreadyShown = this.shown;
     var style = this.overlay.style;
     style.MozTransition = '-moz-transform 0.2s linear';
-    style.MozTransform = 'translateY(100%)';
+    style.MozTransform = 'translateY(calc(100% + 1px))';
     this.shown = true;
     this.screen.classList.add('utility-tray');
 
