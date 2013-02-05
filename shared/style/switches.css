@@ -61,11 +61,11 @@ label input[type="checkbox"][data-type="switch"] + span {
   left: 50%;
   top: 50%;
   margin: -1.1rem 0 0 -2.7rem;
-  width: 5.4rem;
+  width: 5rem;
   height: 2.2rem;
   pointer-events: none;
   border: solid 0.1rem #c2c2c2;
-  border-radius: 5.4rem;
+  border-radius: 5rem;
   overflow: hidden;
   background: url(switches/images/switch/handler.png) no-repeat -0.2rem center;
   background-size: auto calc(100% + 0.2rem);
@@ -78,7 +78,7 @@ label input[data-type="switch"] + span:before {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 5.4rem;
+  width: 5rem;
   z-index: -1;
   transition: transform 0.2s ease;
 }
@@ -92,7 +92,7 @@ label input[data-type="switch"] + span:before {
 label input[data-type="switch"] + span:after {
   left: 100%;
   background: #e6e6e6;
-  transform: translateX(-5.4rem);
+  transform: translateX(-5rem);
 }
 
 /* switch: disabled state */
@@ -114,11 +114,11 @@ label input[data-type="switch"]:checked:disabled + span {
 
 label input[data-type="switch"]:checked + span {
   border-color: #00acce;
-  background-position: 3.2rem center;
+  background-position: 2.8rem center;
 }
 
 label input[data-type="switch"]:checked + span:before {
-  transform: translateX(5.4rem);
+  transform: translateX(5rem);
 }
 
 label input[data-type="switch"]:checked + span:after {
