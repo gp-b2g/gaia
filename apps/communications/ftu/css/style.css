@@ -999,6 +999,10 @@ i.hack-first-child {
   text-align: center;
 }
 
+#tutorial-screen section#step5 img {
+  width: 20.6rem;
+}
+
 /* Tutorial Steps state */
 #tutorial-screen .step-state {
   border-bottom: none;
