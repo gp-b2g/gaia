@@ -94,7 +94,7 @@
   height: 100%;
 
   background-color: #000;
-  /*background-size: cover; Possible memory leaks, removed for improving stability*/
+  background-size: cover; /*Possible memory leaks, remove to improve stability*/
   background-repeat: no-repeat;
   background-position: 50% 50%;
 
