@@ -38,6 +38,7 @@ button.recommend:active,
 a.recommend[role="button"]:active  {
   border-color: #008aaa;
   background: #008aaa;
+  background-size: auto 100%;
   color: #333;
 }
 
