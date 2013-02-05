@@ -144,6 +144,7 @@ var KeypadManager = {
 
   _MAX_FONT_SIZE_DIAL_PAD: 18,
   _MAX_FONT_SIZE_ON_CALL: 16,
+  _SCALE_RATIO: (window.innerWidth/320)*100,
 
   _phoneNumber: '',
   _onCall: false,
@@ -226,7 +227,7 @@ var KeypadManager = {
     // to the font-size property of the body element.
     var defaultFontSize = window.getComputedStyle(document.body, null)
                                 .getPropertyValue('font-size');
-    this.minFontSize = parseInt(parseInt(defaultFontSize) * 10 * 0.226);
+    this.minFontSize = parseInt(parseInt(defaultFontSize) * this._SCALE_RATIO * 0.226);
     this.maxFontSize = this._onCall ?
       parseInt(parseInt(defaultFontSize) * this._MAX_FONT_SIZE_ON_CALL
         * 0.226) :
@@ -356,7 +357,7 @@ var KeypadManager = {
         var src = contactsIframe.src;
         // Only perform this refresh if we DID open the contacts tab
         if (src && src.length > 0) {
-          var timestamp = new Date().getTime();  
+          var timestamp = new Date().getTime();
           contactsIframe.contentWindow.location.search =
             '?timestamp=' + timestamp;
         }
@@ -606,7 +607,7 @@ var KeypadManager = {
       this.phoneNumberView.value = phoneNumber;
       this.moveCaretToEnd(this.phoneNumberView);
     }
-    
+
     this.formatPhoneNumber(ellipsisSide, maxFontSize);
   },
 

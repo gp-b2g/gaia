@@ -169,6 +169,7 @@ article:not(:target) #keypad-delete {
 
 .voicemail {
   background-image: url('images/voicemail.png');
+  background-size: 2.2rem;
 }
 
 .asterisk {
