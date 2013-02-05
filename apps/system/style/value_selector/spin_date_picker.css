@@ -85,7 +85,7 @@ div.animation-on {
 }
 
 #spin-date-picker .picker-bar-background {
-  background: url("../themes/default/images/ui/time_pattern.png") repeat scroll left top transparent;
+  background: url("../themes/default/images/ui/time_pattern.png") repeat left top / 0.5rem;
   position: absolute;
   width: 7.30rem;
   height: 100%;

@@ -136,7 +136,7 @@
 }
 
 #date-picker-container li.present {
-  background: url(images/ui/pattern-current.png) repeat left top;
+  background: url(images/ui/pattern-current.png) repeat left top / 0.5rem;
 }
 
 #date-picker-container span.selected  {
