@@ -410,6 +410,6 @@ body, html {
 
 .sb-icon-call-forwarding {
   /* Waiting for the correct icon. In the mean time we use this one. */
-  background: url('images/call-forwarding.png') no-repeat;
+  background: url('images/call-forwarding.png') no-repeat / 1.6rem;
   background-position: 0 0;
 }
