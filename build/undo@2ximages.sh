@@ -1,7 +1,8 @@
 # Shared config
 APPS=apps
 SHARED=shared
-SOURCE="$APPS $SHARED"
+DOG=dogfood_apps
+SOURCE="$APPS $DOG"
 
 if [ -d .tmp_$APPS ];
   then
@@ -10,10 +11,10 @@ if [ -d .tmp_$APPS ];
 	cp -rf .tmp_$APPS/ $APPS/
 	rm -rf .tmp_$APPS/
 
-	# Clean temporal $SHARED folders and restore intial state
-	rm -rf $SHARED/
-	cp -rf .tmp_$SHARED/ $SHARED/
-	rm -rf .tmp_$SHARED/
+	# Clean temporal $DOG folders and restore intial state
+	rm -rf $DOG/
+	cp -rf .tmp_$DOG/ $DOG/
+	rm -rf .tmp_$DOG/
   else
   	echo "Warning: Temporal folders does not exists"
 fi

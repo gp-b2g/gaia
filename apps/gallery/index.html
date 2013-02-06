@@ -24,7 +24,8 @@
     <script type="text/javascript" defer src="js/MetadataParser.js"></script>
     <script type="text/javascript" defer src="js/ImageEditor.js"></script>
     <script type="text/javascript" defer src="js/gallery.js"></script>
-  </head>
+    <link rel="stylesheet" href="/shared/style/resolution.css" >
+</head>
 
   <body class="hidden" role="application">
     <section role="region" id="thumbnail-list-view" class="hidden">
@@ -82,7 +83,7 @@
         <img id="crop-image"></img>
       </div>
     </section>
-    
+
     <section role="region" id="edit-view" class="hidden skin-organic">
       <header id="edit-header">
         <button id="edit-cancel-button"><span class="icon icon-close"></span></button>
@@ -116,7 +117,7 @@
           </div>
         </div>
 
-        <div id="edit-crop-options" class="edit-options-bar hidden"> 
+        <div id="edit-crop-options" class="edit-options-bar hidden">
           <a id="edit-crop-none" class="button"></a>
           <a id="edit-crop-aspect-free" class="selected radio button"></a>
           <a id="edit-crop-aspect-portrait" class="radio button"></a>
@@ -124,7 +125,7 @@
           <a id="edit-crop-aspect-square" class="radio button"></a>
         </div>
 
-        <div id="edit-effect-options" class="edit-options-bar hidden"> 
+        <div id="edit-effect-options" class="edit-options-bar hidden">
           <a id="edit-effect-none" class="selected radio button bgimage"
              data-effect="none"></a>
           <a id="edit-effect-bw" class="radio button filter-bw bgimage"
@@ -137,7 +138,7 @@
              data-effect="faded"></a>
         </div>
 
-        <div id="edit-border-options" class="edit-options-bar hidden"> 
+        <div id="edit-border-options" class="edit-options-bar hidden">
           <a id="edit-border-none" class="selected radio button bgimage"
              data-border-width="0"></a>
           <a id="edit-border-thin-white" class="radio button bgimage"
@@ -215,7 +216,7 @@
 
     <!-- A WebGL vertex shader program. Required by js/ImageEditor.js -->
     <script id="edit-vertex-shader" type="x-glsl/vertex-shader">
-      attribute vec2 src_pixel;   // pixel position in the image  
+      attribute vec2 src_pixel;   // pixel position in the image
       attribute vec2 dest_pixel;  // pixel position on the canvas
       uniform vec2 canvas_size;   // size of destination canvas in pixels
       uniform vec2 image_size;    // size of source image in pixels
@@ -234,15 +235,15 @@
       uniform sampler2D image;
       uniform float border_width;
       uniform vec4 border_color;
-      uniform vec2 dest_size;     // size of the destination rectangle 
+      uniform vec2 dest_size;     // size of the destination rectangle
       uniform vec2 dest_origin;   // upper-left corner of destination rectangle
       uniform vec4 gamma;
       uniform mat4 matrix;
       varying vec2 src_position;  // from the vertex shader
 
       void main() {
-        // Use border color if we're over the border 
-        if (gl_FragCoord.x < dest_origin.x + border_width || 
+        // Use border color if we're over the border
+        if (gl_FragCoord.x < dest_origin.x + border_width ||
             gl_FragCoord.y < dest_origin.y + border_width ||
             gl_FragCoord.x > dest_origin.x + dest_size.x - border_width ||
             gl_FragCoord.y > dest_origin.y + dest_size.y - border_width)
@@ -250,8 +251,8 @@
           gl_FragColor = border_color;
           return;
         }
-  
-        // Otherwise take the image clor, apply gamma correction and 
+
+        // Otherwise take the image clor, apply gamma correction and
         // the color manipulation matrix.
         vec4 color = texture2D(image, src_position);
         gl_FragColor = pow(color, gamma) * matrix;

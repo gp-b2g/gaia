@@ -243,13 +243,11 @@ webapp-manifests: install-xulrunner-sdk
 # We need to modify in Make process al the .html files for linking to our desired .css file
 ui-scale:
 	@echo "Initializing scaling process..."
-	build/./@2ximages.sh
 	build/./@2xsettings.sh
 
 # Go to previous state of  ui-scale command
 undo-ui-scale:
 	@echo "Reverting scaling process..."
-	build/./undo@2ximages.sh
 	build/./undo@2xsettings.sh
 
 # Generate profile/webapps/APP/application.zip
