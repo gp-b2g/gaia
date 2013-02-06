@@ -107,6 +107,7 @@ html, body {
   overflow: hidden;
   background-image: url('images/grey-noise-bg.png');
   background-repeat: repeat-x;
+  background-size: auto 100%;
   -moz-box-sizing: border-box;
   border-bottom: 0.1rem #2c2c2c solid;
   -moz-transform: translateY(-5rem);
