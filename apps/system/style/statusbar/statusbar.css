@@ -276,6 +276,7 @@ body, html {
   left: 0;
   background: url('images/icons.png') no-repeat;
   background-position: -16.8rem -4rem;
+  background-size: 31rem;
 }
 
 .sb-icon-network-activity {
