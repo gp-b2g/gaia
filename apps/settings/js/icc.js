@@ -20,6 +20,8 @@
   var iccStkSubheader = document.getElementById('icc-stk-subheader');
   var alertbox = document.getElementById('icc-stk-alert');
   var alertbox_btn = document.getElementById('icc-stk-alert-btn');
+  var alertbox_btnback = document.getElementById('icc-stk-alert-btn_back');
+  var alertbox_btnclose = document.getElementById('icc-stk-alert-btn_close');
   var alertbox_msg = document.getElementById('icc-stk-alert-msg');
   var iccLastCommand = null;
   var iccLastCommandProcessed = false;
@@ -71,16 +73,6 @@
     };
 
     document.getElementById('icc-stk-app-back').onclick = stkResGoBack;
-    document.getElementById('icc-stk-alert-btn_back').onclick = function() {
-      alertbox.classList.add('hidden');
-      stkResGoBack();
-    }
-    document.getElementById('icc-stk-alert-btn_close').onclick = function() {
-      alertbox.classList.add('hidden');
-      responseSTKCommand({
-        resultCode: icc.STK_RESULT_UICC_SESSION_TERM_BY_USER
-      });
-    };
     document.getElementById('icc-stk-help-exit').onclick = updateMenu;
 
     window.onunload = function() {
@@ -142,6 +134,13 @@
       }
     }
   };
+
+  function stkResTerminate() {
+    iccLastCommandProcessed = true;
+    responseSTKCommand({
+      resultCode: icc.STK_RESULT_UICC_SESSION_TERM_BY_USER
+    });
+  }
 
   function stkResGoBack() {
     iccLastCommandProcessed = true;
@@ -231,6 +230,8 @@
 
     // By default a generic screen
     setSTKScreenType(STK_SCREEN_DEFAULT);
+
+    reopenSettings();
 
     switch (command.typeOfCommand) {
       case icc.STK_CMD_SELECT_ITEM:
@@ -337,8 +338,6 @@
       case icc.STK_CMD_PLAY_TONE:
         debug(' STK:Play Tone: ', options);
         playTone(options);
-        iccLastCommandProcessed = true;
-        responseSTKCommand({ resultCode: icc.STK_RESULT_OK });
         break;
 
       default:
@@ -488,12 +487,14 @@
     var reqApplications =
       window.navigator.mozSettings.createLock().get('icc.applications');
     reqApplications.onsuccess = function icc_getApplications() {
-      var menu = JSON.parse(reqApplications.result['icc.applications']);
+      var json = reqApplications.result['icc.applications'];
+      var menu = json && JSON.parse(json);
       clearList();
 
       setSTKScreenType(STK_SCREEN_MAINMENU);
 
-      if (!menu || (menu.items.length == 1 && menu.items[0] === null)) {
+      if (!menu || !menu.items ||
+        (menu.items.length == 1 && menu.items[0] === null)) {
         debug('No STK available - hide & exit');
         document.getElementById('icc-mainheader').hidden = true;
         document.getElementById('icc-mainentry').hidden = true;
@@ -757,6 +758,18 @@
       }
     };
 
+    alertbox_btnback.onclick = function() {
+      clearTimeout(timeoutId);
+      alertbox.classList.add('hidden');
+      stkResGoBack();
+    }
+
+    alertbox_btnclose.onclick = function() {
+      clearTimeout(timeoutId);
+      alertbox.classList.add('hidden');
+      stkResTerminate();
+    };
+
     alertbox_msg.textContent = options.text;
     alertbox.classList.remove('hidden');
   }
@@ -765,6 +778,11 @@
    * Play tones
    */
   function playTone(options) {
+    function closeToneAlert() {
+      tonePlayer.pause();
+      alertbox.classList.add('hidden');
+    }
+
     debug('playTone: ', options);
 
     var tonePlayer = new Audio();
@@ -829,10 +847,24 @@
 
     if (options.text) {
       alertbox_btn.onclick = function() {
-        alertbox.classList.add('hidden');
+        closeToneAlert();
+        iccLastCommandProcessed = true;
+        responseSTKCommand({ resultCode: icc.STK_RESULT_OK });
+      }
+      alertbox_btnback.onclick = function() {
+        closeToneAlert();
+        stkResGoBack();
+      };
+      alertbox_btnclose.onclick = function() {
+        closeToneAlert();
+        stkResTerminate();
       };
       alertbox_msg.textContent = options.text;
       alertbox.classList.remove('hidden');
+    } else {
+      // If no dialog is showed, we answer the STK command
+      iccLastCommandProcessed = true;
+      responseSTKCommand({ resultCode: icc.STK_RESULT_OK });
     }
 
     tonePlayer.play();
