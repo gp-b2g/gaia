@@ -1024,3 +1024,22 @@ i.hack-first-child {
   margin-top: -0.2rem;
   background: #FFFFFF;
 }
+
+
+
+/* Fixing issue on PEAK device (system does not resize FTU frame onkeyboardshow) */
+@media all and (min-device-width: 540px) {
+  #unlock-sim-screen  [role="navigation"] { bottom: 330px; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
