@@ -87,8 +87,9 @@
     asyncStorage.setItem('nextResetAlarm', alarmId, function _updateOption() {
       ConfigManager.setOption({ nextReset: date }, function _sync() {
         localStorage['sync'] = 'nextReset#' + Math.random();
-        if (callback)
+        if (callback) {
           callback();
+        }
       });
     });
   }
@@ -117,6 +118,69 @@
 
       if (callback)
         callback();
+    };
+  }
+
+  function sendBalanceThresholdNotification(remaining, settings, callback) {
+    // XXX: Hack hiding the message class in the icon URL
+    // Should use the tag element of the notification once the final spec
+    // lands:
+    // See: https://bugzilla.mozilla.org/show_bug.cgi?id=782211
+    navigator.mozApps.getSelf().onsuccess = function _onAppReady(evt) {
+      var app = evt.target.result;
+      var iconURL = NotificationHelper.getIconURI(app);
+
+      var goToBalance;
+      if (!inStandAloneMode()) {
+        goToBalance = function _goToBalance() {
+          app.launch();
+          window.parent.CostControlApp.showBalanceTab();
+        };
+      }
+
+      debug('Low limit already notified:', settings.lowLimitNotified);
+      debug('Zero balance already notified:', settings.lowLimitNotified);
+
+      // Zero reached notification
+      var type;
+      if (remaining.balance === 0 && !settings.zeroBalanceNotified) {
+        type = 'zeroBalance';
+
+      // There is a limit an we are below that limit and we did not notified yet
+      } else if (settings.lowLimit &&
+                 remaining.balance < settings.lowLimitThreshold &&
+                 !settings.lowLimitNotified) {
+        type = 'lowBalance';
+
+      // No need for notification
+      } else {
+        return;
+      }
+      debug('Notification type:', type);
+      iconURL += '?' + type;
+
+      // Get l10n for remaining balance
+      var remainingBalance = _('currency', {
+        currency: remaining.currency,
+        value: remaining.balance
+      });
+
+      // Compose notification and send it
+      var title = _('low-balance-notification-title');
+      var message = _('low-balance-notification-text',
+                      { remaining: remainingBalance });
+      if (type === 'zeroBalance') {
+        title = _('usage');
+        message = _('zero-balance-message');
+      }
+      NotificationHelper.send(title, message, iconURL, goToBalance);
+
+      // Finally mark the notification as sent
+      var update = {};
+      var notified = (type === 'lowBalance') ? 'lowLimitNotified' :
+                                               'zeroBalanceNotified';
+      update[notified] = true;
+      ConfigManager.setOption(update, callback);
     };
   }
 
@@ -156,15 +220,16 @@
             debug('Trying to recognize TopUp error SMS');
             description = new RegExp(configuration.topup.incorrect_code_regexp);
             isError = !!sms.body.match(description);
-            if (!isError)
-              console.warn('Impossible to parse TopUp error message.');
-
+            if (!isError) {
+              console.warn('Impossible to parse TopUp confirmation message.');
+            }
           }
 
         }
 
-        if (!isBalance && !isConfirmation && !isError)
+        if (!isBalance && !isConfirmation && !isError) {
           return;
+        }
 
         // TODO: Remove the SMS
 
@@ -189,16 +254,20 @@
               debug('Balance up to date and stored');
               debug('Trying to synchronize!');
               localStorage['sync'] = 'lastBalance#' + Math.random();
-              closeIfProceeds();
+              sendBalanceThresholdNotification(newBalance, settings,
+                                               closeIfProceeds);
             }
           );
-
         } else if (isConfirmation) {
           // Store SUCCESS for TopIp and sync
           navigator.mozAlarms.remove(settings.waitingForTopUp);
           debug('TopUp timeout:', settings.waitingForTopUp, 'removed');
           ConfigManager.setOption(
-            { 'waitingForTopUp': null },
+            {
+              'waitingForTopUp': null,
+              'lowLimitNotified': false,
+              'zeroBalanceNotified': false
+            },
             function _onSet() {
               debug('TopUp confirmed!');
               debug('Trying to synchronize!');
@@ -206,14 +275,18 @@
               closeIfProceeds();
             }
           );
-
         } else if (isError) {
           // Store ERROR for TopUp and sync
           settings.errors['INCORRECT_TOPUP_CODE'] = true;
           navigator.mozAlarms.remove(settings.waitingForTopUp);
           debug('TopUp timeout: ', settings.waitingForTopUp, 'removed');
           ConfigManager.setOption(
-            { 'errors': settings.errors, 'waitingForTopUp': null },
+            {
+              'errors': settings.errors,
+              'waitingForTopUp': null,
+              'lowLimitNotified': false,
+              'zeroBalanceNotified': false
+            },
             function _onSet() {
               debug('Balance up to date and stored');
               debug('Trying to synchronize!');
@@ -272,18 +345,27 @@
     // Count a new SMS
     window.navigator.mozSetMessageHandler('sms-sent', function _onSMSSent(sms) {
       clearTimeout(closing);
-      ConfigManager.requestSettings(function _onSettings(settings) {
-        debug('SMS sent!');
-        var manager = window.navigator.mozSms;
-        var smsInfo = manager.getSegmentInfoForText(sms.body);
-        var realCount = smsInfo.segments;
-        settings.lastTelephonyActivity.timestamp = new Date();
-        settings.lastTelephonyActivity.smscount += realCount;
-        ConfigManager.setOption({
-          lastTelephonyActivity: settings.lastTelephonyActivity
-        }, function _sync() {
-          localStorage['sync'] = 'lastTelephonyActivity#' + Math.random();
-          closeIfProceeds();
+      debug('SMS sent!');
+
+      ConfigManager.requestAll(function _onInfo(configuration, settings) {
+        CostControl.getInstance(function _onInstance(costcontrol) {
+          var mode = costcontrol.getApplicationMode(settings);
+          if (mode === 'PREPAID' &&
+              !costcontrol.isBalanceRequestSMS(sms, configuration)) {
+            costcontrol.request({ type: 'balance' });
+          }
+
+          var manager = window.navigator.mozSms;
+          var smsInfo = manager.getSegmentInfoForText(sms.body);
+          var realCount = smsInfo.segments;
+          settings.lastTelephonyActivity.timestamp = new Date();
+          settings.lastTelephonyActivity.smscount += realCount;
+          ConfigManager.setOption({
+            lastTelephonyActivity: settings.lastTelephonyActivity
+          }, function _sync() {
+            localStorage['sync'] = 'lastTelephonyActivity#' + Math.random();
+            closeIfProceeds();
+          });
         });
       });
     });
@@ -292,19 +374,26 @@
     window.navigator.mozSetMessageHandler('telephony-call-ended',
       function _onCall(tcall) {
         clearTimeout(closing);
-
-        if (tcall.direction !== 'outgoing')
+        if (tcall.direction !== 'outgoing') {
           return;
-
+        }
         debug('Outgoing call finished!');
+
         ConfigManager.requestSettings(function _onSettings(settings) {
-          settings.lastTelephonyActivity.timestamp = new Date();
-          settings.lastTelephonyActivity.calltime += tcall.duration;
-          ConfigManager.setOption({
-            lastTelephonyActivity: settings.lastTelephonyActivity
-          }, function _sync() {
-            localStorage['sync'] = 'lastTelephonyActivity#' + Math.random();
-            closeIfProceeds();
+          CostControl.getInstance(function _onInstance(costcontrol) {
+            var mode = costcontrol.getApplicationMode(settings);
+            if (mode === 'PREPAID') {
+              costcontrol.request({ type: 'balance' });
+            }
+
+            settings.lastTelephonyActivity.timestamp = new Date();
+            settings.lastTelephonyActivity.calltime += tcall.duration;
+            ConfigManager.setOption({
+              lastTelephonyActivity: settings.lastTelephonyActivity
+            }, function _sync() {
+              localStorage['sync'] = 'lastTelephonyActivity#' + Math.random();
+              closeIfProceeds();
+            });
           });
         });
       }

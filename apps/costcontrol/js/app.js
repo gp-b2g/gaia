@@ -55,8 +55,9 @@ var CostControlApp = (function() {
   }
 
   window.addEventListener('localized', function _onLocalize() {
-    if (initialized)
+    if (initialized) {
       updateUI();
+    }
   });
 
   var tabmanager, settingsVManager;
@@ -132,11 +133,13 @@ var CostControlApp = (function() {
   }
 
   function handleNotification(type) {
-    // XXX: Probably more types coming. Let's leave this switch and remove the
-    // comment when more types added.
     switch (type) {
       case 'topUpError':
         BalanceTab.topUpWithCode(true);
+        break;
+      case 'lowBalance':
+      case 'zeroBalance':
+        tabmanager.changeViewTo('balance-tab');
         break;
     }
   }
@@ -153,10 +156,10 @@ var CostControlApp = (function() {
 
         // Initialize on demand
         DataUsageTab.initialize(tabmanager);
-        if (mode === 'PREPAID')
+        if (mode === 'PREPAID') {
           TelephonyTab.finalize();
           BalanceTab.initialize(tabmanager, vmanager);
-        if (mode === 'POSTPAID') {
+        } else if (mode === 'POSTPAID') {
           BalanceTab.finalize();
           TelephonyTab.initialize(tabmanager);
         }
@@ -180,13 +183,20 @@ var CostControlApp = (function() {
 
           // If it was showing the left tab, force changing to the
           // proper left view
-          if (tabmanager.getCurrentTab() !== 'datausage-tab')
+          if (tabmanager.getCurrentTab() !== 'datausage-tab') {
             tabmanager.changeViewTo(mode === 'PREPAID' ? 'balance-tab' :
                                                          'telephony-tab');
+          }
         }
 
       }
     });
   }
+
+  return {
+    showBalanceTab: function _showBalanceTab () {
+      tabmanager.changeViewTo('balance-tab');
+    }
+  };
 
 }());
