@@ -147,12 +147,10 @@ html, body {
 }
 
 .notification > .timestamp {
-  position: absolute;
-  right: 0;
-  top: -.2rem;
   color: #52B6CC;
-  margin: 1.3rem 1.5rem 0 0;
+  margin: 1.1rem 1.5rem 0 0;
   padding: 0;
+  float: right;
   display: inline;
   line-height: 1.6rem;
 }
