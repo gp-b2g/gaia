@@ -31,7 +31,7 @@ function addToZip(zip, pathInZip, file) {
     if ( file2x.exists() ) {
       return;
     }
-  } else {
+  } else if ( file.path.search('@2x') != -1 ) {
         var pathInZip = pathInZip.split("@2x")[0]+pathInZip.split("@2x")[1];
   }
 
