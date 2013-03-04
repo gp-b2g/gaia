@@ -66,6 +66,9 @@ var WindowManager = (function() {
   var inlineActivityFrames = [];
   var activityCallerOrigin = '';
 
+  // Keep a list of cached screenshot URLs for the card view
+  var screenshots = {};
+
   // Some document elements we use
   var windows = document.getElementById('windows');
   var screenElement = document.getElementById('screen');
@@ -95,19 +98,6 @@ var WindowManager = (function() {
 
   // The origin of the currently displayed app, or null if there isn't one
   var displayedApp = null;
-
-  // Function to hide init starting logo
-  function handleInitlogo(callback) {
-    var initlogo = document.getElementById('initlogo');
-    initlogo.classList.add('hide');
-    initlogo.addEventListener('transitionend', function delInitlogo() {
-      initlogo.removeEventListener('transitionend', delInitlogo);
-      initlogo.parentNode.removeChild(initlogo);
-      if (callback) {
-        callback();
-      }
-    });
-  };
 
   // Public function. Return the origin of the currently displayed app
   // or null if there is none.
@@ -420,12 +410,25 @@ var WindowManager = (function() {
     }
 
     if (classList.contains('opening')) {
-      windowOpened(frame);
+      var onWindowReady = function() {
+        windowOpened(frame);
 
-      setTimeout(openCallback);
-      openCallback = null;
+        setTimeout(openCallback);
+        openCallback = null;
 
-      setOpenFrame(null);
+        setOpenFrame(null);
+      };
+
+      // If this is a cold launch let's wait for the app to load first
+      var iframe = openFrame.firstChild;
+      if ('unpainted' in iframe.dataset) {
+        iframe.addEventListener('mozbrowserloadend', function on(e) {
+          iframe.removeEventListener('mozbrowserloadend', on);
+          onWindowReady();
+        });
+      } else {
+        onWindowReady();
+      }
     } else if (classList.contains('closing')) {
       windowClosed(frame);
 
@@ -497,36 +500,66 @@ var WindowManager = (function() {
     windows.classList.remove('active');
 
     // set the closed frame visibility to false
-    if ('setVisible' in iframe)
-      iframe.setVisible(false);
+    if ('setVisible' in iframe) {
+      // When we setVisible(false) the app frame, it throws out its
+      // layer tree, which results in it not being renderable by the
+      // compositor.  If that happens before we repaint our tree
+      // without the white app background, then we can see a flicker
+      // of white due to the race condition.
+      //
+      // What we /really/ want to do here is install an AfterPaint
+      // listener for the system app frame and then setVisible(false)
+      // the app from the next notification.  But AfterPaint isn't
+      // available to content, so we use a hack here.
+      //
+      // (The mozbrowser nextpaint event would equivalently fix this,
+      // but the system app can't get a reference to its outer frame
+      // element so that doesn't work either.)
+      //
+      // The "real" fix for this defect is tracked in bug 842102.
+      setTimeout(function _setVisible() { iframe.setVisible(false); }, 50);
+    }
 
     screenElement.classList.remove('fullscreen-app');
   }
 
-  // The following things needs to happen when firstpaint happens.
-  // We centralize all that here but not all of them applies.
+  // Save the screenshot
+  // Remove the background only until we actually got the screenshot,
+  // because the getScreenshot() call will be pushed back by
+  // painting/loading in the child process; when we got the screenshot,
+  // that means the app is mostly loaded.
+  // (as opposed to plain white firstpaint)
+  function saveScreenShotAndReplace(frame) {
+    saveAppScreenshot(frame, function screenshotTaken() {
+      // Remove the default background
+      frame.classList.remove('default-background');
+
+      // Remove the screenshot from frame
+      clearFrameBackground(frame);
+    });
+  }
+
   windows.addEventListener('mozbrowserfirstpaint', function firstpaint(evt) {
     var iframe = evt.target;
     var frame = iframe.parentNode;
 
     // remove the unpainted flag
     delete iframe.dataset.unpainted;
+  });
 
-    setTimeout(function firstpainted() {
-      // Save the screenshot
-      // Remove the background only until we actually got the screenshot,
-      // because the getScreenshot() call will be pushed back by
-      // painting/loading in the child process; when we got the screenshot,
-      // that means the app is mostly loaded.
-      // (as opposed to plain white firstpaint)
-      saveAppScreenshot(frame, function screenshotTaken() {
-        // Remove the default background
-        frame.classList.remove('default-background');
+  // We're saving the screenshot once the iframe is loaded _and_ painted
+  windows.addEventListener('mozbrowserloadend', function loadend(evt) {
+    var iframe = evt.target;
+    var frame = iframe.parentNode;
 
-        // Remove the screenshot from frame
-        clearFrameBackground(frame);
+    if (iframe.dataset.unpainted) {
+      iframe.addEventListener('mozbrowserfirstpaint', function painted() {
+        iframe.removeEventListener('mozbrowserfirstpaint', painted);
+        saveScreenShotAndReplace(frame);
       });
-    });
+    } else {
+      saveScreenShotAndReplace(frame);
+    }
   });
 
   // setFrameBackground() will attach the screenshot background to
@@ -639,7 +672,7 @@ var WindowManager = (function() {
       }
 
       callback(req.result.screenshot, true);
-    }
+    };
     req.onerror = function(evt) {
       console.warn('Window Manager: get screenshot from database failed.');
       callback();
@@ -684,6 +717,10 @@ var WindowManager = (function() {
         return;
 
       var iframe = frame.firstChild;
+
+      var objectURL = URL.createObjectURL(screenshot);
+      screenshots[iframe.dataset.frameOrigin] = objectURL;
+
       putAppScreenshotToDatabase(iframe.src || iframe.dataset.frameOrigin,
                                  screenshot);
     });
@@ -872,9 +909,13 @@ var WindowManager = (function() {
     if (!isRunning(homescreen)) {
       var app = Applications.getByManifestURL(homescreenManifestURL);
       appendFrame(null, homescreen, homescreenURL,
-                  app.manifest.name, app.manifest, app.manifestURL);
+                  app.manifest.name, app.manifest, app.manifestURL,
+                  /* expectingSystemMessage */ false);
       runningApps[homescreen].iframe.dataset.start = Date.now();
       setAppSize(homescreen);
+      if (displayedApp != homescreen &&
+        'setVsibile' in runningApps[homescreen].iframe)
+        runningApps[homescreen].iframe.setVisible(false);
     } else if (reset) {
       runningApps[homescreen].iframe.src = homescreenURL;
       setAppSize(homescreen);
@@ -906,12 +947,12 @@ var WindowManager = (function() {
 
         callback(app);
       }
-    }
+    };
   }
 
   function skipFTU() {
     document.getElementById('screen').classList.remove('ftuStarting');
-    handleInitlogo();
+    InitLogoHandler.animate();
     setDisplayedApp(homescreen);
   }
 
@@ -1023,7 +1064,8 @@ var WindowManager = (function() {
     if (closeFrame && 'setVisible' in closeFrame.firstChild)
       closeFrame.firstChild.setVisible(false);
 
-    if (!isFirstRunApplication && newApp == homescreen && !AttentionScreen.isFullyVisible()) {
+    if (!isFirstRunApplication && newApp == homescreen &&
+      !AttentionScreen.isFullyVisible()) {
       toggleHomescreen(true);
     }
 
@@ -1053,7 +1095,11 @@ var WindowManager = (function() {
       //
       // if the app is not cold booting (is in memory) we will listen
       // to appopen event, which is fired when the transition to the
-      // app window is complete.
+      // app window is complete
+      //
+      // we listen to the event on the capturing phase in order to ignore
+      // any system-level work done once the app is launched, we're only timing
+      // the app here
       //
       // [w] - warm boot (app is in memory, just transition to it)
       // [c] - cold boot (app has to be booted, we show it's document load
@@ -1067,7 +1113,7 @@ var WindowManager = (function() {
       }
 
       app.frame.addEventListener(type, function apploaded(e) {
-        e.target.removeEventListener(e.type, apploaded);
+        e.target.removeEventListener(e.type, apploaded, true);
 
         var evt = document.createEvent('CustomEvent');
         evt.initCustomEvent('apploadtime', true, false, {
@@ -1075,7 +1121,7 @@ var WindowManager = (function() {
           type: (e.type == 'appopen') ? 'w' : 'c'
         });
         iframe.dispatchEvent(evt);
-      });
+      }, true);
     }
 
     // Case 1: the app is already displayed
@@ -1092,7 +1138,7 @@ var WindowManager = (function() {
     else if (isFirstRunApplication) {
       isRunningFirstRunApp = true;
       openWindow(newApp, function windowOpened() {
-        handleInitlogo(function() {
+        InitLogoHandler.animate(function() {
           var mainScreen = document.getElementById('screen');
           mainScreen.classList.add('ftu');
           mainScreen.classList.remove('ftuStarting');
@@ -1209,7 +1255,15 @@ var WindowManager = (function() {
     return frame;
   }
 
-  function appendFrame(origFrame, origin, url, name, manifest, manifestURL) {
+  function maybeSetFrameIsCritical(iframe, origin) {
+    if (origin.startsWith('app://communications.gaiamobile.org/dialer') ||
+        origin.startsWith('app://clock.gaiamobile.org')) {
+      iframe.setAttribute('mozapptype', 'critical');
+    }
+  }
+
+  function appendFrame(origFrame, origin, url, name, manifest, manifestURL,
+                       expectingSystemMessage) {
     // Create the <iframe mozbrowser mozapp> that hosts the app
     var frame =
         createFrame(origFrame, origin, url, name, manifest, manifestURL);
@@ -1231,6 +1285,12 @@ var WindowManager = (function() {
     if (origin === homescreen) {
       iframe.setAttribute('mozapptype', 'homescreen');
     }
+
+    if (expectingSystemMessage) {
+      iframe.setAttribute('expecting-system-message',
+                          'expecting-system-message');
+    }
+    maybeSetFrameIsCritical(iframe, origin);
 
     // Add the iframe to the document
     windows.appendChild(frame);
@@ -1256,10 +1316,6 @@ var WindowManager = (function() {
       frame.classList.add('ftu');
     }
 
-    // A frame should start with visible false
-    if ('setVisible' in iframe)
-      iframe.setVisible(false);
-
     numRunningApps++;
 
     return app;
@@ -1271,6 +1327,10 @@ var WindowManager = (function() {
     var iframe = frame.firstChild;
     frame.classList.add('inlineActivity');
     iframe.dataset.frameType = 'inline-activity';
+
+    iframe.setAttribute('expecting-system-message',
+                        'expecting-system-message');
+    maybeSetFrameIsCritical(iframe, origin);
 
     // Give a name to the frame for differentiating between main frame and
     // inline frame. With the name we can get frames of the same app using the
@@ -1332,6 +1392,12 @@ var WindowManager = (function() {
 
     delete runningApps[origin];
     numRunningApps--;
+
+    // Clear the cached screen
+    if (screenshots[origin]) {
+      URL.revokeObjectURL(screenshots[origin]);
+      delete screenshots[origin];
+    }
   }
 
   function removeInlineFrame(frame) {
@@ -1490,13 +1556,17 @@ var WindowManager = (function() {
         } else if (origin !== homescreen) {
           // XXX: We could ended opening URls not for the app frame
           // in the app frame. But we don't care.
-          appendFrame(null, origin, e.detail.url,
-                      name, manifest, app.manifestURL);
+          var app = appendFrame(null, origin, e.detail.url,
+                      name, manifest, app.manifestURL,
+                      /* expectingSystemMessage */ true);
 
           // set the size of the iframe
           // so Cards View will get a correct screenshot of the frame
-          if (!e.detail.isActivity)
+          if (!e.detail.isActivity) {
             setAppSize(origin, false);
+            if ('setVisible' in app.iframe)
+              app.iframe.setVisible(false);
+          }
         } else {
           ensureHomescreen();
         }
@@ -1619,7 +1689,8 @@ var WindowManager = (function() {
     if (!inlineActivityFrames.length)
       return;
 
-    var topFrame = inlineActivityFrames[inlineActivityFrames.length - 1].firstChild;
+    var topFrame = inlineActivityFrames[inlineActivityFrames.length - 1]
+      .firstChild;
     if ('setVisible' in topFrame) {
       topFrame.setVisible(visible);
     }
@@ -1865,7 +1936,7 @@ var WindowManager = (function() {
 
       var app = appendFrame(iframe, origin, url, title, {
         'name': title
-      }, null);
+      }, null, /* expectingSystemMessage */ false);
 
       // Set the window name in order to reuse this app if we try to open
       // a new window with same name
@@ -2058,7 +2129,8 @@ var WindowManager = (function() {
     hideCurrentApp: hideCurrentApp,
     restoreCurrentApp: restoreCurrentApp,
     retrieveHomescreen: retrieveHomescreen,
-    retrieveFTU: retrieveFTU
+    retrieveFTU: retrieveFTU,
+    screenshots: screenshots
   };
 }());
 

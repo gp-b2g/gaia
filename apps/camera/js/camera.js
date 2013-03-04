@@ -422,7 +422,7 @@ var Camera = {
 
     var onerror = function() {
       handleError('error-recording');
-    }
+    };
     var onsuccess = (function onsuccess() {
       document.body.classList.add('capturing');
       captureButton.removeAttribute('disabled');
@@ -481,7 +481,7 @@ var Camera = {
         spaceReq.onerror = onerror;
         spaceReq.onsuccess = function() {
           startRecording(spaceReq.result);
-        }
+        };
       }).bind(this);
     }).bind(this));
   },
@@ -727,6 +727,7 @@ var Camera = {
   },
 
   takePictureSuccess: function camera_takePictureSuccess(blob) {
+    this._config.position = null;
     this._manuallyFocused = false;
     this.hideFocusRing();
     this.restartPreview();
@@ -734,20 +735,13 @@ var Camera = {
       var addreq = this._pictureStorage.addNamed(blob, path + name);
       addreq.onsuccess = (function() {
         if (this._pendingPick) {
-          // XXX: https://bugzilla.mozilla.org/show_bug.cgi?id=806503
-          // We ought to just be able to pass this blob to the activity.
-          // But there seems to be a bug with blob lifetimes and activities.
-          // So we'll get a new blob back out of device storage to ensure
-          // that we've got a file-backed blob instead of a memory-backed blob.
-          var getreq = this._pictureStorage.get(path + name);
-          getreq.onsuccess = (function() {
+          this._resizeBlobIfNeeded(blob, function(resized_blob) {
             this._pendingPick.postResult({
               type: 'image/jpeg',
-              blob: getreq.result
+              blob: resized_blob
             });
-            this.cancelPick();
-          }).bind(this);
-
+            this._pendingPick = null;
+          }.bind(this));
           return;
         }
 
@@ -762,6 +756,28 @@ var Camera = {
               navigator.mozL10n.get('error-saving-text'));
       };
     }).bind(this));
+  },
+
+  _resizeBlobIfNeeded: function camera_resizeBlobIfNeeded(blob, callback) {
+    var pickWidth = this._pendingPick.source.data.width;
+    var pickHeight = this._pendingPick.source.data.height;
+    if (!pickWidth || !pickHeight) {
+      callback(blob);
+      return;
+    }
+
+    var img = new Image();
+    img.onload = function resizeImg() {
+      var canvas = document.createElement('canvas');
+      canvas.width = pickWidth;
+      canvas.height = pickHeight;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, pickWidth, pickHeight);
+      canvas.toBlob(function toBlobSuccess(resized_blob) {
+        callback(resized_blob);
+      }, 'image/jpeg');
+    };
+    img.src = window.URL.createObjectURL(blob);
   },
 
   hideFocusRing: function camera_hideFocusRing() {
@@ -889,7 +905,10 @@ var Camera = {
   takePicture: function camera_takePicture() {
     this._config.rotation = this._phoneOrientation;
     this._config.pictureSize = this._pictureSize;
-    if (this._position) {
+    // We do not attach our current position to the exif of photos
+    // that are taken via an activity as that leaks position information
+    // to other apps without permission
+    if (this._position && !this._pendingPick) {
       this._config.position = this._position;
     }
     this._cameraObj

@@ -144,6 +144,15 @@ SEP=\\
 MSYS_FIX=/
 endif
 
+
+SETTINGS_PATH := build/custom-settings.json
+ifdef CUSTOMIZE
+	CUSTOMIZE_SETTINGS := $(realpath $(CUSTOMIZE))$(SEP)settings.json
+	ifneq ($(wildcard $(CUSTOMIZE_SETTINGS)),)
+		SETTINGS_PATH := $(CUSTOMIZE_SETTINGS)
+	endif
+endif
+
 ifeq ($(SYS),Darwin)
 MD5SUM = md5 -r
 SED_INPLACE_NO_SUFFIX = /usr/bin/sed -i ''
@@ -357,6 +366,7 @@ define run-js-command
 	const GAIA_DEFAULT_LOCALE = "$(GAIA_DEFAULT_LOCALE)";                       \
 	const GAIA_INLINE_LOCALES = "$(GAIA_INLINE_LOCALES)";                       \
 	const GAIA_ENGINE = "xpcshell";                                             \
+	const CUSTOMIZE = "$(realpath $(CUSTOMIZE))";      													\
 	';                                                                          \
 	$(XULRUNNERSDK) $(XPCSHELLSDK) -e "$$JS_CONSTS" -f build/utils.js "build/$(strip $1).js"
 endef
@@ -368,6 +378,10 @@ EXTENDED_PREF_FILES = \
   custom-prefs.js \
   payment-prefs.js \
   ua-override-prefs.js \
+
+ifeq ($(DOGFOOD),1)
+EXTENDED_PREF_FILES += dogfood-prefs.js
+endif
 
 # Generate profile/prefs.js
 preferences: install-xulrunner-sdk
@@ -691,7 +705,7 @@ SETTINGS_ARG += --console
 endif
 
 profile/settings.json: build/settings.py build/wallpaper.jpg
-	python build/settings.py $(SETTINGS_ARG) --locale $(GAIA_DEFAULT_LOCALE) --homescreen $(SCHEME)homescreen.$(GAIA_DOMAIN)$(GAIA_PORT)/manifest.webapp --ftu $(SCHEME)communications.$(GAIA_DOMAIN)$(GAIA_PORT)/manifest.webapp --wallpaper build/wallpaper.jpg --override build/custom-settings.json --output $@
+	python build/settings.py $(SETTINGS_ARG) --locale $(GAIA_DEFAULT_LOCALE) --homescreen $(SCHEME)homescreen.$(GAIA_DOMAIN)$(GAIA_PORT)/manifest.webapp --ftu $(SCHEME)communications.$(GAIA_DOMAIN)$(GAIA_PORT)/manifest.webapp --wallpaper build/wallpaper.jpg --override $(SETTINGS_PATH) --output $@
 
 # push profile/settings.json to the phone
 install-settings-defaults:

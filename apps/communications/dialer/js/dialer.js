@@ -49,7 +49,11 @@ var CallHandler = (function callHandler() {
   window.navigator.mozSetMessageHandler('activity', handleActivity);
 
   /* === Notifications support === */
-  function handleNotification() {
+  function handleNotification(evt) {
+    if (!evt.clicked) {
+      return;
+    }
+
     navigator.mozApps.getSelf().onsuccess = function gotSelf(evt) {
       var app = evt.target.result;
       app.launch('dialer');
@@ -59,14 +63,13 @@ var CallHandler = (function callHandler() {
   window.navigator.mozSetMessageHandler('notification', handleNotification);
 
   function handleNotificationRequest(number) {
-    Contacts.findByNumber(number, function lookup(contact) {
+    Contacts.findByNumber(number, function lookup(contact, matchingTel) {
       LazyL10n.get(function localized(_) {
         var title = _('missedCall');
-        var sender = (number && number.length) ? number : _('unknown');
 
-        if (contact && contact.name) {
-          sender = contact.name;
-        }
+        var sender = (contact == null) ? number :
+          (Utils.getPhoneNumberPrimaryInfo(matchingTel, contact) ||
+            _('unknown'));
 
         var body = _('from', {sender: sender});
 
@@ -189,19 +192,36 @@ var CallHandler = (function callHandler() {
     }
 
     var oncall = function t_oncall() {
-      if (!callScreenWindow)
-        openCallScreen();
-    }.bind(this);
+      if (!callScreenWindow) {
+        openCallScreen(opened);
+      }
+    };
 
     var connected, disconnected = function clearPhoneView() {
       KeypadManager.updatePhoneNumber('', 'begin', true);
     };
 
-    TelephonyHelper.call(number, oncall, connected, disconnected);
+    var shouldCloseCallScreen = false;
+
+    var error = function() {
+      shouldCloseCallScreen = true;
+    };
+
+    var opened = function() {
+      if (shouldCloseCallScreen) {
+        sendCommandToCallScreen('*', 'exitCallScreen');
+      }
+    };
+
+    TelephonyHelper.call(number, oncall, connected, disconnected, error);
   }
 
   /* === Attention Screen === */
-  function openCallScreen() {
+  // Each window gets a unique name to prevent a possible race condition
+  // where we want to open a new call screen while the previous one is
+  // animating out of the screen.
+  var callScreenId = 0;
+  function openCallScreen(openCallback) {
     if (callScreenWindow)
       return;
 
@@ -209,11 +229,17 @@ var CallHandler = (function callHandler() {
     var protocol = document.location.protocol;
     var urlBase = protocol + '//' + host + '/dialer/oncall.html';
 
+    var highPriorityWakeLock = navigator.requestWakeLock('high-priority');
     var openWindow = function dialer_openCallScreen(state) {
       callScreenWindow = window.open(urlBase + '#' + state,
-                  'call_screen', 'attention');
+                  ('call_screen' + callScreenId++), 'attention');
+
       callScreenWindow.onload = function onload() {
+        highPriorityWakeLock.unlock();
         callScreenWindowLoaded = true;
+        if (openCallback) {
+          openCallback();
+        }
       };
 
       var telephony = navigator.mozTelephony;

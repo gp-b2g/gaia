@@ -50,13 +50,17 @@ function iconDescriptor(directory, app_name, entry_point) {
   let manifestURL = gaiaManifestURL(app_name);
 
   // For external/3rd party apps that don't use the Gaia domain, we have an
-  // 'origin' file that specifies the URL.
+  // 'metadata.json' file that specifies the URL.
   let dir = getFile(GAIA_DIR, directory, app_name);
-  let originFile = dir.clone();
-  originFile.append("origin");
-  if (originFile.exists()) {
-    origin = getFileContent(originFile).replace(/^\s+|\s+$/, '');
-    if (origin.slice(-1) == "/") {
+  let metadataFile = dir.clone();
+  metadataFile.append("metadata.json");
+  if (metadataFile.exists()) {
+    let metadata = getJSON(metadataFile);
+    origin = metadata.origin.replace(/^\s+|\s+$/, '');
+    manifestURL = metadata.manifestURL;
+    if (manifestURL) {
+      manifestURL = manifestURL.replace(/^\s+|\s+$/, '');
+    } else if (origin.slice(-1) == "/") {
       manifestURL = origin + "manifest.webapp";
     } else {
       manifestURL = origin + "/manifest.webapp";
@@ -65,7 +69,15 @@ function iconDescriptor(directory, app_name, entry_point) {
 
   let manifestFile = dir.clone();
   manifestFile.append("manifest.webapp");
-  let manifest = getJSON(manifestFile);
+  let manifest;
+  try {
+    manifest = getJSON(manifestFile);
+  } catch (e) {
+    manifestFile = dir.clone();
+    manifestFile.append("update.webapp");
+    dump('Looking for packaged app: ' + manifestFile.path + '\n');
+    manifest = getJSON(manifestFile);
+  }
 
   if (entry_point &&
       manifest.entry_points &&
@@ -82,6 +94,17 @@ function iconDescriptor(directory, app_name, entry_point) {
     name: manifest.name,
     icon: icon
   };
+}
+
+function getCustomize(name) {
+  var content;
+  if (Gaia.customizeFolder) {
+    let customize = getFile(Gaia.customizeFolder, name + '.json');
+    if (customize.exists()) {
+      content = getJSON(customize);
+    }
+  }
+  return content;
 }
 
 // zeroth grid page is the dock
@@ -111,24 +134,31 @@ if (DOGFOOD == 1) {
   customize.homescreens[0].push(["dogfood_apps", "feedback"]);
 }
 
-let init = getFile(GAIA_DIR, 'customize.json');
-if (init.exists()) {
-  customize = getJSON(init);
+let homescreens = getCustomize('homescreens');
+if (homescreens) {
+  customize = homescreens;
 }
 
-let content = customize.homescreens.map(
-  function map_homescreens(applist) {
-    var output = [];
-    for (var i = 0; i < applist.length; i++) {
-      if (applist[i] !== null) {
-        output.push(iconDescriptor.apply(null, applist[i]));
-      }
-    }
-    return output;
-  }
-);
+let content = {
+  search_page: {
+    provider: 'EverythingME',
+    enabled: true
+  },
 
-init = getFile(GAIA_DIR, GAIA_CORE_APP_SRCDIR, 'homescreen', 'js', 'init.json');
+  grid: customize.homescreens.map(
+    function map_homescreens(applist) {
+      var output = [];
+      for (var i = 0; i < applist.length; i++) {
+        if (applist[i] !== null) {
+          output.push(iconDescriptor.apply(null, applist[i]));
+        }
+      }
+      return output;
+    }
+  )
+};
+
+let init = getFile(GAIA_DIR, GAIA_CORE_APP_SRCDIR, 'homescreen', 'js', 'init.json');
 writeContent(init, JSON.stringify(content));
 
 // Apps that should never appear in settings > app permissions
@@ -178,11 +208,22 @@ content = {
   default_low_limit_threshold: 3
 };
 
+let costcontrol = getCustomize('costcontrol');
+if (costcontrol) {
+  content = costcontrol;
+}
+
 writeContent(init, JSON.stringify(content));
 
 // SMS
 init = getFile(GAIA_DIR, 'apps', 'sms', 'js', 'blacklist.json');
 content = ["1515", "7000"];
+
+let blacklist = getCustomize('sms-blacklist');
+if (blacklist) {
+  content = blacklist;
+}
+
 writeContent(init, JSON.stringify(content));
 
 // Browser
@@ -206,6 +247,11 @@ content = {
   ]
 }
 
+let browser = getCustomize('browser');
+if (browser) {
+  content = browser;
+}
+
 writeContent(init, JSON.stringify(content));
 
 // Support
@@ -226,6 +272,12 @@ content = {
     }
   ]
 }
+
+let support = getCustomize('support');
+if (support) {
+  content = support;
+}
+
 writeContent(init, JSON.stringify(content));
 
 // ICC / STK
@@ -233,4 +285,10 @@ init = getFile(GAIA_DIR, 'apps', 'settings', 'resources', 'icc.json');
 content = {
   "defaultURL": "http://www.mozilla.org/en-US/firefoxos/"
 }
+
+let icc = getCustomize('icc');
+if (icc) {
+  content = icc;
+}
+
 writeContent(init, JSON.stringify(content));
