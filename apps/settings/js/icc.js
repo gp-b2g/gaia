@@ -85,9 +85,9 @@
       handleSTKCommand(event.command);
     });
     window.addEventListener('stkasynccommand',
-        function do_handleAsyncSTKCmd(event) {
-      handleSTKCommand(event.detail.command);
-    });
+      function do_handleAsyncSTKCmd(event) {
+        handleSTKCommand(event.detail.command);
+      });
 
     /**
      * Open STK main application
@@ -99,41 +99,24 @@
     // Load STK apps
     updateMenu();
 
+    // XXX https://bugzilla.mozilla.org/show_bug.cgi?id=844727
+    // We should use Settings.settingsCache first
+    var settings = Settings.mozSettings;
+    var lock = settings.createLock();
     // Update displayTextTimeout with settings parameter
-    var reqDisplayTimeout =
-      window.navigator.mozSettings.createLock().get('icc.displayTextTimeout');
+    var reqDisplayTimeout = lock.get('icc.displayTextTimeout');
     reqDisplayTimeout.onsuccess = function icc_getDisplayTimeout() {
       displayTextTimeout = reqDisplayTimeout.result['icc.displayTextTimeout'];
     };
 
     // Update inputTimeout with settings parameter
-    var reqInputTimeout =
-      window.navigator.mozSettings.createLock().get('icc.inputTextTimeout');
+    var reqInputTimeout = lock.get('icc.inputTextTimeout');
     reqInputTimeout.onsuccess = function icc_getInputTimeout() {
       inputTimeout = reqInputTimeout.result['icc.inputTextTimeout'];
     };
 
     getIccInfo();
-
-    // Check if async message has arrived
-    var reqIccData = window.navigator.mozSettings.createLock().get('icc.data');
-    reqIccData.onsuccess = function icc_getIccData() {
-      var cmd = reqIccData.result['icc.data'];
-      if (cmd) {
-        var iccCommand = JSON.parse(cmd);
-        debug('ICC async command: ', iccCommand);
-        reqIccData = window.navigator.mozSettings.createLock().set({
-          'icc.data': ''
-        });
-        if (iccCommand) {        // Open ICC section
-          var event = new CustomEvent('stkasynccommand', {
-            detail: { 'command': iccCommand }
-          });
-          window.dispatchEvent(event);
-        }
-      }
-    }
-  };
+  }
 
   function stkResTerminate() {
     iccLastCommandProcessed = true;
@@ -307,10 +290,13 @@
 
       case icc.STK_CMD_SET_UP_CALL:
         debug(' STK:Setup Phone Call. Number: ' + options.address);
-        var confirmed = true;
-        if (options.confirmMessage) {
-          confirmed = confirm(options.confirmMessage);
+        if (!options.confirmMessage) {
+          options.confirmMessage = _(
+            'operatorService-confirmCall-defaultmessage', {
+              'number': options.address
+            });
         }
+        var confirmed = confirm(options.confirmMessage);
         iccLastCommandProcessed = true;
         responseSTKCommand({
           hasConfirmed: confirmed,
@@ -663,6 +649,9 @@
     if (options.isYesNoRequired) {
       input.type = 'checkbox';
     }
+    if (options.hideInput) {
+      input.type = 'password';
+    }
     if (options.hidden) {
       input.type = 'hidden';
     }
@@ -702,6 +691,13 @@
         clearTimeout(inputTimeOutID);
         inputTimeOutID = null;
       }
+      if (input.type === 'tel') {
+        // Removing unauthorized characters
+        console.log('TEL keypad. Remove unauthorized characters: ' +
+          input.value);
+        input.value = input.value.replace(/[()-]/g,'');
+        console.log('TEL keypad. Final entry: ' + input.value);
+      }
       button.disabled = !checkInputLengthValid(input.value.length,
                                               options.minLength,
                                               options.maxLength);
@@ -710,6 +706,7 @@
     label.appendChild(button);
     li.appendChild(label);
     iccStkList.appendChild(li);
+    input.focus();
 
     // Help
     if (options.isHelpAvailable) {
@@ -829,17 +826,20 @@
 
     var timeout = 0;
     if (options.duration &&
-        options.duration.timeUnit &&
-        options.duration.timeInterval) {
+        options.duration.timeUnit != undefined &&
+        options.duration.timeInterval != undefined) {
       timeout = calculateDurationInMS(options.duration.timeUnit,
         options.duration.timeInterval);
-    } else if (options.timeUnit && options.timeInterval) {
+    } else if (options.timeUnit != undefined &&
+        options.timeInterval != undefined) {
       timeout = calculateDurationInMS(options.timUnit, options.timeInterval);
     }
     if (timeout) {
       debug('Tone stop in (ms): ', timeout);
       setTimeout(function() {
-        tonePlayer.pause();
+        closeToneAlert();
+        iccLastCommandProcessed = true;
+        responseSTKCommand({ resultCode: icc.STK_RESULT_OK });
       }, timeout);
     }
 

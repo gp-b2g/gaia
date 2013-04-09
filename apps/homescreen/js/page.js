@@ -91,21 +91,16 @@ Icon.prototype = {
 
     // Image
     var img = this.img = new Image();
-    icon.appendChild(img);
+    img.setAttribute('role', 'presentation');
+    img.width = MAX_ICON_SIZE+4;
+    img.height = MAX_ICON_SIZE+4;
     img.style.visibility = 'hidden';
-    if (this.downloading) {
-      img.src = descriptor.icon;
-      img.style.visibility = 'visible';
+    if (descriptor.renderedIcon) {
+      this.displayRenderedIcon();
     } else {
-      img.setAttribute('role', 'presentation');
-      img.width = MAX_ICON_SIZE+4;
-      img.height = MAX_ICON_SIZE+4;
-      if (descriptor.renderedIcon) {
-        this.displayRenderedIcon();
-      } else {
-        this.fetchImageData();
-      }
+      this.fetchImageData();
     }
+    icon.appendChild(img);
 
     // Label
 
@@ -217,6 +212,7 @@ Icon.prototype = {
     }
 
     img.onload = function icon_loadSuccess() {
+      img.onload = img.onerror = null;
       if (blob)
         window.URL.revokeObjectURL(img.src);
       self.renderImage(img);
@@ -227,8 +223,10 @@ Icon.prototype = {
         window.URL.revokeObjectURL(img.src);
       img.src = getDefaultIcon(self.app);
       img.onload = function icon_errorIconLoadSucess() {
+        img.onload = null;
         self.renderImage(img);
       };
+      img.onerror = null;
     };
   },
 
@@ -521,13 +519,6 @@ function Page(container, icons) {
 }
 
 Page.prototype = {
-
-  /*
-   * It defines the threshold in pixels to consider a gesture like a tap event
-   */
-
-   // for Keon tapThreshold: 10,
-  tapThreshold: 15,
 
   /*
    * Renders a page for a list of apps

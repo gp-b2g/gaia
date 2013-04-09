@@ -8,19 +8,11 @@
     <!-- Common style -->
     <link rel="stylesheet" type="text/css" href="shared/style/headers.css"/>
     <link rel="stylesheet" type="text/css" href="shared/style/switches.css"/>
-    <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
-    <link rel="stylesheet" type="text/css" href="shared/style/action_menu.css"/>
-    <link rel="stylesheet" type="text/css" href="shared/style/confirm.css"/>
-    <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
 
     <!-- Specific style -->
     <link rel="stylesheet" type="text/css" href="style/lists.css"/>
     <link rel="stylesheet" type="text/css" href="style/icons.css"/>
     <link rel="stylesheet" type="text/css" href="style/settings.css"/>
-    <link rel="stylesheet" type="text/css" href="style/simcard.css"/>
-    <link rel="stylesheet" type="text/css" href="style/phone_lock.css"/>
-    <link rel="stylesheet" type="text/css" href="style/apps.css"/>
-    <link rel="stylesheet" type="text/css" href="style/updates.css"/>
 
     <!-- Shared resources
     <link rel="resource" type="application/json" href="shared/resources/tz.json"/>
@@ -36,27 +28,15 @@
     <link rel="resource" type="application/l10n" href="shared/locales/permissions.ini"/>
     <link rel="resource" type="application/l10n" href="shared/locales/tz.ini"/>
     <link rel="resource" type="application/l10n" href="locales/locales.ini"/>
-    <script type="application/javascript" src="shared/js/l10n.js"></script>
-    <script type="application/javascript" src="shared/js/l10n_date.js"></script>
-
-    <!-- shared helper library -->
-    <script type="application/javascript" defer src="shared/js/mouse_event_shim.js"></script>
-    <script type="application/javascript" defer src="shared/js/manifest_helper.js"></script>
-    <script type="application/javascript" defer src="shared/js/async_storage.js"></script>
+    <script defer src="shared/js/l10n.js"></script>
+    <script defer src="shared/js/l10n_date.js"></script>
 
     <!-- Specific code -->
-    <script type="application/javascript" defer src="js/utils.js"></script>
-    <script type="application/javascript" defer src="js/settings.js"></script>
-    <script type="application/javascript" defer src="js/airplane_mode.js"></script>
+    <script defer src="js/settings.js"></script>
 
-    <!-- Required to update the status of the root panel -->
-    <script type="application/javascript" defer src="js/battery.js"></script>
-    <script type="application/javascript" defer src="js/app_storage.js"></script>
-    <script type="application/javascript" defer src="js/media_storage.js"></script>
-    <script type="application/javascript" defer src="shared/js/mobile_operator.js"></script>
-    <script type="application/javascript" defer src="js/connectivity.js"></script>
-    <script type="application/javascript" defer src="js/security_privacy.js"></script>
-    <script type="application/javascript" defer src="js/icc_menu.js"></script>
+    <!-- shared helper library -->
+    <!--<script defer src="shared/js/mouse_event_shim.js"></script>-->
+    <!--<script defer src="shared/js/mobile_operator.js"></script>-->
 
     <!-- all non-#root panels will lazy-load their own scripts -->
     <link rel="stylesheet" href="/shared/style/resolution.css" >
@@ -154,6 +134,7 @@
           <input type="password" data-ignore name="password" maxlength="63" x-inputmode="verbatim" />
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -199,6 +180,8 @@
           <input type="password" data-ignore name="password" maxlength="63" />
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -243,6 +226,7 @@
           <input type="text" />
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -285,6 +269,8 @@
           <button data-l10n-id="cancel" type="reset">Cancel</button>
         </menu>
       </form>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
+      <link rel="stylesheet" type="text/css" href="shared/style/action_menu.css"/>
       -->
     </section>
 
@@ -299,7 +285,7 @@
       <ul>
         <li id="wifi-enabled">
           <label>
-            <input type="checkbox" data-type="switch" />
+            <input type="checkbox" data-type="switch" data-ignore/>
             <span></span>
           </label>
           <a data-l10n-id="wifi">Wi-Fi</a>
@@ -346,7 +332,8 @@
         </li>
       </ul>
 
-      <script type="application/javascript" src="js/wifi.js"></script>
+      <script src="js/wifi.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -375,6 +362,7 @@
           <a data-l10n-id="callForwardingForward">Forward</a>
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -403,6 +391,7 @@
           <a data-l10n-id="callForwardingForward">Forward</a>
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -431,6 +420,7 @@
           <a data-l10n-id="callForwardingForward">Forward</a>
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -459,6 +449,7 @@
           <a data-l10n-id="callForwardingForward">Forward</a>
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -473,7 +464,7 @@
       <ul>
         <li id="menuItem-callWaiting" data-state="off">
           <label class="checkbox-label">
-            <input type="checkbox" data-type="switch"/>
+            <input type="checkbox" data-type="switch" data-ignore/>
             <span></span>
           </label>
           <label class="alert-label" hidden>
@@ -513,7 +504,7 @@
           </p>
           <p class="cw-alert-sub-p">
             <label class="cw-alert-checkbox-label">
-              <input type="checkbox" data-type="switch"/>
+              <input type="checkbox" data-type="switch" data-ignore/>
               <span></span>
             </label>
             <span data-l10n-id="callWaiting">Call Waiting</span>
@@ -525,7 +516,9 @@
         </menu>
       </form>
 
-      <script type="application/javascript" src="js/call.js"></script>
+      <script src="js/call.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
+      <link rel="stylesheet" type="text/css" href="shared/style/confirm.css"/>
       -->
     </section>
 
@@ -551,7 +544,7 @@
         </li>
         <li id="operator-autoSelect">
           <label>
-            <input type="checkbox" data-type="switch" />
+            <input type="checkbox" data-type="switch" data-ignore/>
             <span></span>
           </label>
           <small></small>
@@ -575,6 +568,7 @@
           </label>
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -624,6 +618,7 @@
           <input type="text" data-setting="ril.data.httpProxyPort" />
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -685,6 +680,7 @@
           <input type="text" data-setting="ril.mms.mmsc" />
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -734,6 +730,7 @@
           <input type="text" data-setting="ril.supl.httpProxyPort" />
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -757,6 +754,8 @@
           <button type="submit" class="recommend" data-l10n-id="turnOn">Turn ON</button>
         </menu>
       </form>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
+      <link rel="stylesheet" type="text/css" href="shared/style/confirm.css"/>
       -->
     </section>
 
@@ -804,7 +803,7 @@
       <ul>
         <li>
           <label>
-            <input type="checkbox" data-type="switch" name="ril.data.enabled"/>
+            <input type="checkbox" data-type="switch" name="ril.data.enabled" class="uninit"/>
             <span></span>
           </label>
           <small id="dataConnection-desc"></small>
@@ -814,7 +813,7 @@
         </li>
         <li>
           <label>
-            <input type="checkbox" data-type="switch" name="ril.data.roaming_enabled"/>
+            <input type="checkbox" data-type="switch" name="ril.data.roaming_enabled" class="uninit"/>
             <span></span>
           </label>
           <a data-l10n-id="dataRoaming">Data Roaming</a>
@@ -853,7 +852,9 @@
         </li>
       </ul>
 
-      <script type="application/javascript" defer src="js/carrier.js"></script>
+      <script src="shared/js/async_storage.js"></script>
+      <script defer src="js/carrier.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -868,7 +869,7 @@
       <ul>
         <li id="bluetooth-status">
           <label>
-            <input type="checkbox" data-type="switch" />
+            <input type="checkbox" data-type="switch" data-ignore/>
             <span></span>
           </label>
           <a data-l10n-id="bluetooth">Bluetooth</a>
@@ -923,7 +924,10 @@
         </menu>
       </form>
 
-      <script type="application/javascript" src="js/bluetooth.js"></script>
+      <script src="shared/js/async_storage.js"></script>
+      <script src="js/bluetooth.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
+      <link rel="stylesheet" type="text/css" href="shared/style/action_menu.css"/>
       -->
     </section>
 
@@ -943,7 +947,7 @@
           <p data-l10n-id="ssid-name">SSID Network Name</p>
           <input type="text" data-setting="tethering.wifi.ssid" />
         </li>
-        <li>
+        <li class="password-item">
           <p data-l10n-id="wifi-password">Password</p>
           <input type="text" data-setting="tethering.wifi.security.password" />
         </li>
@@ -951,7 +955,7 @@
           <p data-l10n-id="wifi-security">Security</p>
           <p class="fake-select">
             <button class="icon icon-dialog">Security</button>
-            <select data-setting="tethering.wifi.security.type">
+            <select class="security-selector" data-setting="tethering.wifi.security.type">
               <option value="open" data-l10n-id="hotspot-open">open</option>
               <option value="wpa-psk" data-l10n-id="hotspot-wpa-psk">WPA (TKIP)</option>
               <option value="wpa2-psk" data-l10n-id="hotspot-wpa2-psk">WPA2 (AES)</option>
@@ -959,6 +963,8 @@
           </p>
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -976,7 +982,7 @@
       <ul>
         <li>
           <label>
-            <input type="checkbox" data-type="switch" name="tethering.wifi.enabled"/>
+            <input type="checkbox" data-type="switch" name="tethering.wifi.enabled" class="uninit"/>
             <span></span>
           </label>
           <a data-l10n-id="wifi-hotspot">Wi-Fi Hotspot</a>
@@ -989,7 +995,7 @@
             <span data-name="tethering.wifi.ssid"></span>
           </a>
         </li>
-        <li>
+        <li class="password-item" hidden>
           <a data-l10n-id="wifi-password">Password
             <span data-name="tethering.wifi.security.password"></span>
           </a>
@@ -1001,7 +1007,7 @@
         </li>
         <li id="hotspot-settings-section">
           <label>
-            <button data-href="#hotspot-wifiSettings"
+            <button class="hotspot-wifiSettings-btn"
               data-l10n-id="hotspotSettings">Hotspot Settings</button>
           </label>
         </li>
@@ -1013,7 +1019,7 @@
       <ul>
         <li>
           <label>
-            <input type="checkbox" data-type="switch" name="tethering.usb.enabled"/>
+            <input type="checkbox" data-type="switch" name="tethering.usb.enabled" class="uninit"/>
             <span></span>
           </label>
           <a data-l10n-id="usb-tethering">USB Tethering</a>
@@ -1023,7 +1029,8 @@
         </li>
       </ul>
 
-      <script type="application/javascript" src="js/hotspot.js"></script>
+      <script src="js/hotspot.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -1067,7 +1074,7 @@
       <ul>
         <li>
           <label>
-            <input type="checkbox" data-type="switch" name="vibration.enabled" checked />
+            <input type="checkbox" data-type="switch" name="vibration.enabled" checked class="uninit"/>
             <span></span>
           </label>
           <a data-l10n-id="vibrate">Vibrate</a>
@@ -1140,7 +1147,8 @@
         </li>
       </ul>
 
-      <script type="application/javascript" src="js/sound.js"></script>
+      <script src="js/sound.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -1191,7 +1199,8 @@
         </li>
       </ul>
 
-      <script type="application/javascript" src="js/wallpaper.js"></script>
+      <script src="js/wallpaper.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -1240,7 +1249,7 @@
       <ul id="time-auto" data-state="auto" hidden>
         <li>
           <label>
-            <input type="checkbox" data-type="switch" name="time.nitz.automatic-update.enabled"/>
+            <input type="checkbox" data-type="switch" name="time.nitz.automatic-update.enabled" class="uninit"/>
             <span></span>
           </label>
           <a data-l10n-id="setTimeAutomatically">Set Automatically</a>
@@ -1285,8 +1294,10 @@
         </li>
       </ul>
 
-      <script type="application/javascript" src="shared/js/tz_select.js"></script>
-      <script type="application/javascript" src="js/date_time.js"></script>
+      <script src="shared/js/tz_select.js"></script>
+      <script src="js/date_time.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
       -->
     </section>
 
@@ -1332,6 +1343,7 @@
         <dd id="region-date">Friday, September 28 2012</dd>
         <dd id="region-time">06:54 PM</dd>
       </dl>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -1398,6 +1410,13 @@
             <span></span>
           </label>
           <a data-l10n-id="portuguese">Portuguese (Brazilian)</a>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="keyboard.layouts.polish"/>
+            <span></span>
+          </label>
+          <a data-l10n-id="polish">Polish</a>
         </li>
         <li>
           <label>
@@ -1478,6 +1497,9 @@
           </div>
         </div>
       </div>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
+      <link rel="stylesheet" type="text/css" href="style/phone_lock.css"/>
       -->
     </section>
 
@@ -1492,14 +1514,14 @@
       <ul>
         <li>
           <label>
-            <input type="checkbox" data-type="switch" name="lockscreen.enabled" id="lockscreen-enable" />
+            <input type="checkbox" data-type="switch" name="lockscreen.enabled" id="lockscreen-enable" class="uninit"/>
             <span></span>
           </label>
           <a data-l10n-id="lockScreen">Lock Screen</a>
         </li>
         <li class="lockscreen-enabled">
           <label>
-            <input type="checkbox" data-type="switch" name="lockscreen.passcode-lock.enabled" id="passcode-enable" />
+            <input type="checkbox" data-type="switch" name="lockscreen.passcode-lock.enabled" id="passcode-enable" class="uninit"/>
             <span></span>
           </label>
           <a data-l10n-id="passcode-lock">Passcode Lock</a>
@@ -1525,7 +1547,8 @@
         </li>
       </ul>
 
-      <script type="application/javascript" src="js/phone_lock.js"></script>
+      <script src="js/phone_lock.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -1583,7 +1606,9 @@
         </div>
       </div>
 
-      <script type="application/javascript" src="js/simcard_dialog.js"></script>
+      <script src="js/simcard_dialog.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/input_areas.css"/>
+     <link rel="stylesheet" type="text/css" href="style/simcard.css"/>
       -->
     </section>
 
@@ -1598,7 +1623,7 @@
       <ul>
         <li id="simpin-enabled">
           <label>
-            <input type="checkbox" data-type="switch" />
+            <input type="checkbox" data-type="switch" data-ignore/>
             <span></span>
           </label>
           <a data-l10n-id="simPin">SIM PIN</a>
@@ -1625,8 +1650,9 @@
         </li>
       </ul>
 
-      <script type="application/javascript" src="js/simcard_lock.js"></script>
-      <script type="application/javascript" src="js/simcard_dialog.js"></script>
+      <script src="js/simcard_lock.js"></script>
+      <script src="js/simcard_dialog.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -1658,6 +1684,7 @@
         <h2 data-l10n-id="uninstallApp">Uninstall App</h2>
       </header>
       <button id="uninstall-app" data-l10n-id="uninstallApp" class="danger">Uninstall App</button>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -1696,8 +1723,12 @@
         </menu>
       </form>
 
-      <script type="application/javascript" src="js/hiddenapps.js"></script>
-      <script type="application/javascript" src="js/apps.js"></script>
+      <script type="application/javascript" src="shared/js/manifest_helper.js"></script>
+      <script src="js/hiddenapps.js"></script>
+      <script src="js/apps.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
+      <link rel="stylesheet" type="text/css" href="shared/style/confirm.css"/>
+      <link rel="stylesheet" type="text/css" href="style/apps.css"/>
       -->
     </section>
 
@@ -1836,6 +1867,7 @@
           <a data-l10n-id="simplifiedChinese">Simplified Chinese</a>
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -1915,7 +1947,8 @@
         </li>
       </ul>
 
-      <script type="application/javascript" src="js/factory_reset.js"></script>
+      <script src="js/factory_reset.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -2142,7 +2175,9 @@
         </li>
       </ul>
 
-      <script type="application/javascript" src="js/about.js"></script>
+      <script src="js/about.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
+      <link rel="stylesheet" type="text/css" href="style/updates.css"/>
       -->
     </section>
 
@@ -2168,7 +2203,7 @@
       <ul>
         <li>
           <label>
-            <input type="checkbox" data-type="switch" name="powersave.enabled" />
+            <input type="checkbox" data-type="switch" name="powersave.enabled" class="uninit"/>
             <span></span>
           </label>
           <a data-l10n-id="powerSaveMode">Power Save Mode</a>
@@ -2191,6 +2226,7 @@
           services back on manually.
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -2242,23 +2278,30 @@
       </header>
       <ul>
         <li>
+          <div id="space-stackedbar"></div>
+        </li>
+        <li id="music-space">
+          <span class="stackedbar-color"></span>
           <a data-l10n-id="music-space"> Music
-            <span id="music-space"></span>
+            <span class="size"></span>
           </a>
         </li>
-        <li>
+        <li id="pictures-space">
+          <span class="stackedbar-color"></span>
           <a data-l10n-id="pictures-space"> Pictures
-            <span id="pictures-space"></span>
+            <span class="size"></span>
           </a>
         </li>
-        <li>
+        <li id="videos-space">
+          <span class="stackedbar-color"></span>
           <a data-l10n-id="videos-space"> Movies
-            <span id="videos-space"></span>
+            <span class="size"></span>
           </a>
         </li>
-        <li>
+        <li id="media-free-space">
+          <span class="stackedbar-color"></span>
           <a data-l10n-id="left-space"> Space Left
-            <span id="media-free-space"></span>
+            <span class="size"></span>
           </a>
         </li>
       </ul>
@@ -2398,6 +2441,7 @@
           <a data-l10n-id="askToSendReport">Ask me when a crash occurs</a>
         </li>
       </ul>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -2433,7 +2477,8 @@
           </label>
         </li>
       </ul>
-      <script type="application/javascript" src="js/support.js"></script>
+      <script src="js/support.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
       -->
     </section>
 
@@ -2470,8 +2515,10 @@
         </menu>
       </form>
 
-      <script type="application/javascript" src="/shared/js/notification_helper.js"></script>
-      <script type="application/javascript" src="js/icc.js"></script>
+      <script src="/shared/js/notification_helper.js"></script>
+      <script src="js/icc.js"></script>
+      <link rel="stylesheet" type="text/css" href="shared/style/buttons.css"/>
+      <link rel="stylesheet" type="text/css" href="shared/style/confirm.css"/>
       -->
     </section>
 
@@ -2488,14 +2535,14 @@
       <ul>
         <li>
           <label>
-            <input type="checkbox" data-type="switch" name="ril.radio.disabled" />
+            <input type="checkbox" data-type="switch" name="ril.radio.disabled" class="uninit"/>
             <span></span>
           </label>
           <a id="menuItem-airplaneMode" class="menu-item" data-l10n-id="airplaneMode">Airplane Mode</a>
         </li>
         <li>
           <label>
-            <input type="checkbox" data-type="switch" name="geolocation.enabled" />
+            <input type="checkbox" data-type="switch" name="geolocation.enabled" class="uninit"/>
             <span></span>
           </label>
           <a id="menuItem-gps" class="menu-item" data-l10n-id="gps">GPS</a>
@@ -2619,17 +2666,16 @@
       </ul>
 
       <!-- Main :: SIM Toolkit -->
-      <header id="icc-mainheader" hidden>
+      <header id="icc-mainheader">
         <h2 data-l10n-id="operatorServices">Operator Services</h2>
       </header>
-      <ul id="icc-mainentry" hidden>
+      <ul id="icc-mainentry">
         <li>
           <small id="icc-desc" class="menu-item-desc"></small>
           <a id="menuItem-icc" class="menu-item" href="#icc">SIM Toolkit</a>
         </li>
       </ul>
     </section>
-
   </body>
 </html>
 

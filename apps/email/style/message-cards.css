@@ -11,6 +11,12 @@
   /* force the card to be tall enough so we can scroll the search bit out of the
      way by default*/
   min-height: calc(100% + 4.8rem); /* 2.4rem is the search bar */
+  /* Give it a z-index of 0 so that all its contents are forced into a single stacking
+     context. This simplifies display list construction because our many positioned
+     descendants can be clipped as a single group instead of independently.
+     XXX we can take this out when Gecko bug 841192 is fixed. */
+  position: relative;
+  z-index: 0;
 }
 
 /* Have enough scroll space to have the search bit pull out. */
@@ -53,7 +59,6 @@ input.msg-search-text-tease {
   display: block;
   position: relative;
   height: 8rem;
-  overflow: hidden;
   border-bottom: 0.10rem solid lightgray;
   vertical-align: 0%;
 }
@@ -211,6 +216,11 @@ input.msg-search-text-tease {
   line-height: 2.6rem;
 }
 
+.card-message-reader .msg-body-container > progress {
+  display: block;
+  margin: 0 auto;
+}
+
 .msg-attachments-container {
   padding: 0 1rem;
   font-size: 1.2rem;
@@ -219,8 +229,8 @@ input.msg-search-text-tease {
 
 .msg-peep-bubble {
   display: inline-block;
-  background: -moz-linear-gradient(top, #FFFFFF, #DDDDDD);
-  border: 0.10rem solid #CCCCCC;
+  background: #F2F2F2;
+  border: 0.5rem solid #CCCCCC;
   border-radius: 1rem;
   margin: 0.10rem 0;
   padding: 0.20rem 0.8rem;
@@ -232,7 +242,6 @@ input.msg-search-text-tease {
 .msg-peep-content {
 }
 .msg-peep-address {
-  font-style: italic;
 }
 
 .msg-attachment-item {
@@ -261,6 +270,7 @@ input.msg-search-text-tease {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(100% - 12.5rem);
+  white-space: nowrap;
 }
 .msg-attachment-filesize {
   color: gray;
@@ -350,28 +360,31 @@ input.msg-search-text-tease {
   color: white;
   font-size: 1.2rem;
   left: 0;
-  bottom: 4.9rem;
+  bottom: 4.8rem;
   width: 100%;
   height: 2.2rem;
-  padding: 0.5rem;
-  background-color: rgba(16, 16, 16, 0.8);
+  line-height: 2.2rem;
+  padding: 0.8rem 1.6rem;
+  background-color: #424242;;
 }
 
 .msg-reply-all-btn {
 }
 
+/* We need to use !important on the buttons because shared/style/buttons.css definesa more specific
+   selector than ours for :active, so we can't just reorder the files to fix the problem. */
 .msg-refresh-btn {
-  background: url("images/icons/refresh.png") no-repeat scroll center transparent;
+  background: url("images/icons/refresh.png") no-repeat scroll center transparent !important;
 }
 
 .msg-search-btn {
-  background: url("images/icons/search.png") no-repeat scroll center transparent;
+  background: url("images/icons/search.png") no-repeat scroll center transparent !important;
   position: absolute;
   right: 0;
 }
 
 .msg-edit-btn {
-  background: url("images/icons/edit-mode.png") no-repeat scroll center transparent;
+  background: url("images/icons/edit-mode.png") no-repeat scroll center transparent !important;
   position: absolute;
   left: calc((100% - 6rem)/2);
 }
@@ -381,23 +394,23 @@ input.msg-search-text-tease {
 }
 
 .msg-star-btn {
-  background: url("images/icons/star.png") no-repeat center center / 3rem;
+  background: url("images/icons/star.png") no-repeat center center / 3rem !important;
 }
 
 .msg-mark-read-btn {
-  background: url("images/icons/mark.png") no-repeat center center / 3rem;
+  background: url("images/icons/mark.png") no-repeat center center / 3rem !important;
 }
 
 .msg-delete-btn {
-  background: url("images/icons/delete.png") no-repeat center center / 3rem;
+  background: url("images/icons/delete.png") no-repeat center center / 3rem !important;
 }
 
 .msg-move-btn {
-  background: url("images/icons/move.png") no-repeat center center / 3rem;
+  background: url("images/icons/move.png") no-repeat center center / 3rem !important;
 }
 
 .msg-forward-btn {
-  background: url("images/icons/forward.png") no-repeat center center / 3rem;
+  background: url("images/icons/forward.png") no-repeat center center / 3rem !important;
 }
 
 /* Message list edit mode layout control */

@@ -124,7 +124,7 @@ contacts.Details = (function() {
     });
   };
 
-  var render = function cd_render(currentContact, tags) {
+  var render = function cd_render(currentContact, tags, isEnrichedContact) {
     contactData = currentContact || contactData;
 
     TAG_OPTIONS = tags || TAG_OPTIONS;
@@ -134,7 +134,7 @@ contacts.Details = (function() {
     // Initially enabled and only disabled if necessary
     editContactButton.removeAttribute('disabled');
 
-    if (isFbContact) {
+    if (!isEnrichedContact && isFbContact) {
       var fbContact = new fb.Contact(contactData);
       var req = fbContact.getData();
 
@@ -360,7 +360,8 @@ contacts.Details = (function() {
       var escapedType = utils.text.escapeHTML(currentTel.type, true);
       var telField = {
         value: utils.text.escapeHTML(currentTel.value, true) || '',
-        type: escapedType || TAG_OPTIONS['phone-type'][0].value,
+        type: _(escapedType) || escapedType ||
+                                        TAG_OPTIONS['phone-type'][0].value,
         carrier: utils.text.escapeHTML(currentTel.carrier || '', true) || '',
         i: tel
       };
@@ -399,7 +400,8 @@ contacts.Details = (function() {
       var escapedType = utils.text.escapeHTML(currentEmail['type'], true);
       var emailField = {
         value: utils.text.escapeHTML(currentEmail['value'], true) || '',
-        type: escapedType || TAG_OPTIONS['email-type'][0].value,
+        type: _(escapedType) || escapedType ||
+                                          TAG_OPTIONS['email-type'][0].value,
         i: email
       };
       var template = utils.templates.render(emailsTemplate, emailField);
@@ -446,7 +448,8 @@ contacts.Details = (function() {
         postalCode: escapedPostalCode,
         locality: escapedLocality || '',
         countryName: escapedCountry,
-        type: escapedType || TAG_OPTIONS['address-type'][0].value,
+        type: _(escapedType) || escapedType ||
+                                        TAG_OPTIONS['address-type'][0].value,
         i: i
       };
       var template = utils.templates.render(addressesTemplate, addressField);

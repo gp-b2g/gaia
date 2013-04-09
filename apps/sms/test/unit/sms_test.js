@@ -7,14 +7,18 @@
 // Import of all code needed
 requireApp('sms/js/contacts.js');
 requireApp('sms/js/fixed_header.js');
-requireApp('sms/js/searchUtils.js');
+requireApp('sms/js/search_utils.js');
 requireApp('sms/js/utils.js');
 requireApp('sms/test/unit/contact_mockup.js');
 requireApp('sms/test/unit/utils_mockup.js');
 requireApp('sms/test/unit/messages_mockup.js');
 requireApp('sms/test/unit/sms_test_html_mockup.js');
 requireApp('sms/test/unit/thread_list_mockup.js');
-requireApp('sms/js/sms.js');
+requireApp('sms/js/message_manager.js');
+requireApp('sms/js/thread_list_ui.js');
+requireApp('sms/js/thread_ui.js');
+requireApp('sms/js/waiting_screen.js');
+requireApp('sms/js/startup.js');
 
 
 
@@ -218,7 +222,7 @@ suite('SMS App Unit-Test', function() {
 
       test('Update thread with contact info', function() {
         // Given a number, we should retrieve the contact and update the info
-        var threadWithContact = document.getElementById('thread_1977');
+        var threadWithContact = document.getElementById('thread_1');
         var contactName =
           threadWithContact.getElementsByClassName('name')[0].innerHTML;
         assert.equal(contactName, 'Josh');

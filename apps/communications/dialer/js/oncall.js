@@ -141,6 +141,7 @@ var CallScreen = {
 };
 
 var OnCallHandler = (function onCallHandler() {
+  var COMMS_APP_ORIGIN = 'app://communications.gaiamobile.org';
   // Changing this will probably require markup changes
   var CALLS_LIMIT = 2;
 
@@ -204,9 +205,7 @@ var OnCallHandler = (function onCallHandler() {
   }
 
   function postToMainWindow(data) {
-    var origin = document.location.protocol + '//' +
-      document.location.host;
-    window.opener.postMessage(data, origin);
+    window.opener.postMessage(data, COMMS_APP_ORIGIN);
   }
 
   /* === Handled calls === */
@@ -253,8 +252,10 @@ var OnCallHandler = (function onCallHandler() {
   }
 
   function addCall(call) {
-    // Once we already have 1 call, we only care about incomings
-    if (handledCalls.length && (call.state != 'incoming')) {
+    // Once we already have 1 call, we need to care about incoming
+    // calls and insert new dialing calls.
+    if (handledCalls.length &&
+      (call.state != 'incoming') && (call.state != 'dialing')) {
       return;
     }
 
@@ -285,7 +286,13 @@ var OnCallHandler = (function onCallHandler() {
 
     if (handledCalls.length > 1) {
       // New incoming call, signaling the user.
-      handleCallWaiting(call);
+      if (call.state === 'incoming') {
+        handleCallWaiting(call);
+
+      // User performed another outgoing call. show its status.
+      } else {
+        hc.show();
+      }
     } else {
       if (window.location.hash === '#locked' &&
           (call.state == 'incoming')) {
@@ -376,7 +383,7 @@ var OnCallHandler = (function onCallHandler() {
 
   function handleCallWaiting(call) {
     LazyL10n.get(function localized(_) {
-      var number = (call.number.length ? call.number : _('unknown'));
+      var number = call.number || _('unknown');
       Contacts.findByNumber(number, function lookupContact(contact) {
         if (contact && contact.name) {
           CallScreen.incomingNumber.textContent = contact.name;
@@ -447,6 +454,9 @@ var OnCallHandler = (function onCallHandler() {
 
   /* Handle commands send to the callscreen via postmessage */
   function handleCommand(evt) {
+    if (evt.origin !== COMMS_APP_ORIGIN) {
+      return;
+    }
     var message = evt.data;
     if (!message) {
       return;
@@ -490,7 +500,7 @@ var OnCallHandler = (function onCallHandler() {
   function handleHSCommand(message) {
     // We will receive the message for button released,
     // we will ignore it
-    if (message == 'headset-button-release') {
+    if (message != 'headset-button-press') {
       return;
     }
 

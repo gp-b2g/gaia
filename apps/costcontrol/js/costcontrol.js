@@ -389,63 +389,69 @@ var CostControl = (function() {
                          new Date(settings.nextReset.getTime() - DAY) :
                          tomorrow);
 
+    if (start > end) {
+      console.error('Start date is higher than end date. This must not ' +
+                    'happen. Maybe the clock has changed');
+      end = new Date(start.getTime() + DAY);
+    }
 
     asyncStorage.getItem('dataUsageTags', function _onTags(tags) {
+      asyncStorage.getItem('wifiFixing', function _onFixing(wifiFixing) {
 
-      // Request Wi-Fi
-      var wifiRequest = statistics.getNetworkStats({
-        start: start,
-        end: today,
-        connectionType: 'wifi'
-      });
-
-      wifiRequest.onsuccess = function _onWifiData() {
-
-        // Request Mobile
-        var mobileRequest = statistics.getNetworkStats({
+        // Request Wi-Fi
+        var wifiRequest = statistics.getNetworkStats({
           start: start,
-          end: today,
-          connectionType: 'mobile'
+          end: end,
+          connectionType: 'wifi'
         });
 
-        // Finally, store the result and continue
-        mobileRequest.onsuccess = function _onMobileData() {
-          var fakeTag = {
-            sim: connection.iccInfo.iccid,
-            start: settings.lastDataReset,
-            fixing: [[settings.lastDataReset, settings.wifiFixing || 0]]
-          };
-          var wifiData = adaptData(wifiRequest.result, [fakeTag]);
-          var mobileData = adaptData(mobileRequest.result, tags);
-          var lastDataUsage = {
-            timestamp: new Date() ,
+        wifiRequest.onsuccess = function _onWifiData() {
+
+          // Request Mobile
+          var mobileRequest = statistics.getNetworkStats({
             start: start,
             end: end,
-            today: today,
-            wifi: {
-              total: wifiData[1]
-            },
-            mobile: {
-              total: mobileData[1]
+            connectionType: 'mobile'
+          });
+
+          // Finally, store the result and continue
+          mobileRequest.onsuccess = function _onMobileData() {
+            var fakeTag = {
+              sim: connection.iccInfo.iccid,
+              start: settings.lastDataReset,
+              fixing: [[settings.lastDataReset, wifiFixing || 0]]
+            };
+            var wifiData = adaptData(wifiRequest.result, [fakeTag]);
+            var mobileData = adaptData(mobileRequest.result, tags);
+            var lastDataUsage = {
+              timestamp: new Date(),
+              start: start,
+              end: end,
+              today: today,
+              wifi: {
+                total: wifiData[1]
+              },
+              mobile: {
+                total: mobileData[1]
+              }
+            };
+            ConfigManager.setOption({ 'lastDataUsage': lastDataUsage },
+              function _onSetItem() {
+                debug('Statistics up to date and stored.');
+              }
+            );
+            // XXX: Enrich with the samples because I can not store them
+            lastDataUsage.wifi.samples = wifiData[0];
+            lastDataUsage.mobile.samples = mobileData[0];
+            result.status = 'success';
+            result.data = lastDataUsage;
+            debug('Returning up to date statistics.');
+            if (callback) {
+              callback(result);
             }
           };
-          ConfigManager.setOption({ 'lastDataUsage': lastDataUsage },
-            function _onSetItem() {
-              debug('Statistics up to date and stored.');
-            }
-          );
-          // XXX: Enrich with the samples because I can not store them
-          lastDataUsage.wifi.samples = wifiData[0];
-          lastDataUsage.mobile.samples = mobileData[0];
-          result.status = 'success';
-          result.data = lastDataUsage;
-          debug('Returning up to date statistics.');
-          if (callback) {
-            callback(result);
-          }
         };
-      };
-
+      });
     });
   }
 
@@ -455,6 +461,11 @@ var CostControl = (function() {
     var output = [];
     var totalData, accum = 0;
     for (var i = 0, item; item = data[i]; i++) {
+      if (item.txBytes === undefined) {
+        output.push({ date: item.date });
+        continue;
+      }
+
       totalData = 0;
       if (item.rxBytes) {
         totalData += item.rxBytes;
