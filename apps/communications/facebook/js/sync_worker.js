@@ -279,7 +279,7 @@ importScripts('/contacts/js/fb/fb_query.js',
             contactId: contact.contactId
           }
         });
-      }
+      };
     }
   }
 
@@ -306,7 +306,7 @@ importScripts('/contacts/js/fb/fb_query.js',
           contactId: uids[uid].contactId
         }
       });
-    }
+    };
   }
 
 

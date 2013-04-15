@@ -61,21 +61,25 @@ GAIA_DOMAIN=thisdomaindoesnotexist.org
 GAIA_APP_SRCDIRS=apps showcase_apps
 else ifeq ($(MAKECMDGOALS), dogfood)
 DOGFOOD=1
-PRODUCTION=1
-B2G_SYSTEM_APPS=1
 else ifeq ($(MAKECMDGOALS), production)
 PRODUCTION=1
-B2G_SYSTEM_APPS=1
+endif
+
+ifeq ($(DOGFOOD), 1)
+PRODUCTION=1
 endif
 
 # PRODUCTION is also set for user and userdebug B2G builds
+# note: GAIA_OPTIMIZE is not used in v1.0.1
 ifeq ($(PRODUCTION), 1)
+GAIA_OPTIMIZE=1
+B2G_SYSTEM_APPS=1
 GAIA_APP_SRCDIRS=apps
 ADB_REMOUNT=1
 endif
 
-ifeq ($(MAKECMDGOALS), dogfood)
-GAIA_APP_SRCDIRS=apps dogfood_apps
+ifeq ($(DOGFOOD), 1)
+GAIA_APP_SRCDIRS+=dogfood_apps
 endif
 
 ifeq ($(B2G_SYSTEM_APPS), 1)
@@ -144,12 +148,23 @@ SEP=\\
 MSYS_FIX=/
 endif
 
+ifndef GAIA_DISTRIBUTION_DIR
+  GAIA_DISTRIBUTION_DIR := $(CURDIR)$(SEP)distribution
+else
+	ifneq (,$(findstring MINGW32_,$(SYS)))
+		GAIA_DISTRIBUTION_DIR := $(join \
+			$(filter %:,$(subst :,: ,$GAIA_DISTRIBUTION_DIR)),\
+			$(realpath $(filter-out %:,$(subst :,: ,$GAIA_DISTRIBUTION_DIR))))
+	else
+		GAIA_DISTRIBUTION_DIR := $(realpath $(GAIA_DISTRIBUTION_DIR))
+	endif
+endif
 
 SETTINGS_PATH := build/custom-settings.json
-ifdef CUSTOMIZE
-	CUSTOMIZE_SETTINGS := $(realpath $(CUSTOMIZE))$(SEP)settings.json
-	ifneq ($(wildcard $(CUSTOMIZE_SETTINGS)),)
-		SETTINGS_PATH := $(CUSTOMIZE_SETTINGS)
+ifdef GAIA_DISTRIBUTION_DIR
+	DISTRIBUTION_SETTINGS := $(realpath $(GAIA_DISTRIBUTION_DIR))$(SEP)settings.json
+	ifneq ($(wildcard $(DISTRIBUTION_SETTINGS)),)
+		SETTINGS_PATH := $(DISTRIBUTION_SETTINGS)
 	endif
 endif
 
@@ -269,13 +284,13 @@ ifneq ($(DEBUG),1)
 	@$(call run-js-command, webapp-zip)
 endif
 
-# Precompile l10n
-webapp-l10n: install-xulrunner-sdk
-	@$(call run-js-command, webapp-l10n)
+# Web app optimization steps (like precompling l10n, concatenating js files, etc..).
+webapp-optimize: install-xulrunner-sdk
+	@$(call run-js-command, webapp-optimize)
 
 # Remove temporary l10n files
-l10n-clean: install-xulrunner-sdk
-	@$(call run-js-command, l10n-clean)
+optimize-clean: install-xulrunner-sdk
+	@$(call run-js-command, optimize-clean)
 
 # Populate appcache
 offline-cache: webapp-manifests install-xulrunner-sdk
@@ -291,7 +306,7 @@ contacts: install-xulrunner-sdk
 	@echo "Done"
 
 # Create webapps
-offline: webapp-manifests webapp-l10n webapp-zip l10n-clean
+offline: webapp-manifests webapp-optimize webapp-zip optimize-clean
 
 
 # The install-xulrunner target arranges to get xulrunner downloaded and sets up
@@ -366,7 +381,7 @@ define run-js-command
 	const GAIA_DEFAULT_LOCALE = "$(GAIA_DEFAULT_LOCALE)";                       \
 	const GAIA_INLINE_LOCALES = "$(GAIA_INLINE_LOCALES)";                       \
 	const GAIA_ENGINE = "xpcshell";                                             \
-	const CUSTOMIZE = "$(realpath $(CUSTOMIZE))";      													\
+	const GAIA_DISTRIBUTION_DIR = "$(GAIA_DISTRIBUTION_DIR)";               	\
 	';                                                                          \
 	$(XULRUNNERSDK) $(XPCSHELLSDK) -e "$$JS_CONSTS" -f build/utils.js "build/$(strip $1).js"
 endef
@@ -376,6 +391,7 @@ endef
 # conflict, the result is undefined.
 EXTENDED_PREF_FILES = \
   custom-prefs.js \
+  gps-prefs.js \
   payment-prefs.js \
   ua-override-prefs.js \
 
@@ -615,7 +631,7 @@ update-offline-manifests:
 TARGET_FOLDER = webapps/$(BUILD_APP_NAME).$(GAIA_DOMAIN)
 
 APP_NAME = $(shell cat apps/${BUILD_APP_NAME}/manifest.webapp | grep name | head -1 | cut -d '"' -f 4)
-APP_PID = $(shell adb shell b2g-ps | grep '${APP_NAME}' | tr -s '${APP_NAME}' ' ' | tr -s ' ' ' ' | cut -f 3 -d' ')
+APP_PID = $(shell adb shell b2g-ps | grep '^${APP_NAME}' | sed 's/^${APP_NAME}\s*//' | awk '{ print $$2 }')
 install-gaia:
 ifneq ($(SCREEN_TYPE),*)
 	$(MAKE) ui-scale
@@ -686,17 +702,22 @@ reset-gaia: purge install-gaia install-settings-defaults
 # remove the memories and apps on the phone
 purge:
 	$(ADB) shell stop b2g
-	@(for FILE in `$(ADB) shell ls $(MSYS_FIX)/data/local | tr -d '\r'`; \
+	(for FILE in `$(ADB) shell ls $(MSYS_FIX)/data/local | tr -d '\r'`; \
 	do \
-		[ $$FILE != 'tmp' ] && $(ADB) shell rm -r $(MSYS_FIX)/data/local/$$FILE; \
+		[ $$FILE = 'tmp' ] || $(ADB) shell rm -r $(MSYS_FIX)/data/local/$$FILE; \
 	done);
 	$(ADB) shell rm -r $(MSYS_FIX)/cache/*
 	$(ADB) shell rm -r $(MSYS_FIX)/data/b2g/*
-	$(ADB) shell rm -r $(MSYS_FIX)$(GAIA_INSTALL_PARENT)/webapps
+	$(ADB) shell rm -r $(MSYS_FIX)/data/local/webapps
+	$(ADB) shell rm -r $(MSYS_FIX)/system/b2g/webapps
 
 # Build the settings.json file from settings.py
 ifeq ($(NOFTU), 1)
-SETTINGS_ARG=--noftu
+SETTINGS_ARG += --noftu
+endif
+
+ifeq ($(REMOTE_DEBUGGER), 1)
+SETTINGS_ARG += --enable-debugger
 endif
 
 # We want the console to be disabled for device builds using the user variant.

@@ -92,6 +92,8 @@ var videostorage;
 
 var visibilityMonitor;
 
+var loader = LazyLoader;
+
 // The localized event is the main entry point for the app.
 // We don't do anything until we receive it.
 window.addEventListener('localized', function showBody() {
@@ -160,10 +162,23 @@ function init() {
     case 'browse':
       // The 'browse' activity is the way we launch Gallery from Camera.
       // If this was a cold start, then the db needs to be initialized.
-      if (!photodb)
+      if (!photodb) {
         initDB(true);  // Initialize both the photo and video databases
-      // Always switch to the list of thumbnails.
-      setView(thumbnailListView);
+        setView(thumbnailListView);
+      }
+      else {
+        // If the gallery was already running we we arrived here via a
+        // browse activity, then the user is probably coming to us from the
+        // camera, and she probably wants to see the list of thumbnails.
+        // If we're currently displaying a single image, switch to the
+        // thumbnails. But if the user left the gallery in the middle of
+        // an edit or in the middle of making a selection, then returning
+        // to the thumbnail list would cause her to lose work, so in those
+        // cases we don't change anything and let the gallery resume where
+        // the user left it.  See Bug 846220.
+        if (currentView === fullscreenView)
+          setView(thumbnailListView);
+      }
       break;
     case 'pick':
       if (pendingPick) // I don't think this can really happen anymore
@@ -198,7 +213,7 @@ function initDB(include_videos) {
       return;
     }
 
-    loadScript('js/metadata_scripts.js', function() {
+    loader.load('js/metadata_scripts.js', function() {
       loaded = true;
       metadataParser(file, onsuccess, onerror);
     });
@@ -257,7 +272,7 @@ function getVideoFile(filename, callback) {
   };
   req.onerror = function() {
     console.error('Failed to get video file', filename);
-  }
+  };
 }
 
 // This comparison function is used for sorting arrays and doing binary
@@ -412,6 +427,15 @@ function deleteFile(n) {
   // must also delete the video file.
   if (fileinfo.metadata.video) {
     videostorage.delete(fileinfo.metadata.video);
+  }
+
+  // If the metdata parser saved a preview image for this photo,
+  // delete that, too.
+  if (fileinfo.metadata.preview && fileinfo.metadata.preview.filename) {
+    // We use raw device storage here instead of MediaDB because that is
+    // what MetadataParser.js uses for saving the preview.
+    var pictures = navigator.getDeviceStorage('pictures');
+    pictures.delete(fileinfo.metadata.preview.filename);
   }
 }
 
@@ -632,8 +656,10 @@ function startPick(activityRequest) {
   else {
     pickWidth = pickHeight = 0;
   }
-  loadScript('js/ImageEditor.js'); // We need this for cropping the photo
-  setView(pickView);
+  // We need this for cropping the photo
+  loader.load('js/ImageEditor.js', function() {
+    setView(pickView);
+  });
 }
 
 function cropPickedImage(fileinfo) {
@@ -710,7 +736,7 @@ function thumbnailClickHandler(evt) {
     return;
 
   if (currentView === thumbnailListView || currentView === fullscreenView) {
-    loadScript('js/frame_scripts.js', function() {
+    loader.load('js/frame_scripts.js', function() {
       showFile(parseInt(target.dataset.index));
     });
   }
@@ -934,29 +960,3 @@ function showOverlay(id) {
 // make it opaque to touch events. Without this, it does not prevent
 // the user from interacting with the UI.
 $('overlay').addEventListener('click', function dummyHandler() {});
-
-var loadedScripts = {};
-
-function loadScript(url, callback) {
-  var script = loadedScripts[url];
-  if (script === true) { // It has already been loaded
-    callback();
-    return;
-  }
-
-  // If the script has started loading but isn't complete yet,
-  // just register the callback as an additional onload handler for it
-  if (script instanceof HTMLScriptElement) {
-    script.addEventListener('load', callback);
-    return;
-  }
-
-  script = document.createElement('script');
-  loadedScripts[url] = script;
-  script.src = url;
-  document.head.appendChild(script);
-  script.addEventListener('load', function() {
-    loadedScripts[url] = true;
-    callback();
-  });
-}

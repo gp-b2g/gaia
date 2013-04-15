@@ -99,6 +99,13 @@ var WindowManager = (function() {
   // The origin of the currently displayed app, or null if there isn't one
   var displayedApp = null;
 
+  // Track the audio activity.
+  var normalAudioChannelActive = false;
+
+  // When an app stops playing audio and the device is locked, we use a timer
+  // in order to restore its visibility.
+  var deviceLockedTimer = 0;
+
   // Public function. Return the origin of the currently displayed app
   // or null if there is none.
   function getDisplayedApp() {
@@ -343,6 +350,18 @@ var WindowManager = (function() {
     });
   }
 
+  // XXX: We couldn't avoid to stop inline activities
+  // when screen is turned off and lockscreen is enabled
+  // to avoid two cameras iframes are competing resources
+  // if the user opens a app to call camera activity and
+  // at the same time open camera app from lockscreen.
+
+  window.addEventListener('lock', function onScreenLocked() {
+    if (inlineActivityFrames.length) {
+      stopInlineActivity(true);
+    }
+  });
+
   windows.addEventListener('transitionend', function frameTransitionend(evt) {
     var prop = evt.propertyName;
     var frame = evt.target;
@@ -410,25 +429,12 @@ var WindowManager = (function() {
     }
 
     if (classList.contains('opening')) {
-      var onWindowReady = function() {
-        windowOpened(frame);
+      windowOpened(frame);
 
-        setTimeout(openCallback);
-        openCallback = null;
+      setTimeout(openCallback);
+      openCallback = null;
 
-        setOpenFrame(null);
-      };
-
-      // If this is a cold launch let's wait for the app to load first
-      var iframe = openFrame.firstChild;
-      if ('unpainted' in iframe.dataset) {
-        iframe.addEventListener('mozbrowserloadend', function on(e) {
-          iframe.removeEventListener('mozbrowserloadend', on);
-          onWindowReady();
-        });
-      } else {
-        onWindowReady();
-      }
+      setOpenFrame(null);
     } else if (classList.contains('closing')) {
       windowClosed(frame);
 
@@ -1454,7 +1460,7 @@ var WindowManager = (function() {
     if (e.detail.type == 'activity-done') {
       // Remove the top most frame every time we get an 'activity-done' event.
       stopInlineActivity();
-      if (!inlineActivityFrames.length) {
+      if (!inlineActivityFrames.length && !activityCallerOrigin) {
         setDisplayedApp(activityCallerOrigin);
         activityCallerOrigin = '';
       }
@@ -1632,8 +1638,16 @@ var WindowManager = (function() {
     'attentionscreenshow',
     'attentionscreenhide',
     'status-active',
-    'status-inactive'
+    'status-inactive',
+    'mozChromeEvent'
   ];
+
+  function resetDeviceLockedTimer() {
+    if (deviceLockedTimer) {
+      clearTimeout(deviceLockedTimer);
+      deviceLockedTimer = 0;
+    }
+  }
 
   function overlayEventHandler(evt) {
     if (attentionScreenTimer)
@@ -1649,9 +1663,15 @@ var WindowManager = (function() {
         } else {
           setVisibilityForCurrentApp(true);
         }
+        resetDeviceLockedTimer();
         break;
       case 'lock':
-        setVisibilityForCurrentApp(false);
+        // If the audio is active, the app should not set non-visible
+        // otherwise it will be muted.
+        if (!normalAudioChannelActive) {
+          setVisibilityForCurrentApp(false);
+        }
+        resetDeviceLockedTimer();
         break;
 
       /*
@@ -1676,6 +1696,21 @@ var WindowManager = (function() {
             var app = runningApps[displayedApp];
             if (app)
               app.iframe.blur();
+        }
+        break;
+
+      case 'mozChromeEvent':
+        if (evt.detail.type == 'visible-audio-channel-changed') {
+          resetDeviceLockedTimer();
+
+          if (normalAudioChannelActive && evt.detail.channel !== 'normal' &&
+              LockScreen.locked) {
+            deviceLockedTimer = setTimeout(function setVisibility() {
+              setVisibilityForCurrentApp(false);
+            }, 3000);
+          }
+
+          normalAudioChannelActive = (evt.detail.channel === 'normal');
         }
         break;
     }
@@ -2067,6 +2102,11 @@ var WindowManager = (function() {
       } else {
         e.preventDefault();
       }
+      // Make sure this happens before activity frame is removed.
+      // Because we will be asked by a 'activity-done' event from gecko
+      // to relaunch to activity caller, and this is the only way to
+      // determine if we are going to homescreen or the original app.
+      activityCallerOrigin = '';
     } else {
       stopInlineActivity(true);
       ensureHomescreen(true);

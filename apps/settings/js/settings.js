@@ -124,10 +124,29 @@ var Settings = {
     // activate all scripts
     var scripts = panel.querySelectorAll('script');
     for (var i = 0; i < scripts.length; i++) {
+      var src = scripts[i].getAttribute('src')
+      if (document.head.querySelector('script[src="' + src + '"]')) {
+        continue;
+      }
+
       var script = document.createElement('script');
       script.type = 'application/javascript';
-      script.src = scripts[i].getAttribute('src');
+      script.src = src;
       document.head.appendChild(script);
+    }
+
+    // activate all stylesheets
+    var stylesheets = panel.querySelectorAll('link');
+    for (var i = 0; i < stylesheets.length; i++) {
+      var href = stylesheets[i].getAttribute('href');
+      if (document.head.querySelector('link[href="' + href + '"]'))
+        continue;
+
+      var stylesheet = document.createElement('link');
+      stylesheet.type = 'text/css';
+      stylesheet.rel = 'stylesheet';
+      stylesheet.href = href;
+      document.head.appendChild(stylesheet);
     }
 
     // activate all links
@@ -163,6 +182,10 @@ var Settings = {
   // in here, but not much useful can be done with the settings app
   // without these, so we keep this around most of the time.
   _settingsCache: null,
+
+  get settingsCache() {
+    return this._settingsCache;
+  },
 
   // True when a request has already been made to fill the settings
   // cache.  When this is true, no further get("*") requests should be
@@ -224,6 +247,16 @@ var Settings = {
           checkboxes[i].checked = !!result[key];
         }
       }
+
+      // remove initial class so the swich animation will apply
+      // on these toggles if user interact with it.
+      setTimeout(function() {
+        for (var i = 0; i < checkboxes.length; i++) {
+          if (checkboxes[i].classList.contains('initial')) {
+            checkboxes[i].classList.remove('initial');
+          }
+        }
+      }, 0);
 
       // preset all radio buttons
       rule = 'input[type="radio"]:not([data-ignore])';
@@ -519,6 +552,26 @@ window.addEventListener('load', function loadSettings() {
   Settings.init();
   handleDataConnectivity();
 
+  setTimeout(function() {
+    var scripts = [
+      'js/utils.js',
+      'shared/js/mouse_event_shim.js',
+      'js/airplane_mode.js',
+      'js/battery.js',
+      'js/app_storage.js',
+      'js/media_storage.js',
+      'shared/js/mobile_operator.js',
+      'js/connectivity.js',
+      'js/security_privacy.js',
+      'js/icc_menu.js'
+    ];
+    scripts.forEach(function attachScripts(src) {
+      var script = document.createElement('script');
+      script.src = src;
+      document.head.appendChild(script);
+    });
+  });
+
   // panel lazy-loading
   function lazyLoad(panel) {
     if (panel.children.length) // already initialized
@@ -732,3 +785,5 @@ window.addEventListener('localized', function showLanguages() {
 // Do initialization work that doesn't depend on the DOM, as early as
 // possible in startup.
 Settings.preInit();
+
+MouseEventShim.trackMouseMoves = false;

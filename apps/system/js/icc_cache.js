@@ -54,23 +54,43 @@
           var application = document.location.protocol + '//' +
             document.location.host.replace('system', 'settings');
           debug('application: ', application);
-          if (WindowManager.getRunningApps()[application]) {
-            return;   // If settings is opened, we don't manage it
-          }
-          navigator.mozApps.mgmt.getAll().onsuccess = function gotApps(evt) {
-            var apps = evt.target.result;
-            apps.forEach(function appIterator(app) {
-              if (app.origin == application) {
-                var reqIccData = window.navigator.mozSettings.createLock().set({
-                  'icc.data': JSON.stringify(command)
-                });
-                reqIccData.onsuccess = function icc_getIccData() {
-                  debug('Launching ', app.origin);
-                  app.launch();
-                }
-              }
-            }, this);
-          }
+          var reqIccData = window.navigator.mozSettings.createLock().set({
+            'icc.data': JSON.stringify(command)
+          });
+          reqIccData.onsuccess = function icc_getIccData() {
+            if (WindowManager.getRunningApps()[application]) {
+              debug('Settings is running. Ignoring');
+              return;   // If settings is opened, we don't manage it
+            }
+
+            function launchSettings() {
+              debug('Locating settings . . .');
+              navigator.mozApps.mgmt.getAll().onsuccess = function gotApps(evt) {
+                var apps = evt.target.result;
+                apps.forEach(function appIterator(app) {
+                  if (app.origin != application)
+                    return;
+
+                  var reqIccData = window.navigator.mozSettings.createLock().set({
+                    'icc.data': JSON.stringify(command)
+                  });
+                  reqIccData.onsuccess = function icc_getIccData() {
+                    debug('Launching ', app.origin);
+                    app.launch();
+                  };
+                }, this);
+              };
+            }
+            if (WindowManager.isFtuRunning()) {
+              // Delay the stk command until FTU is done
+              window.addEventListener('ftudone', function ftudone() {
+                debug('ftu is done!');
+                launchSettings();
+              });
+            } else {
+              launchSettings();
+            }
+          };
         }
       });
   }

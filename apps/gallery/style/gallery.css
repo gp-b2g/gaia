@@ -459,11 +459,11 @@ footer {
 #crop-frame {
   position: absolute;
   top: 5rem;
-  left: 0rem;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
-  padding: 0rem;
-  margin: 0rem;
+  padding: 0;
+  margin: 0;
   overflow: hidden;
   -moz-user-select: none;
 }
@@ -501,8 +501,8 @@ footer {
   position: absolute;
   top: 1rem;
   left: 1rem;
-  width: 30rem;  /* I can't do right: 1rem here. Bug? */
-  height: calc(100% - 2rem)  /* cant just set bottom: 1rem here */
+  width: calc(100% - 2rem);  /* I can't do right: 10px here. Bug? */
+  height: calc(100% - 2rem);  /* can't just set bottom: 10px here */
 }
 
 #edit-crop-canvas {
