@@ -22,18 +22,28 @@ const PR_EXCL = 0x80;
  */
 function addToZip(zip, pathInZip, file) {
 
-  // Check @2x files to add
-  if ( SCREEN_TYPE != '*' && file.path.search("@2x") == -1 ) {
-    var path2x = file.path;
-    var path2x = path2x.split(".")[0]+"@2x."+path2x.split(".")[1];
-    var file2x = new FileUtils.File(path2x);
-    // If there is a @2x version of this asset just exit, the @2x will come after
-    if ( file2x.exists() ) {
-      return;
+  // All non @2x files and SCREEN_TYPE enabled
+  if ( SCREEN_TYPE != '*' && file.path.search('@2x') == -1 ) {
+
+    // Allowed bitmap files
+    var types = /.png|.gif|.jpg/
+    if ( file.path.search(types) != -1 ) {
+      // Extract file extension
+      var ext = file.path.split(".").pop();
+      var path2x = file.path.split(types)[0]+'@2x.'+ext;
+      var file2x = new FileUtils.File(path2x);
+
+      // @2x one will come later
+      if ( file2x.exists() ) {
+        return;
+      }
     }
+
   } else if ( file.path.search('@2x') != -1 ) {
-        var pathInZip = pathInZip.split("@2x")[0]+pathInZip.split("@2x")[1];
+    // Send to the zip @2x files with normal filename
+     var pathInZip = pathInZip.split('@2x')[0]+pathInZip.split('@2x')[1];
   }
+
 
 
   if (isSubjectToBranding(file.path)) {
