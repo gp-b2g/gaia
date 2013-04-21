@@ -30,14 +30,12 @@ Evme.SmartFolder = function Evme_SartFolder(_options) {
         options.experienceId && self.setExperience(options.experienceId);
         options.image && self.setImage(options.image);
         options.elParent && self.appendTo(options.elParent);
-
         onScrollEnd = options.onScrollEnd;
-
+        
         self.MoreIndicator.init({
             "elParent": elApps
         });
 
-      
         elLoading = Evme.$create('div',
                     { 'class': 'loading-apps' },
                     '<progress class="small skin-dark"></progress>');
@@ -140,7 +138,6 @@ Evme.SmartFolder = function Evme_SartFolder(_options) {
     this.appendTo = function appendTo(elParent) {
         elParent.appendChild(el);
         elParent.appendChild(elScreen);
-
         return self;
     };
 

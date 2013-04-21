@@ -96,16 +96,16 @@ Evme.DoATAPI = new function Evme_DoATAPI() {
         
         var params = {
             "query": options.query,
-            "experienceId": options.experienceId,
-            "typeHint": options.typeHint,
-            "feature": options.feature,
+            "experienceId": options.experienceId || '',
+            "typeHint": options.typeHint || '',
+            "feature": options.feature || '',
             "cachedIcons": options.cachedIcons,
-            "exact": options.exact,
-            "spellcheck": options.spellcheck,
-            "suggest": options.suggest,
-            "first": options.first,
-            "limit": options.limit,
-            "idx": options.index,
+            "exact": !!options.exact,
+            "spellcheck": !!options.spellcheck,
+            "suggest": !!options.suggest,
+            "first": options.first || 0,
+            "limit": options.limit || 16,
+            "idx": options.index || '',
             "iconFormat": options.iconFormat,
             "prevQuery": (options.first === 0)? options.prevQuery || "" : ""
         };
@@ -184,14 +184,14 @@ Evme.DoATAPI = new function Evme_DoATAPI() {
 
         var params = {
             "query": options.query,
-            "experienceId": options.experienceId,
-            "typeHint": options.typeHint,
-            "feature": options.feature,
-            "exact": options.exact,
-            "width": options.width,
-            "height": options.height,
-            "idx": options.index,
-            "prevQuery": options.prevQuery || ""
+            "experienceId": options.experienceId || '',
+            "typeHint": options.typeHint || '',
+            "feature": options.feature || '',
+            "exact": !!options.exact,
+            "width": Math.round(options.width || 320),
+            "height": Math.round(options.height || 480),
+            "idx": options.index || '',
+            "prevQuery": options.prevQuery || ''
         };
 
         return request({
@@ -338,7 +338,8 @@ Evme.DoATAPI = new function Evme_DoATAPI() {
             !options && (options = {});
             
             var params = {
-                "existing": JSON.stringify(options.existing || [])
+                "existing": JSON.stringify(options.existing || []),
+                "iconFormat": options.iconFormat || 20
             };
             
             return request({

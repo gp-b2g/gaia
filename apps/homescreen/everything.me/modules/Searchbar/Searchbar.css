@@ -39,7 +39,7 @@
         line-height: 3.6rem;
     }
     #evmeContainer.empty-query:not(.keyboard-visible) #search-q-bg {
-        background-position: 98% 1rem;
+        background-position: 98% 1.1rem;
     }
 
     #evmeContainer #search-q,
@@ -73,15 +73,7 @@
     #evmeContainer #search-q-bg {
         border-radius: 0.2rem;
         box-shadow: 0.1rem 0.1rem 0 0 #ccc inset, 0 0 0 0.1rem rgba(0, 0, 0, .3);
-        background: #fff;
-        border: none;
-        z-index: 5;
-        width: 100%;
-        top: 0;
-        background-image: url('/everything.me/images/search-icon.png');
-        background-repeat: no-repeat;
-        background-position: 98% 0.7rem;
-        background-size: 1.5rem;
+        background: #ffffff url('/everything.me/images/search-icon.png') no-repeat 98% 0.7rem/1.6rem ;
     }
     #evmeContainer .clear-visible #search-q-bg {
         background-image: none;
@@ -99,10 +91,8 @@
         height: 2rem;
         cursor: pointer;
         font-size: 0;
-        background: url('/everything.me/images/search-clear.png') no-repeat;
-        background-size: 1.7rem;
+        background: url(/everything.me/images/search-clear.png) no-repeat 0 0/1.7rem;
         -moz-user-select: none;
-        overflow: hidden;
         display: none;
     }
     #evmeContainer .clear-visible #button-clear {

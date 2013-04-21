@@ -97,6 +97,10 @@ Evme.BackgroundImage = new function Evme_BackgroundImage() {
     };
 
     this.showFullScreen = function showFullScreen() {
+        if (!currentImage || !currentImage.image) {
+          return false;
+        }
+        
         Evme.$remove(elFullScreen);
         elFullScreen = null;
 
@@ -121,6 +125,8 @@ Evme.BackgroundImage = new function Evme_BackgroundImage() {
         active = true;
 
         cbShowFullScreen();
+        
+        return true;
     };
 
     this.getFullscreenElement = function getFullscreenElement(data, onClose) {
