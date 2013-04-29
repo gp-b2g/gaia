@@ -28,6 +28,7 @@ GAIA_DOMAIN?=gaiamobile.org
 
 DEBUG?=0
 PRODUCTION?=0
+HIDPI?=*
 DOGFOOD?=0
 
 LOCAL_DOMAINS?=1
@@ -369,6 +370,7 @@ define run-js-command
 	const LOCALES_FILE = "$(LOCALES_FILE)";                                     \
 	const BUILD_APP_NAME = "$(BUILD_APP_NAME)";                                 \
 	const PRODUCTION = "$(PRODUCTION)";                                         \
+	const HIDPI = "$(HIDPI)";                                     \
 	const DOGFOOD = "$(DOGFOOD)";                                               \
 	const OFFICIAL = "$(MOZILLA_OFFICIAL)";                                     \
 	const GAIA_DEFAULT_LOCALE = "$(GAIA_DEFAULT_LOCALE)";                       \
@@ -708,8 +710,14 @@ ifneq ($(TARGET_BUILD_VARIANT),user)
 SETTINGS_ARG += --console
 endif
 
-profile/settings.json: build/settings.py build/wallpaper.jpg
+profile/settings.json:
+ifneq ($(HIDPI),*)
+	python build/settings.py --hidpi build/wallpaper@2x.jpg
+	python build/settings.py $(SETTINGS_ARG) --locale $(GAIA_DEFAULT_LOCALE) --hidpi --homescreen $(SCHEME)homescreen.$(GAIA_DOMAIN)$(GAIA_PORT)/manifest.webapp --ftu $(SCHEME)communications.$(GAIA_DOMAIN)$(GAIA_PORT)/manifest.webapp --wallpaper build/wallpaper@2x.jpg --override $(SETTINGS_PATH) --output $@
+else
+	python build/settings.py build/wallpaper.jpg
 	python build/settings.py $(SETTINGS_ARG) --locale $(GAIA_DEFAULT_LOCALE) --homescreen $(SCHEME)homescreen.$(GAIA_DOMAIN)$(GAIA_PORT)/manifest.webapp --ftu $(SCHEME)communications.$(GAIA_DOMAIN)$(GAIA_PORT)/manifest.webapp --wallpaper build/wallpaper.jpg --override $(SETTINGS_PATH) --output $@
+endif
 
 # push profile/settings.json and profile/contacts.json (if CONTACTS_PATH defined) to the phone
 install-default-data: profile/settings.json contacts
