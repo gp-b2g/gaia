@@ -39,6 +39,7 @@
     <!--<script defer src="shared/js/mobile_operator.js"></script>-->
 
     <!-- all non-#root panels will lazy-load their own scripts -->
+    <link rel="stylesheet" href="/shared/style/responsive.css" >
   </head>
   <body class="skin-organic uninit">
 
@@ -1563,11 +1564,15 @@
           <span id="messageBody">3 tries left.</span>
         </div>
 
+<<<<<<< HEAD
         <div id="triesLeft" data-l10-id="inputCodeRetriesLeft">
           3 tries left
         </div>
 
         <div id="pinArea">
+=======
+        <div id="pinArea" class="sim-code-area">
+>>>>>>> 7b038c7... Cherry-pick Settings HIDPI: 7202403530d43a3fbac223f3beef5899faa46665
           <div data-l10n-id="simPin">SIM PIN</div>
           <div class="input-wrapper">
             <input type="number" name="simpin" size="8" maxlength="8" />
@@ -1575,7 +1580,7 @@
           </div>
         </div>
 
-        <div id="pukArea">
+        <div id="pukArea" class="sim-code-area">
           <div data-l10n-id="pukCode">PUK Code</div>
           <div class="input-wrapper">
             <input type="number" name="simpuk" size="8" maxlength="8" />
@@ -1583,7 +1588,7 @@
           </div>
         </div>
 
-        <div id="newPinArea">
+        <div id="newPinArea" class="sim-code-area">
           <div data-l10n-id="newSimPinMsg">
             Create PIN (must contain 4 to 8 digits)
           </div>
@@ -1593,9 +1598,9 @@
           </div>
         </div>
 
-        <div id="confirmPinArea">
+        <div id="confirmPinArea" class="sim-code-area">
           <div data-l10n-id="confirmNewSimPinMsg">
-            Confirm New PIN
+          Confirm New PIN
           </div>
           <div class="input-wrapper">
             <input type="number" name="confirmNewSimpin" size="8" maxlength="8" />
