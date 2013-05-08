@@ -4,6 +4,7 @@
 'use strict';
 
 var attachmentMap = new WeakMap();
+var scaleRatio = window.innerWidth / 320;
 
 function thui_mmsAttachmentClick(target) {
   var attachment = attachmentMap.get(target);
@@ -338,16 +339,15 @@ var ThreadUI = global.ThreadUI = {
   },
   setInputMaxHeight: function thui_setInputMaxHeight() {
     // Method for initializing the maximum height
-    var fontSize = Utils.getFontSize();
-    var viewHeight = this.container.offsetHeight / fontSize;
-    var inputHeight = this.input.offsetHeight / fontSize;
+    var viewHeight = this.container.offsetHeight;
+    var inputHeight = this.input.offsetHeight;
     var barHeight =
-      document.getElementById('messages-compose-form').offsetHeight / fontSize;
+      document.getElementById('messages-compose-form').offsetHeight;
     var adjustment = barHeight - inputHeight;
     if (window.location.hash === '#new') {
       adjustment += this.TO_FIELD_HEIGHT;
     }
-    this.input.style.maxHeight = (viewHeight - adjustment) + 'rem';
+    this.input.style.maxHeight = (viewHeight - adjustment) + 'px';
   },
   back: function thui_back() {
     var goBack = (function() {
@@ -478,15 +478,12 @@ var ThreadUI = global.ThreadUI = {
   },
 
   updateInputHeight: function thui_updateInputHeight() {
-    // First of all we retrieve all CSS info which we need
-    var inputCss = window.getComputedStyle(this.input, null);
-    var inputMaxHeight = parseInt(inputCss.getPropertyValue('max-height'), 10);
-    var fontSize = Utils.getFontSize();
-    var verticalPadding =
-      (parseInt(inputCss.getPropertyValue('padding-top'), 10) +
-      parseInt(inputCss.getPropertyValue('padding-bottom'), 10)) /
-      fontSize;
+
+    // Declare all CSS info which we need to avoid causing reflows
+    // by directly retrieving it, also helps to adapt it for HIDPI devices
+    var verticalPadding = 6 * scaleRatio;
     var buttonHeight = this.sendButton.offsetHeight;
+    var inputMaxHeight = 100 * scaleRatio;
 
     // Retrieve elements useful in growing method
     var bottomBar = this.composeForm;
@@ -498,14 +495,14 @@ var ThreadUI = global.ThreadUI = {
     // This is when we have reached the header (UX requirement)
     if (this.input.scrollHeight > inputMaxHeight) {
       // Height of the input is the maximum
-      this.input.style.height = inputMaxHeight / fontSize + 'rem';
+      this.input.style.height = inputMaxHeight + 'px';
       // Update the bottom bar height taking into account the padding
       bottomBar.style.height =
-        inputMaxHeight / fontSize + verticalPadding + 'rem';
+        inputMaxHeight + verticalPadding + 'px';
       // We update the position of the button taking into account the
       // new height
       this.sendButton.style.marginTop = this.attachButton.style.marginTop =
-        (this.input.offsetHeight - buttonHeight) / fontSize + 'rem';
+        this.input.offsetHeight - buttonHeight + 'px';
       return;
     }
 
@@ -514,19 +511,18 @@ var ThreadUI = global.ThreadUI = {
     // with additional margin for preventing scroll bar.
     this.input.style.height =
       this.input.offsetHeight > this.input.scrollHeight ?
-      this.input.offsetHeight / fontSize + 'rem' :
-      this.input.scrollHeight / fontSize + verticalPadding + 'rem';
+      this.input.offsetHeight + 'px' :
+      this.input.scrollHeight + verticalPadding + 'px';
 
     // We retrieve current height of the input
     var newHeight = this.input.getBoundingClientRect().height;
 
     // We calculate the height of the bottonBar which contains the input
-    var bottomBarHeight = (newHeight / fontSize + verticalPadding) + 'rem';
+    var bottomBarHeight = newHeight + verticalPadding + 'px';
     bottomBar.style.height = bottomBarHeight;
 
     // We move the button to the right position
-    var buttonOffset = (this.input.offsetHeight - buttonHeight) /
-      fontSize + 'rem';
+    var buttonOffset = this.input.offsetHeight - buttonHeight + 'px';
     this.sendButton.style.marginTop = this.attachButton.style.marginTop =
       buttonOffset;
 
