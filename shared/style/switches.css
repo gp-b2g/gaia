@@ -57,77 +57,77 @@ label:not([for]).danger input[type="radio"] + span {
  * ON/OFF SWITCHES
  * ---------------------------------- */
 
-label input[type="checkbox"][data-type="switch"] + span {
+label:not([for]) input[type="checkbox"][data-type="switch"] + span {
   position: absolute;
   left: 50%;
   top: 50%;
   margin: -1.1rem 0 0 -2.7rem;
-  width: 5.4rem;
+  width: 5.3rem;
   height: 2.2rem;
   pointer-events: none;
-  border: solid 0.1rem #c2c2c2;
+  border: solid 0.1rem #a2a2a2;
   border-radius: 5.4rem;
   overflow: hidden;
-  background: url(switches/images/switch/handler.png) no-repeat -0.2rem center;
-  background-size: auto calc(100% + 0.2rem);
-  transition: background 0.18s ease;
+  background: url(switches/images/switch/states.png) no-repeat left bottom;
+  animation: 0.25s ease;
 }
 
-label input[data-type="switch"] + span:after,
-label input[data-type="switch"] + span:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 5.4rem;
-  z-index: -1;
-  transition: transform 0.2s ease;
-}
 
-label input[data-type="switch"] + span:before {
-  right: 100%;
-  background: #00c3ea url(switches/images/switch/icon.png) no-repeat 0.5rem center;
-  background-size: auto calc(100% - 0.2rem);
-}
-
-label input[data-type="switch"] + span:after {
-  left: 100%;
-  background: #e6e6e6;
-  transform: translateX(-5.4rem);
-}
-
-/* switch: disabled state */
-label input[data-type="switch"]:disabled + span:before,
-label input[data-type="switch"]:disabled + span:after {
-  opacity: 0.2;
-}
-
-label input[data-type="switch"]:disabled + span {
+/* Disabled states */
+label:not([for]) input[type="checkbox"][data-type="switch"]:disabled + span {
   opacity: 0.3;
 }
 
-label input[data-type="switch"]:checked:disabled + span {
-  opacity: 1;
-  border: solid 1px #A7DBE6;
+/* Moving state */
+label:not([for]) input[type="checkbox"][data-type="switch"] + span.moving {
+  animation: none;
+  transition: none;
+}
+
+/* Finish transition */
+label:not([for]) input[type="checkbox"][data-type="switch"] + span.finish {
+  transition: background-position 0.15s ease;
+}
+
+/* Active states */
+label:not([for]):active input[type="checkbox"][data-type="switch"] + span {
+  background-position: right top;
+}
+
+label:not([for]):active input[type="checkbox"][data-type="switch"]:checked + span {
+  background-position: left top;
 }
 
 /* 'ON' state */
-
-label input[data-type="switch"]:checked + span {
+label:not([for]) input[type="checkbox"][data-type="switch"]:checked + span {
+  background-position: left center;
   border-color: #00acce;
-  background-position: 3.2rem center;
+  animation-name: check;
 }
 
-label input[data-type="switch"]:checked + span:before {
-  transform: translateX(5.4rem);
+/* 'OFF' state */
+label:not([for]) input[type="checkbox"][data-type="switch"] + span {
+  background-position: left bottom;
+  animation-name: uncheck;
 }
 
-label input[data-type="switch"]:checked + span:after {
-  transform: translateX(0);
+@keyframes check {
+  0% {
+    background-position: right top;
+  }
+  100% {
+    background-position: left top;
+  }
 }
 
-label input[type="checkbox"][data-type="switch"].uninit + span,
-label input[type="checkbox"][data-type="switch"].uninit + span:before,
-label input[type="checkbox"][data-type="switch"].uninit + span:after {
-  transition: none;
+/* Reverse option in animation does not animate.
+We must hardcode a reversed animation */
+@keyframes uncheck {
+  0% {
+    background-position: left top;
+  }
+  100% {
+    background-position: right top;
+  }
 }
+
