@@ -78,15 +78,15 @@ label:not([for]) input[type="checkbox"][data-type="switch"]:disabled + span {
   opacity: 0.3;
 }
 
-/* Moving state */
-label:not([for]) input[type="checkbox"][data-type="switch"] + span.moving {
+/* Finish with transition */
+label:not([for]) input[type="checkbox"][data-type="switch"] + span.no-animation {
+  transition: background-position 0.25s ease;
   animation: none;
 }
 
-/* Finish transition */
-label:not([for]) input[type="checkbox"][data-type="switch"] + span.finish {
-  transition: background-position 0.15s ease;
-  animation: none;
+/* Finish with animation */
+label:not([for]) input[type="checkbox"][data-type="switch"] + span.no-transition {
+  transition: none;
 }
 
 /* Active states */

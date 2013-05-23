@@ -1,5 +1,4 @@
 (function() {
-console.log("init");
 
 	// Slider
 	var rootElm = document.querySelectorAll("[data-type=switch]");
@@ -24,7 +23,10 @@ console.log("init");
 		// Calculated from rawAmount, the backgorund position in px
 		var amount = 0;
 
-		// Px to determine non-intentional movements
+		// String value for  background position
+		var position = "";
+
+		// Px to determine non-intentional user movements
 		var threshold = 3;
 
 		// limit = draggable area - handler width
@@ -34,7 +36,7 @@ console.log("init");
 			coordinates.current = (e.touches) ? e.touches[0].pageX : e.clientX;
 			rawAmount = coordinates.current - coordinates.init;
 
-			if (isChecked && amount < 0) {
+			if (isChecked) {
 				// Allow to move right to left
 				amount = rawAmount;
 			} else {
@@ -55,8 +57,8 @@ console.log("init");
 			rawAmount = 0;
 			amount = 0;
 
-			// receiverElm.classList.remove("finish")
-			// receiverElm.classList.remove("moving")
+			receiverElm.classList.add("no-transition");
+
 			context.addEventListener(moveEvent, move);
 			context.addEventListener(releaseEvent, end);
 		}
@@ -66,34 +68,38 @@ console.log("init");
 
 			// true when user is just trying to press & release w/o movment
 			var isPressAndRelease = (rawAmount <= 0 + threshold && rawAmount >= 0 - threshold);
-			console.log(rawAmount)
+
+			// Intentional user movement
 			if (!isPressAndRelease) {
-				// Intentional user movement
 				var toCheck = (amount < (coordinates.limit / 2) * -1)
-				var finish = function() {
-					receiverElm.style.backgroundPosition = null;
-					receiverElm.classList.remove("finish");
-					// receiverElm.classList.add("moving");
-					receiverElm.removeEventListener("transitionend", finish);
-				};
+				receiverElm.classList.remove("no-transition");
+				receiverElm.classList.add("no-animation");
 
 				// Determine if has to be checked or not
-				if (isChecked && toCheck) {
+				if (toCheck) {
 					// Uncheck
-					receiverElm.style.backgroundPosition = (coordinates.limit * -1) + "px top";
-					receiverElm.classList.add("finish");
 					checkbox.checked = false;
+					receiverElm.style.backgroundPosition = "right top";
 
-					receiverElm.addEventListener("transitionend",  finish);
 				} else {
 					// Check
-					receiverElm.style.backgroundPosition = 0 + "px top";
-					receiverElm.classList.add("finish");
 					checkbox.checked = true;
-					receiverElm.addEventListener("transitionend",  finish);
+					receiverElm.style.backgroundPosition = "left top";
 				}
-			}
 
+				var finish = function() {
+					receiverElm.classList.add("no-transition");
+					(toCheck) ? receiverElm.style.backgroundPosition = "left bottom" : receiverElm.style.backgroundPosition = "left center";
+					receiverElm.removeEventListener("transitionend", finish);
+				}
+
+				receiverElm.addEventListener("transitionend", finish);
+			} else {
+				// Clean modified stuff on press&release
+				receiverElm.style.backgroundPosition = null;
+				receiverElm.classList.remove("no-animation");
+				receiverElm.classList.remove("no-transition");
+			}
 			context.removeEventListener(moveEvent, move, false);
 			context.removeEventListener(releaseEvent, end, false);
 		}
