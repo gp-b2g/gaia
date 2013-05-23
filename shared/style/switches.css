@@ -86,6 +86,7 @@ label:not([for]) input[type="checkbox"][data-type="switch"] + span.moving {
 /* Finish transition */
 label:not([for]) input[type="checkbox"][data-type="switch"] + span.finish {
   transition: background-position 0.15s ease;
+  animation: none;
 }
 
 /* Active states */
