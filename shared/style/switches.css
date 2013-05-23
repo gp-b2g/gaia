@@ -81,7 +81,6 @@ label:not([for]) input[type="checkbox"][data-type="switch"]:disabled + span {
 /* Moving state */
 label:not([for]) input[type="checkbox"][data-type="switch"] + span.moving {
   animation: none;
-  transition: none;
 }
 
 /* Finish transition */
