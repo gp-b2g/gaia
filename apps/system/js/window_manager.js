@@ -286,25 +286,22 @@ var WindowManager = (function() {
         setOpenFrame(null);
       };
 
-
-
       // If this is a cold launch let's wait for the app to load first
       var iframe = openFrame.firstChild;
-
-      // Peak fix as is not triggering mozbrowserloadend
-      if (window.innerWidth == 540) {
-        var delay = setTimeout(function(){
-          iframe.style.opacity = "1";
-        }, 1);
-      }
-
       if ('unloaded' in iframe.dataset) {
         if ('wrapper' in frame.dataset)
           wrapperFooter.classList.add('visible');
 
+        // Peak fix as it does not triggers mozbrowserloadend
+        if (window.innerWidth == 540) {
+          var delay = setTimeout(function(){
+              iframe.style.opacity = 1;
+          }, 300)
+        }
+
         iframe.addEventListener('mozbrowserloadend', function onloaded(e) {
         console.log("WINDOW_MANAGER: LOADED FRAME");
-          iframe.style.opacity = "1";
+          iframe.style.opacity = 1;
           iframe.removeEventListener('mozbrowserloadend', onloaded);
           onWindowReady();
         });
