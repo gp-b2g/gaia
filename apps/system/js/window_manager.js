@@ -286,13 +286,25 @@ var WindowManager = (function() {
         setOpenFrame(null);
       };
 
+
+
       // If this is a cold launch let's wait for the app to load first
       var iframe = openFrame.firstChild;
+
+      // Peak fix as is not triggering mozbrowserloadend
+      if (window.innerWidth == 540) {
+        var delay = setTimeout(function(){
+          iframe.style.opacity = "1";
+        }, 1);
+      }
+
       if ('unloaded' in iframe.dataset) {
         if ('wrapper' in frame.dataset)
           wrapperFooter.classList.add('visible');
 
         iframe.addEventListener('mozbrowserloadend', function onloaded(e) {
+        console.log("WINDOW_MANAGER: LOADED FRAME");
+          iframe.style.opacity = "1";
           iframe.removeEventListener('mozbrowserloadend', onloaded);
           onWindowReady();
         });
@@ -458,7 +470,9 @@ var WindowManager = (function() {
   // setFrameBackground() will attach the manifest icon as a background
   function setFrameBackground(frame, callback) {
     var splash = frame.firstChild.splash;
-    frame.style.backgroundImage = 'url("' + splash + '")';
+    frame.style.background = '#000';
+    console.log(frame.outerHTML)
+    // frame.style.backgroundImage = 'url("' + splash + '")';
     setTimeout(callback);
   }
 
@@ -1016,6 +1030,7 @@ var WindowManager = (function() {
 
     // Add the iframe to the document
     windows.appendChild(frame);
+    console.log("WINDOW_MANAGER: APPEND FRAME");
 
     // And map the app origin to the info we need for the app
     var app = new AppWindow({
