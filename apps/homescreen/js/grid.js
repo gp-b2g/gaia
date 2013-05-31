@@ -181,6 +181,11 @@ var GridManager = (function() {
         isPanning = false;
         addActive(evt.target);
         panningResolver.reset();
+
+        // releaseEvents();
+        console.log("TOUCHSTART")
+        pageHelper.getCurrent().tap(evt.target);
+        // removeActive();
         break;
 
       case touchmove:
@@ -342,7 +347,7 @@ var GridManager = (function() {
 
       case touchend:
         releaseEvents();
-        pageHelper.getCurrent().tap(evt.target);
+        // pageHelper.getCurrent().tap(evt.target);
         removeActive();
         break;
 
@@ -390,7 +395,7 @@ var GridManager = (function() {
       }
     } else if (!isPanning && evt) {
       releaseEvents();
-      pageHelper.getCurrent().tap(evt.target);
+      // pageHelper.getCurrent().tap(evt.target);
     }
 
     goToPage(page);
@@ -793,6 +798,7 @@ var GridManager = (function() {
   function getIcon(descriptor) {
     if (descriptor.bookmarkURL)
       return bookmarkIcons[descriptor.bookmarkURL];
+    console.log("descriptor:"+JSON.stringify(descriptor))
 
     var iconsForApp = appIcons[descriptor.manifestURL];
     return iconsForApp && iconsForApp[descriptor.entry_point || ''];

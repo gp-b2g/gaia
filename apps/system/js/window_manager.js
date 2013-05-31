@@ -286,28 +286,28 @@ var WindowManager = (function() {
         setOpenFrame(null);
       };
 
-      // If this is a cold launch let's wait for the app to load first
-      var iframe = openFrame.firstChild;
-      if ('unloaded' in iframe.dataset) {
-        if ('wrapper' in frame.dataset)
-          wrapperFooter.classList.add('visible');
+      // // If this is a cold launch let's wait for the app to load first
+      // var iframe = openFrame.firstChild;
+      // if ('unloaded' in iframe.dataset) {
+      //   if ('wrapper' in frame.dataset)
+      //     wrapperFooter.classList.add('visible');
 
-        // Peak fix as it does not triggers mozbrowserloadend
-        if (window.innerWidth == 540) {
-          var delay = setTimeout(function(){
-              iframe.style.opacity = 1;
-          }, 300)
-        }
+      //   // Peak fix as it does not triggers mozbrowserloadend
+      //   if (window.innerWidth == 540) {
+      //     var delay = setTimeout(function(){
+      //         iframe.style.opacity = 1;
+      //     }, 300)
+      //   }
 
-        iframe.addEventListener('mozbrowserloadend', function onloaded(e) {
-        console.log("WINDOW_MANAGER: LOADED FRAME");
-          iframe.style.opacity = 1;
-          iframe.removeEventListener('mozbrowserloadend', onloaded);
-          onWindowReady();
-        });
-      } else {
-        onWindowReady();
-      }
+      //   iframe.addEventListener('mozbrowserloadend', function onloaded(e) {
+      //   console.log("WINDOW_MANAGER: LOADED FRAME");
+      //     iframe.style.opacity = 1;
+      //     iframe.removeEventListener('mozbrowserloadend', onloaded);
+      //     onWindowReady();
+      //   });
+      // } else {
+      //   onWindowReady();
+      // }
     } else if (animationName.indexOf('closeApp') !== -1) {
       windowClosed(frame);
 
@@ -1299,7 +1299,12 @@ var WindowManager = (function() {
           }
           runningApps[origin].iframe.dataset.start = startTime;
           runningApps[origin].iframe.splash = splash;
-          setDisplayedApp(origin, null, 'window');
+          runningApps[origin].iframe.addEventListener("mozbrowserloadend", function() {
+            // Give some time to Gecko to paint
+            var delay = setTimeout(function(){
+              setDisplayedApp(origin, null, 'window');
+            },30)
+          });
         }
         break;
       // System Message Handler API is asking us to open the specific URL

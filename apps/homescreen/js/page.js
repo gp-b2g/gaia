@@ -758,6 +758,9 @@ Page.prototype = {
       }
       icon.app.launch();
       this.disableTap();
+      console.log(elem.outerHTML)
+      console.log("ICON:" + JSON.stringify(icon))
+      console.log("APP LAUNCH")
     }
   },
 
