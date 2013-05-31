@@ -1,20 +1,20 @@
 # Splash mesaurement
 
 ## Peak
-### splash.css (all needed css files)
+### splash/default.css (all needed css files)
 	* Normal: ~320ms
 	* Minify: ~320ms
 
-### splash.css (all needed files with cleanup)
+### splash/default.css (all needed files with cleanup)
 	* ~290ms
 
-### splash.css (empty)
+### splash/default.css (empty)
 	* ~250ms
 
-### Not loading splash.css
+### Not loading splash/default.css
 	* ~250ms
 
-### splash.css as <style>
+### splash/default.css as <style>
 	* 320ms (minifyed)
 
 

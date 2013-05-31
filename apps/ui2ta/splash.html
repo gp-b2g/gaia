@@ -11,38 +11,15 @@
 		<script>
 
 			document.addEventListener("DOMContentLoaded", function () {
-				console.log("SPLASH: "+Date.now());
-
-				// Using splash.ajax and lazyload.js
-				// Show loaded app when last stylesheet is loaded
-				var splashDom = document.getElementById("splash");
-				var contentReceiver = document.getElementById("contentReceiver");
-				document.addEventListener("stylesReady", function() {
-					console.log("CSS")
-					// document.removeChild() does not work??
-					var delay = setTimeout(function(){
-						splashDom.style.opacity = "0";
-					}, 30)
-
-					var delay = setTimeout(function(){
-						splashDom.outerHTML= "";
-					}, 60)
-
-				});
-
 				/*
-				  LazyLoad the LazyLoad OMFG!
-				  If we dont set a delay System app will load the iframe
+				  LazyLoad splash.js
+				  If we dont set a delay, System app will load the request
 				  inside mozbrowserload event and we won't lazyload
 				  anything
 				*/
 				var delay = setTimeout(function(){
 					var splashJS = document.createElement("script");
-					// splashJS.src = "js/splash.iframe.js";
-					splashJS.src = "js/splash.ajax.js";
-					splashJS.onload = function () {
-						console.log("SPLASH.JS: "+Date.now())
-					};
+					splashJS.src = "js/splash.js";
 					document.head.appendChild(splashJS);
 				}, 300)
 
@@ -52,19 +29,14 @@
 
 	<body>
 
-		<section id="splash" role="region" class="wrapper" data-viewport style="top: 0; z-index: 200; overflow: hidden; opacity: 1;">
-			<header class="header" data-hideon="settings">
-				<a href="#" data-trigger="back" data-hideon="add" class="back"><span class="icon icon-back"></span></a>
-				<menu type="toolbar">
-					<a href="#" data-showon="list" data-trigger="edit" class="action"><span class="icon icon-edit"></span></a>
-				</menu>
-				<h1 data-showon="list"></h1>
+		<section id="splash" role="region">
+			<header class="header" >
+				<h1></h1>
 			</header>
 
-			<section class="views">
-
+			<section role="region">
 				<!-- List  -->
-				<section class="list bb-list" data-type="list">
+				<section data-type="list">
 					 <header>&nbsp;</header>
 					<ul>
 						<li></li>
@@ -78,15 +50,12 @@
 				</section>
 			</section>
 
-			<ul role="tablist" class="bb-tabs">
+			<ul role="tablist">
 				<li role="tab">
 					<a href="#/list">&nbsp;</a>
 			</ul>
 		</section>
 
-		<section id="contentReceiver" role="region" class="wrapper">
-
-		</section>
 
 	</body>
 </html>
