@@ -12,6 +12,24 @@
 
 			document.addEventListener("DOMContentLoaded", function () {
 				console.log("SPLASH: "+Date.now());
+
+				// Using splash.ajax and lazyload.js
+				// Show loaded app when last stylesheet is loaded
+				var splashDom = document.getElementById("splash");
+				var contentReceiver = document.getElementById("contentReceiver");
+				document.addEventListener("stylesReady", function() {
+					console.log("CSS")
+					// document.removeChild() does not work??
+					var delay = setTimeout(function(){
+						splashDom.style.opacity = "0";
+					}, 30)
+
+					var delay = setTimeout(function(){
+						splashDom.outerHTML= "";
+					}, 60)
+
+				});
+
 				/*
 				  LazyLoad the LazyLoad OMFG!
 				  If we dont set a delay System app will load the iframe
@@ -20,7 +38,8 @@
 				*/
 				var delay = setTimeout(function(){
 					var splashJS = document.createElement("script");
-					splashJS.src = "js/splash.iframe.js";
+					// splashJS.src = "js/splash.iframe.js";
+					splashJS.src = "js/splash.ajax.js";
 					splashJS.onload = function () {
 						console.log("SPLASH.JS: "+Date.now())
 					};
@@ -33,7 +52,7 @@
 
 	<body>
 
-		<section id="main" role="region" class="wrapper">
+		<section id="splash" role="region" class="wrapper" data-viewport style="top: 0; z-index: 200; overflow: hidden; opacity: 1;">
 			<header class="header" data-hideon="settings">
 				<a href="#" data-trigger="back" data-hideon="add" class="back"><span class="icon icon-back"></span></a>
 				<menu type="toolbar">
@@ -42,10 +61,10 @@
 				<h1 data-showon="list"></h1>
 			</header>
 
-			<section id="views" class="views">
+			<section class="views">
 
 				<!-- List  -->
-				<section id="list" class="list bb-list" data-type="list">
+				<section class="list bb-list" data-type="list">
 					 <header>&nbsp;</header>
 					<ul>
 						<li></li>
@@ -63,6 +82,9 @@
 				<li role="tab">
 					<a href="#/list">&nbsp;</a>
 			</ul>
+		</section>
+
+		<section id="contentReceiver" role="region" class="wrapper">
 
 		</section>
 
