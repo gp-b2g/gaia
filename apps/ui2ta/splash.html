@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+
+		<title>UI 2 Takeaway</title>
+
+
+		<!-- Splash -->
+		<link rel="stylesheet" type="text/css" href="css/splash.css">
+		<script>
+
+			document.addEventListener("DOMContentLoaded", function () {
+				console.log("SPLASH: "+Date.now());
+				/*
+				  LazyLoad the LazyLoad OMFG!
+				  If we dont set a delay System app will load the iframe
+				  inside mozbrowserload event and we won't lazyload
+				  anything
+				*/
+				var delay = setTimeout(function(){
+					var splashJS = document.createElement("script");
+					splashJS.src = "js/splash.iframe.js";
+					splashJS.onload = function () {
+						console.log("SPLASH.JS: "+Date.now())
+					};
+					document.head.appendChild(splashJS);
+				}, 300)
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<section id="main" role="region" class="wrapper">
+			<header class="header" data-hideon="settings">
+				<a href="#" data-trigger="back" data-hideon="add" class="back"><span class="icon icon-back"></span></a>
+				<menu type="toolbar">
+					<a href="#" data-showon="list" data-trigger="edit" class="action"><span class="icon icon-edit"></span></a>
+				</menu>
+				<h1 data-showon="list"></h1>
+			</header>
+
+			<section id="views" class="views">
+
+				<!-- List  -->
+				<section id="list" class="list bb-list" data-type="list">
+					 <header>&nbsp;</header>
+					<ul>
+						<li></li>
+						<li></li>
+						<li></li>
+						<li></li>
+						<li></li>
+						<li></li>
+						<li></li>
+					</ul>
+				</section>
+			</section>
+
+			<ul role="tablist" class="bb-tabs">
+				<li role="tab">
+					<a href="#/list">&nbsp;</a>
+			</ul>
+
+		</section>
+
+	</body>
+</html>

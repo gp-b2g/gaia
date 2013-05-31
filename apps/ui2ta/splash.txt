@@ -1,0 +1,20 @@
+# Splash mesaurement
+
+## Peak
+### splash.css (all needed css files)
+	* Normal: ~320ms
+	* Minify: ~320ms
+
+### splash.css (all needed files with cleanup)
+	* ~290ms
+
+### splash.css (empty)
+	* ~250ms
+
+### Not loading splash.css
+	* ~250ms
+
+### splash.css as <style>
+	* 320ms (minifyed)
+
+

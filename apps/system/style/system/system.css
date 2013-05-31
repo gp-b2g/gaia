@@ -276,7 +276,7 @@ body {
 }
 
 #windows > .appWindow.opening {
-  animation: openApp .3s forwards ease;
+  animation: openApp 0s forwards ease;
   pointer-events: auto;
 }
 
@@ -294,8 +294,8 @@ body {
 
 /* Opacity increases start up time then we don't use it anymore for opening */
 @keyframes openApp {
-  0%   { transform: scale(0.1) }
-  100% { transform: scale(1.0) }
+  0%   { }
+  100% {  }
 }
 
 #windows > .appWindow.homescreen.zoom-in > iframe {
