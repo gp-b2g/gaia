@@ -1,3 +1,10 @@
+/* Media definitions */
+@media screen and (max--moz-device-pixel-ratio: 1.5) {
+  html {
+    font-size: 15px;
+  }
+}
+
 @font-face {
   font-family: 'Keyboard Symbols';
   font-weight: 600;
@@ -11,16 +18,18 @@
 }
 
 html {
+  font-size: 1rem;
   pointer-events: none;
 }
 
 body {
+  margin: 0;
   overflow: hidden;
 }
 
 button::-moz-focus-inner {
   padding: 0;
-  border: 0
+  border: 0;
 }
 
 .cache {
@@ -264,7 +273,7 @@ button::-moz-focus-inner {
 /* Key states */
 /* Active */
 .keyboard-key.kbr-key-active > .visual-wrapper > span {
-  color: #4495A8;
+  color: #00acd1;
 }
 /* Hold */
 .keyboard-key.kbr-key-hold> .visual-wrapper {

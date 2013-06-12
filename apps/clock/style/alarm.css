@@ -771,4 +771,55 @@ div.animation-on {
   display: none;
 }
 
+/* 320x480 phones */
+@media screen and (width: 320px) {
+  html {
+    font-size: 10px;
+  }
+}
 
+/* 480x800 phones */
+@media screen and (width: 480px) {
+  html {
+    font-size: 10px;
+  }
+  .alarmList-detail {
+    margin-left: 0.31rem; 
+  }
+  .alarmList-time span.time {
+    font: 2.25rem/2.25rem 'MozTT', sans-serif;
+  }
+  .alarmList-time span.hour24-state {
+    font: 1rem/1rem 'MozTT', sans-serif;
+    margin-left: -0.19rem;
+  }
+  .alarmList-detail .label {
+    font: 1.25rem/1.25rem 'MozTT', sans-serif;
+  }
+  .alarmList-detail .repeat {
+    font: 1.13rem/1.13rem 'MozTT', sans-serif;
+  }
+}
+
+/* 640x960 phones */
+@media screen and (width: 540px) {
+  html {
+    font-size: 1rem;
+  }
+  .alarmList-detail {
+    margin-left: 0.31rem; 
+  }
+  .alarmList-time span.time {
+    font: 2.25rem/2.25rem 'MozTT', sans-serif;
+  }
+  .alarmList-time span.hour24-state {
+    font: 1rem/1rem 'MozTT', sans-serif;
+    margin-left: -0.19rem;
+  }
+  .alarmList-detail .label {
+    font: 1.25rem/1.25rem 'MozTT', sans-serif;
+  }
+  .alarmList-detail .repeat {
+    font: 1.13rem/1.13rem 'MozTT', sans-serif;
+  }
+}

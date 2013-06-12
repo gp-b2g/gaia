@@ -69,7 +69,7 @@ html, body {
   position: absolute;
   left: 5rem;
   top: 1rem;
-  width: calc(100% - 5.5rem);
+  width: -moz-calc(100% - 5.5rem);
   color: #52b8cc;
   font-size: 1.5rem;
   font-weight: 500;
@@ -78,7 +78,7 @@ html, body {
 
 #update-manager-container > .message {
   margin: 1rem 0 0 5rem;
-  width: calc(100% - 5.5rem);
+  width: -moz-calc(100% - 5.5rem);
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 1.9rem;
@@ -115,7 +115,7 @@ html, body {
 }
 
 #update-manager-toaster.displayed {
-  transform: translateY(0);
+  -moz-transform: translateY(0);
 }
 
 #updates-viaDataConnection-dialog,

@@ -22,14 +22,14 @@ const IMERender = (function() {
 
   var inputMethodName; // used as a CSS class on the candidatePanel
 
-  // Initiaze the render. It needs some business logic to determine:
+  // Initialize the render. It needs some business logic to determine:
   //   1- The uppercase for a key object
   //   2- When a key is a special key
   var init = function kr_init(uppercaseFunction, keyTest) {
     getUpperCaseValue = uppercaseFunction;
     isSpecialKey = keyTest;
     this.ime = document.getElementById('keyboard');
-  }
+  };
 
   var setInputMethodName = function(name) {
     var candidatePanel = document.getElementById('keyboard-candidate-panel');
@@ -47,7 +47,7 @@ const IMERender = (function() {
     }
 
     inputMethodName = name;
-  }
+  };
 
   // Accepts three values: true / 'locked' / false
   //   Use 'locked' when caps are locked
@@ -71,7 +71,7 @@ const IMERender = (function() {
       capsLockKey.classList.remove('kbr-key-active');
       capsLockKey.classList.remove('kbr-key-hold');
     }
-  }
+  };
 
   // Draw the keyboard and its components. Meat is here.
   var draw = function kr_draw(layout, flags) {

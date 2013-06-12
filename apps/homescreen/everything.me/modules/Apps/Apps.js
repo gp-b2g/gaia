@@ -708,6 +708,54 @@ Evme.IconGroup = new function Evme_IconGroup() {
       onAllIconsReady && onAllIconsReady(context.canvas);
     }
   }
+
+  // used previously- here just in case
+  // renderCanvas is used instead- better performance
+  function renderHTML(options) {
+    var apps = options.apps,
+        icons = options.icons,
+        html = '';
+
+    for (var i=0; i<icons.length; i++) {
+      var app = apps[apps.length-1-i],
+          icon = icons[i],
+          y = icon.y,
+          x = icon.x,
+          size = icon.size * Evme.Utils.devicePixelRatio;
+
+      if (typeof app != "object") {
+        app = {
+          "id": app,
+        };
+      }
+
+      if (!app.icon) {
+        app.icon = Evme.IconManager.get(app.id);
+      }
+
+      app.icon = Evme.Utils.formatImageData(app.icon);
+
+      var missingIcon = '';
+      if (!app.icon) {
+        missingIcon = ' iconToGet="' + app.id + '"';
+      }
+
+      html += '<span' + missingIcon + ' style="' +
+                  'top: ' + y/10 + 'rem;' +
+                  ' left: ' + x/10 + 'rem;' +
+                  ' width: ' + size/10 + 'rem;' +
+                  ' height: ' + size/10 + 'rem;' +
+                  (icon.rotate? ' transform: rotate(' + icon.rotate + 'deg);' : '') +
+                  ((icon.shadowOffset || icon.shadowBlur)? ' box-shadow: ' + (icon.shadowOffsetX || "0")/10 + 'rem ' + (icon.shadowOffset || "0")/10 + 'rem ' + (icon.shadowBlur || "0")/10 + 'rem 0 rgba(0, 0, 0, ' + icon.shadowOpacity + ');' : '') +
+                  (app.icon? ' background-image: url(' + app.icon + ');' : '') +
+                  '">' +
+                  (icon.darken? '<em style="opacity: ' + icon.darken + ';">&nbsp;</em>' : '') +
+                '</span>';
+		console.log(html);
+    }
+
+    return Evme.$create('div', {'class': 'apps-group'}, html);
+  }
 };
 
 Evme.App = function Evme_App(__cfg, __index, __isMore, parent) {

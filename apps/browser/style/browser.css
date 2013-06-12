@@ -735,7 +735,7 @@ li[role="listitem"] h5 {
 
 li[role="listitem"] small {
   display: block;
-  color: #666;
+  color: #575e66;
   overflow: hidden;
   white-space: nowrap;
   pointer-events: none;
@@ -998,7 +998,7 @@ li[role="listitem"] small {
   .page-screen #frames { bottom: 0; }
 }
 
-/* For the Twist , 960x540 */
+/* For the Peak , 960x540 */
 @media (device-height: 540px) and (max-height: 490px),
        (device-height: 960px) and (max-height: 910px) {
   .page-screen #toolbar-end { display: none; }

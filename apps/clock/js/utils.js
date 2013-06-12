@@ -209,7 +209,8 @@ var ValuePicker = (function() {
     // cache the size of picker
     this._pickerUnits = this.element.children;
     this._pickerUnitsHeight = this._pickerUnits[0].clientHeight;
-    this._pickerHeight = this.element.clientHeight;
+    this._pickerHeight = this._pickerUnits[0].clientHeight *
+                                     this._pickerUnits.length;
     this._space = this._pickerHeight / this._range;
   };
 

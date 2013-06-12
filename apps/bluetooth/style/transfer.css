@@ -1,16 +1,19 @@
 html, body {
   margin: 0;
   padding: 0;
-  font-size: 10px;
+  font-size: 1rem;
   background-color: #26272c;
 }
 
 body {
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
   font-family: 'Open Sans', sans-serif;
   color: #fff;
+  font-size: 1.2rem;
 }
 
 #value-selector {
@@ -166,3 +169,23 @@ button.affirmative:active {
   background: url("/bb/value_selector/images/icons/checked.png") no-repeat right center border-box transparent;
 }
 
+/* 320x480 phones */
+@media screen and (width: 320px) {
+  html {
+    font-size: 10px;
+  }
+}
+
+/* 480x800 phones */
+@media screen and (min-width: 480px) {
+  html {
+    font-size: 13.3px;
+  }
+}
+
+/* 540x960 phones */
+@media screen and (min-width: 540px) {
+  html {
+    font-size: 14.4px;
+  }
+}

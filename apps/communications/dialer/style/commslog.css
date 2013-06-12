@@ -227,7 +227,11 @@ ul[role="tablist"][data-type="filter"] > [role="tab"].selected > a {
 */
 #no-result-container {
   background: url('images/ComLog_200x200_clock.png') fixed no-repeat center / 20rem;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+  background-position:center;
   height: 100%;
+  width: 100%;
 }
 
 #no-result-message {

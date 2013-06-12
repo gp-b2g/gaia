@@ -19,7 +19,27 @@
 #listmenu menu button.icon,
 #listmenu menu a[role="button"].icon {
   background-repeat: no-repeat;
-  background-position: 0.5rem center;
-  padding-left: 4rem;
-  background-size: 3rem;
+  background-position: 1rem center;
+  padding-left: 4.5rem;
+  background-size: 3rem 3rem;
+}
+
+/* 320x480 phones */
+@media (orientation: portrait) and (width: 320px),
+       (orientation: landscape) and (width: 480px) {
+  #listmenu menu button.icon,
+  #listmenu menu a[role="button"].icon {
+    background-position: 5px center;
+    padding-left: 40px;
+  }
+}
+
+/* 540x960 phones */
+@media (orientation: portrait) and (width: 540px),
+       (orientation: landscape) and (width: 960px) {
+  #listmenu menu button.icon,
+  #listmenu menu a[role="button"].icon {
+    background-position: 0.5rem center;
+    padding-left: 4rem;
+  }
 }

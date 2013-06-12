@@ -142,7 +142,6 @@ importScripts('/contacts/js/fb/fb_query.js',
       fb.operationsTimeout = message.data.operationsTimeout;
       uids = message.data.uids;
       access_token = message.data.access_token;
-
       getNewImgsForFriends(Object.keys(uids), access_token);
     }
   }

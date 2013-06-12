@@ -1,13 +1,13 @@
 #value-selector {
   width: 100%;
-  height: calc(100% - 2rem);
+  height: -moz-calc(100% - 2rem);
   top: 2rem;
   left: 0;
   position: absolute;
 }
 
 #screen.active-statusbar #value-selector {
-  height: calc(100% - 4rem);
+  height: -moz-calc(100% - 4rem);
   top: 4rem;
 }
 

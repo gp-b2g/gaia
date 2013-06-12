@@ -97,8 +97,21 @@ body {
   position: absolute;
   top: calc(50% - 1.5rem);
   left: calc(50% - 1.5rem);
+  width: 2.9rem;
+  height: 2.9rem;
+  background: url(images/spinner.png) no-repeat center center;
+  animation: 0.9s spinner-animation infinite steps(30);
+  border: none;
 }
 
+@keyframes spinner-animation {
+  from {
+    transform: rotate(1deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* Display the names of the songs we scan here */
 #scan-progress {
@@ -117,7 +130,12 @@ body {
 #scan-spinner {
   position: absolute;
   top: 1rem;
-  left: 1rem;
+  left: 1rem; 
+  width: 2.9rem;
+  height: 2.9rem;
+  background: url(images/spinner.png) no-repeat center center;
+  animation: 0.9s spinner-animation infinite steps(30);
+  border: none;
 }
 
 #scan-count {
@@ -131,7 +149,7 @@ body {
   font-size: 1.2rem;
   font-weight: bold;
   text-align: center;
-  padding-top: 1.7rem;
+  padding-top: 1.6rem;
 }
 
 #scan-artist {
@@ -369,6 +387,7 @@ body.player-mode #title-player {
   width: 66%;
   height: 0;
   padding-bottom: 66%;
+  border: 0.1rem solid rgba(0, 0, 0, 1);
   background-color: black;
   overflow: hidden;
 }
@@ -517,6 +536,56 @@ body.player-mode #title-player {
   background-image: url('./images/AlbumArt10_small.png');
   background-size: 100% 100%;
 }
+
+/* 320x480 phones */
+@media (orientation: portrait) and (width: 320px),
+       (orientation: landscape) and (width: 480px) {
+
+  .main-tile {
+    width: 210px;
+    height: 210px;
+  }
+
+  .sub-tile {
+    width: 104px;
+    height: 104px;
+  }
+
+  .float-right {
+    right: 2px;
+  }
+}
+
+/* 480x800 phones */
+@media (orientation: portrait) and (width: 480px),
+       (orientation: landscape) and (width: 800px) {
+
+  .main-tile {
+    width: 318px;
+    height: 318px;
+  }
+
+  .sub-tile {
+    width: 158px;
+    height: 158px;
+  }
+}
+
+/* 540x960 phones */
+@media (orientation: portrait) and (width: 540px),
+       (orientation: landscape) and (width: 960px) {
+
+  .main-tile {
+    width: 31.8rem;
+    height: 31.8rem;
+  }
+
+  .sub-tile {
+    width: 15.8rem;
+    height: 15.8rem;
+  }
+}
+
 
 #player-cover {
   position: relative;

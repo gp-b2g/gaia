@@ -67,7 +67,7 @@
   top: 5rem;
   left: 0;
   width: 100%;
-  height: calc(100% - 5rem);
+  height: -moz-calc(100% - 5rem);
 
   background-color: #fff;
   transform: translateY(100%);

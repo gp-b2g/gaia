@@ -749,6 +749,7 @@ var Contacts = (function() {
     var lazyLoadFiles = [
       '/contacts/js/utilities/templates.js',
       '/contacts/js/contacts_shortcuts.js',
+      '/contacts/js/utilities/responsive.js',
       '/contacts/js/confirm_dialog.js',
       '/contacts/js/contacts_settings.js',
       '/contacts/js/contacts_details.js',

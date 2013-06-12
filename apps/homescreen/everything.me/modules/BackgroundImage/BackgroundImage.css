@@ -29,7 +29,7 @@
     }
     #search-overlay .img {
         transition: opacity .3s linear;
-        transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+        -moz-transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
     }
     #search-overlay .img.visible {
         opacity: 0.4;

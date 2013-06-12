@@ -249,7 +249,7 @@ var SimManager = {
 
     importer.onread = function sim_import_read(n) {
       progress.setClass('progressBar');
-      progress.setHeaderMsg(_('simContacts-importing'))
+      progress.setHeaderMsg(_('simContacts-importing'));
       progress.setTotal(n);
     };
 

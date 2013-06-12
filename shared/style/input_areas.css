@@ -15,7 +15,7 @@ textarea {
   height: 4rem;
   resize: none;
   padding: 0 0.8rem;
-  font: 1.4rem/4rem "MozTT", Sans-serif;
+  font: 1.8rem/4rem "MozTT", Sans-serif;
   border: 0.1rem solid #ccc;
   border-radius: 0.3rem;
   box-shadow: none; /* override the box-shadow from the system (performance issue) */
@@ -68,7 +68,7 @@ form p textarea + button[type="reset"] {
   font-size: 0;
   opacity: 0;
   pointer-events: none;
-  background: url(input_areas/images/icons/clear.png) no-repeat 50% 50% / 1.7rem auto;
+  background: transparent url(input_areas/images/icons/clear.png) no-repeat 50% 50% / 1.7rem auto;
 }
 
 form p input + button[type="reset"],
@@ -102,7 +102,7 @@ fieldset {
   padding: 0;
   border-radius: 0.3rem;
   border: 0.1rem solid rgba(0,0,0,.2);
-  font: 1.4rem/1em "MozTT", Sans-serif;
+  font: 1.8rem/1em "MozTT", Sans-serif;
   background: #fff url(input_areas/images/ui/shadow.png) repeat-x left top;
 }
 
@@ -234,19 +234,30 @@ form[role="search"] button[type="submit"] {
   float: right;
   min-width: 6rem;
   height: 3.7rem;
-  padding: 0 0.4rem;
+  padding: 0 1.5rem;
   border: none;
+  color: #000;
+  font-weight: 500;
+  font-size: 1.6rem;
+  line-height: 3.2rem;
+  background: url(input_areas/images/ui/separator.png) no-repeat 0 50%;
+  background-size: auto 100%;
+  border-radius: 0;
+  width: auto;
+  border-radius: 0;
+  margin: 0;
+}
+
+form[role="search"].bottom button[type="submit"] {
   color: #333;
-  font: 600 1.4rem/3.2rem "MozTT", Sans-serif;
   background: url(input_areas/images/ui/separator.png) no-repeat 0 50%,
               url(input_areas/images/ui/active.png) repeat-x 0 100%;
- background-size: auto 100%;
 }
 
 form[role="search"] button[type="submit"] + p > textarea {
   height: 3rem;
-  padding: 0.5rem 3rem 0.5rem 0.8rem;
   line-height: 2rem;
+  font-size: 1.8rem;
 }
 
 form[role="search"] button[type="submit"] + p button {
@@ -264,7 +275,8 @@ form[role="search"] button[type="submit"]:active {
 
 form[role="search"] button[type="submit"][disabled] {
   color: #adadad;
-  background: url(input_areas/images/ui/separator.png) no-repeat 0 50%;
+  background: url(input_areas/images/ui/separator.png) no-repeat 0 50%,
+              url(input_areas/images/ui/background.png) repeat-x 0 100%;
 }
 
 form p button[type="reset"]:focus,

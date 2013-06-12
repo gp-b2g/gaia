@@ -18,7 +18,7 @@ section[role="region"] > header:first-child sup {
 }
 
 section[role="region"] > header:first-child .icon.icon-edit-contact {
-  background-image: url(images/edit-contact.png);
+  background: url(images/edit-contact.png) no-repeat center center;
 }
 
 .contact-header img {
@@ -343,6 +343,14 @@ fieldset legend.action:after {
   margin-left: -5rem;
 }
 
+/* Contacts in comms application */
+@media screen and (max-height: 450px) and (min-height: 420px) {
+ nav[data-type="scrollbar"] li {
+  font-size: 1.05rem;
+  line-height: 1.23rem;
+ }
+}
+
 /* SETTINGS */
 section[role="region"] > header .icon.icon-settings
      { background-image: url(/contacts/style/gphx/bitmap/default/vw-header/icons/settings.png); }
@@ -427,6 +435,7 @@ section[role="region"] > header .icon.icon-settings
 /* Extending icon types*/
 #view-settings [data-type="list"] li button.icon-sim:before {
   background-image: url(/contacts/style/images/import_SIM.png);
+  background-size: 1.6rem;
 }
 
 
@@ -482,11 +491,11 @@ section[role="region"] > header .icon.icon-settings
 }
 
 #no-contacts .small.arrow {
-  background: url("/contacts/style/images/arrow_small.png") no-repeat 93% 0.5rem / 4.5rem;
+  background: url("/contacts/style/images/arrow_small.png") no-repeat scroll 93% 0.5rem / 4.5rem transparent;
 }
 
 #no-contacts .big.arrow {
-  background: url("/contacts/style/images/arrow_big.png") no-repeat 93% 0.5rem / 6.5rem;
+  background: url("/contacts/style/images/arrow_big.png") no-repeat scroll 93% 0.5rem / 6.5rem transparent;
   height: 5rem;
   padding-top: 3.5rem;
 }

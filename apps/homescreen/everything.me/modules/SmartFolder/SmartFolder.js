@@ -265,6 +265,10 @@ Evme.SmartFolder = function Evme_SartFolder(_options) {
 
       return (top - parentTop);
     };
+    
+    this.refreshScroll = function refreshScroll() {
+        scroll.refresh();
+    };
 
     this.MoreIndicator = new function MoreIndicator() {
         var self = this,

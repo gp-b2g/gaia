@@ -117,7 +117,7 @@ section {
 #thumbnails {
   position: absolute;
   left: 0;
-  width: 100%;
+  width: calc(100% + 1px); /* one extra pixel for the right margin */
   /* top and bottom are set depending on view below */
   padding: 0;
   margin: 0;

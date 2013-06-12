@@ -55,7 +55,7 @@ html, body {
   white-space: nowrap;
   margin: 0;
   padding: 1.5rem;
-  border-top: 1px solid #a6a6a6;
+  border-top: 0.1rem solid #a6a6a6;
   background: rgba(0,0,0,0.05);
   display: block;
   overflow: hidden;
@@ -72,7 +72,7 @@ html, body {
 }
 
 [role=navigation] button {
-  width: calc((100% / 2) - 0.5rem);
+  width: calc((100% - 1rem) / 2);
   float: left;
   margin-right: 1rem;
   position: relative;
@@ -202,7 +202,7 @@ html, body {
   z-index: 3000;
   transition: all 1s ease;
   background-image: url(/shared/resources/branding/powered.png);
-  background-size: cover;
+  background-size: 100% auto;
   background-position: center top;
 }
 
@@ -382,7 +382,6 @@ aside.connecting {
  75%    { background-position:  -9.6rem center; }
  100%   { background-position: -12.8rem center; }
 }
-
 
 /*
   Wifi configuration
@@ -692,6 +691,7 @@ aside.connecting {
 /* Extending icon types*/
 #import_contacts [data-type="list"] li button.icon-sim:before {
   background-image: url(/contacts/style/images/import_SIM.png);
+  background-size: 1.6rem;
 }
 
 #import_contacts li button.icon {
@@ -702,6 +702,7 @@ aside.connecting {
 #import_contacts li button.icon:before {
   right: auto;
   left: 0.5rem;
+  background-size: 3rem;
 }
 
 #import_contacts article:first-child ul {
@@ -755,6 +756,7 @@ aside.connecting {
   text-decoration: underline;
   font-weight: 500;
 }
+
 #welcome_browser section p a {
   margin-left: 0.3rem;
 }
@@ -1114,4 +1116,3 @@ i.hack-first-child {
   margin-top: -0.2rem;
   background: #FFFFFF;
 }
-

@@ -19,6 +19,34 @@
   -moz-box-sizing: border-box;
 }
 
+/* 480x800 phones */
+@media (orientation: portrait) and (width: 480px),
+       (orientation: landscape) and (width: 800px) {
+  #authentication-dialog input,
+  #modal-dialog input {
+    border-radius: 3px 3px 3px 3px;
+    height: 60px;
+    font-size: 30px;
+    width: 100%;
+    color: white;
+    -moz-box-sizing: border-box;
+  }
+}
+
+/* 540x960 phones */
+@media (orientation: portrait) and (width: 540px),
+       (orientation: landscape) and (width: 960px) {
+  #authentication-dialog input,
+  #modal-dialog input {
+    border-radius: 0.3rem 0.3rem 0.3rem 0.3rem;
+    height: 6rem;
+    font-size: 3rem;
+    width: 100%;
+    color: white;
+    -moz-box-sizing: border-box;
+  }
+}
+
 #screen.modal-dialog #modal-dialog,
 #screen.authentication-dialog #authentication-dialog,
 #authentication-dialog-http.visible,

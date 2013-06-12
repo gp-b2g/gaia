@@ -1,5 +1,5 @@
 #simpin-dialog .container {
-  padding: 0 2rem;
+  padding-left: 2rem;
   font-size: 1.4em;
 }
 
@@ -38,6 +38,7 @@
 
 
 #simpin-dialog .input-wrapper input[type="text"] {
+  width: auto;
   pointer-events: none;
   position: absolute;
   top: 0;

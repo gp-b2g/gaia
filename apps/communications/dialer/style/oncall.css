@@ -229,7 +229,7 @@ button[disabled] .icon-keypad-visibility {
 .icon-keypad-visibility {
   display:inline-block;
   background:url('images/ActionIcon_40x40_dialpad.png') ;
-  background-size: 4rem;
+  background-size: 4rem 4rem;
   width:4rem;
   height:4rem;
 }
@@ -296,7 +296,7 @@ button[disabled] .icon-keypad-visibility {
   margin: 0 auto;
   background-image: url('images/ActionIcon_40x40_hangup.png');
   background-repeat: no-repeat;
-  background-size: 4rem;
+  background-size: 4rem 4rem;
   background-position: center;
   width: 4rem;
   height: 4rem;
@@ -316,7 +316,7 @@ button[disabled] .icon-keypad-visibility {
   margin: 0 auto;
   background-image: url('images/ActionIcon_40x40_pickup.png');
   background-repeat: no-repeat;
-  background-size: 4rem;
+  background-size: 4rem 4rem;
   background-position: center;
   width: 4rem;
   height: 4rem;
@@ -475,7 +475,7 @@ button[disabled] .icon-keypad-visibility {
   height: 3.5rem;
   margin: 4rem 0 0 1rem;
   background-repeat: no-repeat;
-  background-size: 2.4rem;
+  background-size: 2.4rem 2.4rem;
 }
 
 #calls[data-count="1"] > section .duration > .direction.incoming > div {
@@ -578,7 +578,7 @@ button[disabled] .icon-keypad-visibility {
 }
 
 /* Handling the status bar mode */
-@media screen and (max-height: 4.5em ) {
+@media screen and (max-height: 4rem ) {
   body {
     background-color: #82af00;
     background-image: url('images/green-noise-bg.png');

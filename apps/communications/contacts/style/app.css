@@ -6,7 +6,7 @@
 
 
 /* Global */
-html {
+html, body {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -481,7 +481,7 @@ li button.icon-fb-profile:before {
 }
 
 li button.icon-add:before {
-  background-image: url(/contacts/style/gphx/bitmap/default/buttons/plus_sign.png);
+  background-image: url(/contacts/style/gphx/bitmap/default/buttons/plus_sign.png) no-repeat center center;
   background-size: 2.8rem;
 }
 
@@ -650,5 +650,5 @@ nav[data-type="scrollbar"] p img {
   position: absolute;
   top: 25%;
   left: 25%;
-  width: 4.8rem;
+  width: auto;
 }

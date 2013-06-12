@@ -1,3 +1,8 @@
+/* Device Layouts */
+
+@media screen and (max-width: 540px) {
+}
+
 /* loading */
 
 body.loading {
@@ -88,7 +93,7 @@ ol.link-list a {
 
 #progress-indicator {
   position: absolute;
-  top: 6.9rem;
+  top: 10%;
   left: 0;
   width: 100%;
   height: 0.3rem;
@@ -550,6 +555,18 @@ section[role="status"].active {
   animation-name: fade-status;
   animation-delay: 2.5s;
   animation-duration: 1.5s;
+}
+
+@media screen and (min-width: 481px) {
+  html, body {
+    font-size: 1.2rem;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  html, body {
+    font-size: 1.2rem;
+  }
 }
 
 /* Hide on initial render to prevent flashing */

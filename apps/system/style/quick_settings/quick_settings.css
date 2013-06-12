@@ -18,7 +18,7 @@ html, body {
 #quick-settings > a {
   display: block;
   float: left;
-  width: calc(20% - 0.2rem);
+  width: -moz-calc(20% - 0.2rem);
   height: 3rem;
   margin: 1.5rem 0;
   padding: 0;
@@ -41,12 +41,12 @@ html, body {
 }
 
 #quick-settings > a:first-child {
-  width: calc(20% - 0.1rem);
+  width: -moz-calc(20% - 0.1rem);
   border-left: 0;
 }
 
 #quick-settings > a:last-child {
-  width: calc(20% - 0.1rem);
+  width: -moz-calc(20% - 0.1rem);
   border-right: 0;
 }
 
