@@ -462,11 +462,13 @@ html, body {
 #banner-countdown {
   z-index: -1;
   opacity: 0;
+  bottom: -2rem;
   -moz-transition: all 600ms ease;
 }
 #banner-countdown.visible {
   z-index: 1;
   opacity: 1;
+  bottom: 0;
   -moz-transition: all 600ms ease;
 }
 #banner-countdown > p > strong {
@@ -520,7 +522,7 @@ body.hidden *[data-l10n-id] {
 /* 540x960 phones */
 @media screen and (width: 540px) {
   html {
-    font-size: 10px;
+    font-size: 1rem;
   }
   #analog-clock-svg-body.alarm1 {
     transform: matrix(1.13,0,0,1.13,0,7);

@@ -143,12 +143,6 @@ var ThreadUI = {
     Utils.startTimeHeaderScheduler();
     // We add the infinite scroll effect for increasing performance
     this.view.addEventListener('scroll', this.manageScroll.bind(this));
-
-    // Cache fixed measurement while init
-    var style = window.getComputedStyle(this.input, null);
-    this.INPUT_PADDING = parseInt(style.getPropertyValue('padding-top'), 10) +
-      parseInt(style.getPropertyValue('padding-bottom'), 10);
-    this.INPUT_MAXHEIGHT = parseInt(style.getPropertyValue('max-height'), 10);
   },
   // We define an edge for showing the following chunk of elements
   manageScroll: function thui_manageScroll(oEvent) {
@@ -168,11 +162,13 @@ var ThreadUI = {
   },
   setInputMaxHeight: function thui_setInputMaxHeight() {
     // Method for initializing the maximum height
-    // Set the input height to:
-    // view height - (vertical padding (+ to field height if edit new message))
-    var viewHeight = this.view.offsetHeight;
-    var adjustment = this.INPUT_PADDING;
-    this.input.style.maxHeight = (viewHeight - adjustment) + 'px';
+    var fontSize = Utils.getFontSize();
+    var viewHeight = this.view.offsetHeight / fontSize;
+    var inputHeight = this.input.offsetHeight / fontSize;
+    var barHeight =
+      document.getElementById('new-sms-form').offsetHeight / fontSize;
+    var adjustment = barHeight - inputHeight;
+    this.input.style.maxHeight = (viewHeight - adjustment) + 'rem';
   },
   onBackAction: function thui_onBackAction() {
     var goBack = function() {
